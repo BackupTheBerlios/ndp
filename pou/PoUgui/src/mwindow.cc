@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.53  2004/04/29 09:52:55  leserpent
+ * Getdatapointer returns a pointer.
+ *
  * Revision 1.52  2004/04/29 09:51:49  ob821
  * bugfix
  *
@@ -306,9 +309,9 @@ MainWindow::MenuSettingsArgs()
   if ( (oldNumPoints != newNumPoints) && m_points) {
     m_pointset_filtered.randomFilter(m_pointset, newNumPoints);
     m_points->LockBuffer();
-    std::vector<Point> points = m_points->getDataPointer();
-    points.clear();
-    FillVector( m_pointset_filtered, points );
+    std::vector<Point> *points = m_points->getDataPointer();
+    points->clear();
+    FillVector( m_pointset_filtered, *points );
     m_points->unLockBuffer();
   }
   std::cerr << oldNumPoints << " " << newNumPoints << std::endl;

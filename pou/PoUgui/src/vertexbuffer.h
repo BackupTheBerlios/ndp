@@ -26,7 +26,7 @@ class VertexBuffer {
 
   void SetIndices( std::vector<unsigned int> indices ) { m_indices = indices; }
   
-  std::vector<Point> &getDataPointer();
+  std::vector<Point> *getDataPointer();
 
   inline int getSize() { return m_indices.size(); }
   inline int getPolyType() { return m_polytype; }

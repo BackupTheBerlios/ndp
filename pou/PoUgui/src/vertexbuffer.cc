@@ -54,11 +54,11 @@ VertexBuffer::Init()
   m_islocked = false;
 }
 
-std::vector<Point> &
+std::vector<Point> *
 VertexBuffer::getDataPointer() 
 {
   assert(m_islocked);
-  return m_vertices;
+  return &m_vertices;
 }
 
 void 
