@@ -37,7 +37,8 @@ bool HasTS1_0(){ return hasTS1_0; }
 bool HasVP1_0(){ return hasVP1_0; }
 
 
-int OpenGL_Init() 
+int 
+OpenglInit() 
 {
 #ifdef OPENGL_VERBOSE
   std::cout<<"OpenGL Informations :\n";

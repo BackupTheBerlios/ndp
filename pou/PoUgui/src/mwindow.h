@@ -1,19 +1,25 @@
 #ifndef MWINDOW_H
 #define MWINDOW_H
 
+#include <qapplication.h>
 #include <qmainwindow.h>
+#include <qworkspace.h>
+
 #include "PointSet.h"
+#include "openglview.h"
 #include "math/vector3.h"
 #include "box3d.h"
+#include "settings.h"
 #include "language.h"
 
-class MWindow : public QMainWindow 
+class VertexBuffer;
+
+class MainWindow : public QMainWindow 
 {
   Q_OBJECT
     public:
-  MWindow();
-  MWindow( QString title );
-  ~MWindow();
+  MainWindow( QString title );
+  ~MainWindow();
   
  private:
   void CreateMenu();
@@ -22,22 +28,35 @@ class MWindow : public QMainWindow
  
  protected:
   void closeEvent( QCloseEvent * );
-  void timerEvent( QTimerEvent * );
  signals:
   
   private slots:
-  void menu_file_open();
-  void menu_file_close();
-  void menu_file_exit();
-  void menu_settings_args();
-  void menu_windows_new();
-  void menu_rendering_render();
+  void MenuFileOpen();
+  void MenuFileClose();
+  void MenuFileExit();
+  void MenuSettingsArgs();
+  void MenuWindowsNew();
+  void MenuRenderingRender();
+
  private:
   void CleanMemory();
 
-  PointSet ps;
-  BoxVolume m_bbox;
-  Vec3f initPoint;
+  /* Application */
+  QWorkspace *m_workspace;
+
+  /* windows / dialogs */
+  OpenglView *m_polywin;
+  SettingsForm *m_settingsform;
+ 
+  /* Geometry */
+  PointSet m_pointset;
+  BoxVolume m_boundingbox;
+  Vec3f m_initpoint;
+  VertexBuffer *m_points;
+  VertexBuffer *m_polys;
+
+ public:
+  static QApplication *m_qtgui;
 };
 
 int CreateMainWindow( int argc, char **argv );

@@ -29,122 +29,138 @@
 
 int PolyTypes[3] = { GL_POINTS, GL_TRIANGLES, GL_QUADS };
 
-VertexBuffer::VertexBuffer() {
+VertexBuffer::VertexBuffer() 
+{
   init();
 }
 
-VertexBuffer::VertexBuffer(const std::vector<Point> &vertices, int polytype ) {
+VertexBuffer::VertexBuffer(const std::vector<Point> &vertices, int polytype ) 
+{
   init();
   CreateVertexBuffer(vertices, polytype);
 }
 
-VertexBuffer::~VertexBuffer() {
-  if( isLocked )
+VertexBuffer::~VertexBuffer() 
+{
+  if( m_islocked )
     unLockBuffer();
-  if( type == TYPE_VBO )
+  if( m_type == TYPE_VBO )
     ; /* Delete buffer */
 }
 
-void VertexBuffer::init() {
+void 
+VertexBuffer::init() 
+{
   if( !HasVBO() )
-    type = TYPE_VERTEXBUFFER;
+    m_type = TYPE_VERTEXBUFFER;
   else
-    type = TYPE_VBO;
-  contents = POLY_COORDS;
-  isLocked = false;
-  mapptr = 0;
+    m_type = TYPE_VBO;
+  m_islocked = false;
+  m_mapptr = 0;
 }
 
-int VertexBuffer::CreateVertexBuffer( const std::vector<Point> &vertices,
-                                      int polytype ) {
-  this->polytype = polytype;
-  if( type == TYPE_VERTEXBUFFER )
+int 
+VertexBuffer::CreateVertexBuffer( const std::vector<Point> &vertices,
+				  int polytype ) 
+{
+  m_polytype = polytype;
+  if( m_type == TYPE_VERTEXBUFFER )
     m_vertices = vertices;
   
-  if( type == TYPE_VBO ) {
-    
-  }
+  if( m_type == TYPE_VBO ) 
+    {
+    }
   
   return 0;
 }
 
-std::vector<Point> &VertexBuffer::getDataPointer() {
-  assert(isLocked);
+std::vector<Point> &
+VertexBuffer::getDataPointer() 
+{
+  assert(m_islocked);
 
-  if( (type == TYPE_VBO) && !mapptr )
+  if( (m_type == TYPE_VBO) && !m_mapptr )
     MapBuffer();
 
-//   if( type == TYPE_VBO )
-//     return (Vec3f *)mapptr;
+  //if( m_type == TYPE_VBO )
+  //return (Vec3f *)m_mapptr;
 
   return m_vertices;
 }
 
-void VertexBuffer::Bind() 
+void 
+VertexBuffer::Bind() 
 {
   glEnableClientState( GL_COLOR_ARRAY );
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_NORMAL_ARRAY );
- 
-  if( type == TYPE_VERTEXBUFFER ){
-    glVertexPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].pos);
-    glColorPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].rgb);
-    glNormalPointer(GL_FLOAT, sizeof(Point), &m_vertices[0].norm);
-  }
 
+  if( m_type == TYPE_VERTEXBUFFER )
+    {
+      glVertexPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].pos);
+      glColorPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].rgb);
+      glNormalPointer(GL_FLOAT, sizeof(Point), &m_vertices[0].norm);
+    }
 }
 
-void VertexBuffer::unBind() 
+void 
+VertexBuffer::unBind() 
 {
   glDisableClientState(GL_COLOR_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-void VertexBuffer::LockBuffer() 
+void 
+VertexBuffer::LockBuffer() 
 {
-  isLocked = true;
+  m_islocked = true;
 }
 
-void VertexBuffer::unLockBuffer() 
+void 
+VertexBuffer::unLockBuffer() 
 {
-  isLocked = false;
-  if( (type == TYPE_VBO) && mapptr )
+  m_islocked = false;
+  if( (m_type == TYPE_VBO) && m_mapptr )
     unMapBuffer();
 }
 
-int VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) 
+int 
+VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) 
 {
   return 0;
 }
 
-int VertexBuffer::DrawBuffer() 
+int 
+VertexBuffer::DrawBuffer() 
 {
-  assert(!isLocked);
+  assert(!m_islocked);
 
   glColor4f( 1.0,1.0,1.0, 0.0 );
   if( m_indices.empty() )
-    glDrawArrays( PolyTypes[polytype], 0, m_vertices.size() ); 
+    glDrawArrays( PolyTypes[m_polytype], 0, m_vertices.size() ); 
   else {
-    glDrawElements(PolyTypes[polytype], m_indices.size(), GL_UNSIGNED_INT, 
+    glDrawElements(PolyTypes[m_polytype], m_indices.size(), GL_UNSIGNED_INT, 
 		   &m_indices[0]);
   }
   return 0;
 }
 
-void VertexBuffer::MapBuffer() 
+void 
+VertexBuffer::MapBuffer() 
 {
-  if( type == TYPE_VBO )
-    if( !mapptr ){
+  if( m_type == TYPE_VBO )
+    if( !m_mapptr ){
 
     }
 }
 
-void VertexBuffer::unMapBuffer() 
+void 
+VertexBuffer::unMapBuffer() 
 {
-  if( type == TYPE_VBO )
-    if( mapptr ){
-      
-      mapptr = NULL;
-    }
+  if( m_type == TYPE_VBO )
+    if( m_mapptr )
+      {
+	m_mapptr = NULL;
+      }
 }

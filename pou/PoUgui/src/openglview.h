@@ -23,18 +23,19 @@ class OpenglWidget : public QGLWidget
   void clearGL();
   void resizeGL( int w, int h );
   void paintGL();
-  inline OpenglContext *getOpenGLContext(){ return glcontext; }
-  inline VertexBuffer *getVertexBuffer() { return vb; }
+  inline OpenglContext *getOpenGLContext(){ return m_glcontext; }
+  inline VertexBuffer *getVertexBuffer() { return m_vbuffer; }
 
  private:
+  void SetIdleDraw( bool state );
   void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
   void wheelEvent ( QWheelEvent *e );
   void timerEvent( QTimerEvent *e ); 
  private:
-  VertexBuffer *vb;
-  OpenglContext *glcontext;
+  VertexBuffer *m_vbuffer;
+  OpenglContext *m_glcontext;
   bool m_idledraw;
   int m_timerid;
 };
@@ -44,19 +45,14 @@ class OpenglView : public QMainWindow {
   OpenglView( QWorkspace *parent, VertexBuffer *vbuffer );
   ~OpenglView();
 
-
-  //inline void SetLighting( bool state, int type, float x, float y, float z ){
-  //  glwidget -> SetLighting( state, type, x, y, z );
-  //}
   void SetLighting( bool state, int type, float x, float y, float z );
-  
 
  protected:
   void closeEvent( QCloseEvent * );
   void keyPressEvent( QKeyEvent *e );
  private:
-  OpenglWidget *glwidget;
-  QFrame *glframe;
+  OpenglWidget *m_glwidget;
+  QFrame *m_glframe;
   bool m_fpsstate;
 };
 

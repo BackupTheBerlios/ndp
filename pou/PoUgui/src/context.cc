@@ -31,8 +31,7 @@
 #include "openglview.h"
 #include "opengl.h"
 #include "vertexbuffer.h"
-
-#define DEG2RAD( x ) (x) * M_PI / 180.0
+#include "utils.h"
 
 const float OpenglContext::DEF_ZOOM;
 const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
@@ -51,19 +50,17 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_lasttime = -1;
   m_showfps = false;
   m_parent = parent;
+  /*lighting / material*/
   m_lightrx = 0;
   m_lightry = 0;
   m_lightdistance = 0;
   m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
-  m_polygonMode = false;
-  /*material*/
-  m_matR = 0.5;
-  m_matG = 0.5;
-  m_matB = 0.5;
-  m_lightDiff = 1;
-  m_lightSpec = 0.5;
-  m_shininess = 30;
-  m_colorFlag = true;
+  m_light_ambient = Vec3f( 0.3, 0.3, 0.3 );
+  m_light_diffuse = Vec3f( 0.2, 0.2, 0.2 );
+  m_light_specular = Vec3f( 0.4, 0.4, 0.4 );
+  
+  m_polygonmode = false;
+  m_colorflag = false;
   /* init font */
   //m_font.setStyleStrategy( QFont::OpenGLCompatible );
   m_font.setFamily("fixed");
@@ -96,68 +93,46 @@ void OpenglContext::mapToSphere(Vec3f &v)
       v.z = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
 }
 
-void OpenglContext::StartRotationMode( int x, int y, bool camera )
+void OpenglContext::StartRotationMode( int x, int y )
 {
-  if( camera ){
-    m_startVector.setValues(x, y, 0);
-    mapToSphere(m_startVector);
-    m_updatemview = true;
-  }
-  else{
-
-  }
+  m_startVector.setValues(x, y, 0);
+  mapToSphere(m_startVector);
+  m_updatemview = true;
 }
 
-void OpenglContext::StopRotationMode( bool camera )
+void OpenglContext::StopRotationMode()
 {
-  if( camera ){
-    m_startOrientation = m_orientation;
-    m_updatemview = true;
-  }
-  else {
-
-  }
+  m_startOrientation = m_orientation;
+  m_updatemview = true;
 }
 
-void OpenglContext::InitRotationMode( bool camera )
+void OpenglContext::InitRotationMode()
 {
-  if( camera ){
-    m_orientation.toIdentity();
-    m_startOrientation.toIdentity();
-    m_zoomfactor = DEF_ZOOM;
-    m_updatemview = true;
-  }
-  else {
-
-  }
+  m_orientation.toIdentity();
+  m_startOrientation.toIdentity();
+  m_zoomfactor = DEF_ZOOM;
+  m_updatemview = true;
 }
 
-void OpenglContext::RotateView( int x, int y, bool camera ) 
+void OpenglContext::RotateView( int x, int y ) 
 {
-  if( camera ) {
-    Quaternionf q;
-    Vec3f endVector(x, y, 0);
-    mapToSphere(endVector);
-    q.toRotationArc(m_startVector, endVector);
-    m_orientation = q*m_startOrientation;
-    m_orientation.normalize();
-    m_updatemview = true;
-  }
-  else {
-
-  }
+  Quaternionf q;
+  Vec3f endVector(x, y, 0);
+  mapToSphere(endVector);
+  q.toRotationArc(m_startVector, endVector);
+  m_orientation = q*m_startOrientation;
+  m_orientation.normalize();
+  m_updatemview = true;
 }
 
-void OpenglContext::ZoomView( double factor, bool camera )
+void OpenglContext::ZoomView( double factor )
 {
-  if( camera ){
-    if( factor < 0 )
-      m_zoomfactor *= 0.9;
-    else
-      m_zoomfactor *= 1.1;
-    
-    m_updatemview = true;
-  }
+  if( factor < 0 )
+    m_zoomfactor *= 0.9;
+  else
+    m_zoomfactor *= 1.1;
+  
+  m_updatemview = true;
 }
 
 void OpenglContext::SetViewSize( int width, int height )
@@ -215,6 +190,19 @@ void OpenglContext::SetLighting( bool state )
 void OpenglContext::SetLightType( int type )
 {
   m_lighttype = type;
+
+  switch( type ) {
+  case LIGHT_FLAT:
+    glShadeModel( GL_FLAT );
+    break;
+  case LIGHT_SMOOTH:
+    glShadeModel( GL_SMOOTH );
+    break;
+  case LIGHT_PIXEL:
+    break;
+  default:
+    break;
+  }
 }
 
 void OpenglContext::ShowLightPosition( bool flag )
@@ -226,7 +214,7 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
   double cTheta, sTheta, cPhi, sPhi, theta, phi;
   m_lightdistance += distance;
   m_lightrx += anglex;
-  //m_lightrx %= 360; // [0, PI]
+  //m_lightrx %= 360; // [0, 2PI]
   m_lightry += angley;
   //m_lightry %= 360; // [0, 2PI ]
   
@@ -250,21 +238,32 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
 
 void OpenglContext::SetMaterial ()
 {
-  float matGray[3] = {0.2, 0.2, 0.2};  
-  float matDiffuse[3] = { m_matR, m_matG, m_matB};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, matGray);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
-  glMaterialf(GL_FRONT, GL_SHININESS, m_shininess);
+  glMaterialfv( GL_BACK, GL_AMBIENT, &m_light_ambient.x );
+  glMaterialfv( GL_BACK, GL_DIFFUSE, &m_light_diffuse.x );
+  glMaterialfv( GL_BACK, GL_SPECULAR, &m_light_specular.x );
 }
 
 void OpenglContext::OppositeColorFlags ()
 {
-  m_colorFlag = !m_colorFlag;
+  m_colorflag = !m_colorflag;
+
+  if (m_colorflag)
+    {
+      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+      glEnable(GL_COLOR_MATERIAL);
+    }
+  else
+      glDisable(GL_COLOR_MATERIAL);
 }
 
 void OpenglContext::OppositePolygonMode ()
 {
-  m_polygonMode = ! m_polygonMode;
+  m_polygonmode = ! m_polygonmode;
+
+  if (m_polygonmode)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  else
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 void OpenglContext::DrawHud()
@@ -378,19 +377,4 @@ void OpenglContext::SyncContext()
     /* Apply Zoom */
     glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
   }
-  if (m_colorFlag)
-    {
-      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-      glEnable(GL_COLOR_MATERIAL);
-    }
-  else
-    {
-      glDisable(GL_COLOR_MATERIAL);
-      SetMaterial ();
-    }
-  if (m_polygonMode)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  else
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  glShadeModel(m_lighttype);
 }

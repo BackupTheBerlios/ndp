@@ -1,7 +1,7 @@
 #ifndef LANGUAGE_H
 #define LANGUAGE_H
 
-#define MENU_FILE "&File"
+#define MENU_FILE "File"
 #define MENU_WINDOWS "&Windows"
 #define MENU_RENDERING "&Rendering"
 #define MENU_SETTINGS "&Settings"

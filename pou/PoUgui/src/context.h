@@ -7,6 +7,10 @@
 #include "math/vector3.h"
 #include "math/quaternion.h"
 
+#define LIGHT_FLAT 1
+#define LIGHT_SMOOTH 2
+#define LIGHT_PIXEL 3
+
 class OpenglWidget;
 
 class OpenglContext {
@@ -27,11 +31,11 @@ class OpenglContext {
   /********************/
   /* NEED SyncContext() */
   /********************/
-  void StartRotationMode( int x, int y, bool camera );
-  void StopRotationMode( bool camera );
-  void InitRotationMode( bool camera );
-  void RotateView( int x, int y, bool camera );
-  void ZoomView( double factor, bool camera );
+  void StartRotationMode( int x, int y );
+  void StopRotationMode();
+  void InitRotationMode();
+  void RotateView( int x, int y );
+  void ZoomView( double factor );
   
   void SetViewSize( int width, int height );
   void SetFov( double fov );
@@ -80,17 +84,14 @@ class OpenglContext {
   bool m_lightstate;
   bool m_lightdraw;
   int m_lighttype;
+  Vec3f m_light_ambient;
+  Vec3f m_light_diffuse;
+  Vec3f m_light_specular;
 
   /* Polygon Mode*/
-  bool m_polygonMode;
+  bool m_polygonmode;
   /* Material*/
-  float m_matR;
-  float m_matG;
-  float m_matB;
-  float m_lightDiff;
-  float m_lightSpec;
-  float m_shininess;
-  bool m_colorFlag;
+  bool m_colorflag;
 
   /* Stats */
   bool m_showstats;
@@ -98,6 +99,7 @@ class OpenglContext {
   float m_fps;
   int m_frames;
   int m_lasttime;
+  /* Fonts */
   QFont m_font;
 };
 

@@ -42,7 +42,7 @@ class VertexBuffer{
   
   std::vector<Point> &VertexBuffer::getDataPointer();
   inline int getSize(){ return m_indices.size(); }
-  inline int getPolyType(){ return polytype; }
+  inline int getPolyType(){ return m_polytype; }
  private:
   void MapBuffer();
   void unMapBuffer();
@@ -51,16 +51,16 @@ class VertexBuffer{
   std::vector<Point> m_vertices;
 
   /* Both (vertexbuffer, vbo) */
-  int size;
-  int step;
-  bool isLocked;
-  int polytype;
-  int contents;
+  int m_size;
+  int m_step;
+  bool m_islocked;
+  int m_polytype;
+  int m_contents;
 
   /* VBO */
-  int id;
-  int type;
-  void *mapptr;
+  int m_id;
+  int m_type;
+  void *m_mapptr;
 };
 
 

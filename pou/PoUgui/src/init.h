@@ -12,6 +12,6 @@ bool HasTS1_0();
 bool HasVP1_0();
 
 // public Functions
-int OpenGL_Init();
+int OpenglInit();
 
 #endif

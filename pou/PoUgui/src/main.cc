@@ -19,24 +19,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-
-#include <qgl.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#include "libgui.h"
-
-
-void CheckOpenGL() {
-  if( !QGLFormat::hasOpenGL() ){
-    printf("Fatal:\n");
-    printf("Le support OpenGL n'est pas présent sur ce système.\n");
-    printf("Veuillez recompiler QT avec le support Opengl\n");
-    printf("Pour plus d'informations voir www.trolltech.com\n\n" );
-    exit( -1 );
-  }
-}
+#include "mwindow.h"
+#include "utils.h"
 
 int main( int argc, char **argv) {
+  CheckConfigPath();
   return CreateMainWindow( argc, argv );
 }
