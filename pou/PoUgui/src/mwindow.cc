@@ -107,26 +107,26 @@ void MWindow::CreateMenu() {
   menuBar()->insertItem( MENU_SETTINGS, menu_settings );
   menuBar()->insertItem( MENU_HELP, menu_help );
   //Files
-  AddTool( this, MENU_FILE_OPEN, QPixmap( "../icons/fileopen.png"),
+  AddTool( this, MENU_FILE_OPEN, QPixmap( DATADIR"/fileopen.png"),
 	   QKeySequence("Ctrl+O"), toolbar, menu_file,SLOT(menu_file_open()));
-  AddTool( this, MENU_FILE_CLOSE, QPixmap("../icons/fileclose.png"),
+  AddTool( this, MENU_FILE_CLOSE, QPixmap(DATADIR"/fileclose.png"),
 	   QKeySequence("Ctrl+D"), toolbar, menu_file,SLOT(menu_file_close()));
   menu_file->insertSeparator();
-  AddTool( this, MENU_FILE_EXIT, QPixmap("../icons/exit.png"),
+  AddTool( this, MENU_FILE_EXIT, QPixmap(DATADIR"/exit.png"),
 	   QKeySequence("Ctrl+X"), NULL, menu_file,SLOT(menu_file_exit()));
   //Windows
   toolbar->addSeparator();
-  AddTool( this, MENU_WINDOWS_NEW, QPixmap("../icons/window_new.png"),
+  AddTool( this, MENU_WINDOWS_NEW, QPixmap(DATADIR"/window_new.png"),
 	   QKeySequence("Ctrl+N"), toolbar, menu_windows, 
 	   SLOT(menu_windows_new()));
   // Settings
   toolbar->addSeparator();
-  AddTool( this, MENU_SETTINGS_ARGS, QPixmap("../icons/configure.png"),
+  AddTool( this, MENU_SETTINGS_ARGS, QPixmap(DATADIR"/configure.png"),
 	   QKeySequence("Ctrl+S"), toolbar, menu_settings, 
 	   SLOT(menu_settings_args()));
   //Rendering
   toolbar->addSeparator();
-  AddTool( this, MENU_RENDERING_RENDER, QPixmap("../icons/render.png"),
+  AddTool( this, MENU_RENDERING_RENDER, QPixmap(DATADIR"/render.png"),
 	   QKeySequence("Ctrl+R"), toolbar, menu_rendering, 
 	   SLOT(menu_rendering_render()));
 }
