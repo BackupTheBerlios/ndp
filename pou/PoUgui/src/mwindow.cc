@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.30  2004/04/06 16:47:58  leserpent
+ * Now there is only one progress dialog for colors.
+ *
  * Revision 1.29  2004/04/06 16:18:29  leserpent
  * Clear PointSet before loading a new file.
  *
@@ -234,13 +237,11 @@ void MWindow::menu_rendering_render() {
   if( !vbPoints )
     return;
   
-  qpd = new QProgressDialog( "Computing implicit surface...",
+  qpd = new QProgressDialog( "Computing colors...",
                              "Abort Rendering", 100, this, "progress", TRUE );
-  qpd->setProgress(1);
   QT_Gui->processEvents();
 
   //Start ImplicitSurface reconstruction
-
   /* First check if api is OK */
   ims = new ImplicitSurface3D(ConstructRBFPOU::BIHARMONIC);
   //ims = new ImplicitSurface3D(ConstructRBFPOU::TRIHARMONIC);
@@ -248,12 +249,15 @@ void MWindow::menu_rendering_render() {
     return ;
   ims->setCallBack (callback, 10);
 
+  ims->computeRGB( ps, filter_npoints );
+  qpd->setLabelText("Computing geometry...");
+  ims->computeGeometry( ps, filter_npoints );
+
+  qpd->setLabelText("Polygonizing surface...");
   MCubes = new Mc(callback, 10);
   MCubes->setMaxIteration( mc_maxit );
   MCubes->setCubeSize( mc_cubesize );
   MCubes->enableTet( enabletet );
-  ims->compute( ps, filter_npoints );
-  qpd->setLabelText("Polygonizing surface...");
   MCubes -> domc(ims, m_bbox);
   MCubes -> getPoints(vecPoints);
 
