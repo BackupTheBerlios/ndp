@@ -164,8 +164,18 @@ void OpenglContext::SetClipDistance( double near, double far )
 void OpenglContext::SetLighting( bool state )
 {
   m_lightstate = state;
+  if (m_lightstate)
+    {
+      GLfloat m_lightpos[]={m_lightx, m_lighty, m_lightz, 1};
+      GLfloat m_light[]={1.0,1.0,1.0,1.0};
+      glMatrixMode( GL_PROJECTION );
+      glLoadIdentity();
+      glEnable (GL_LIGHTING);
+      glEnable (GL_LIGHT0);
+      glLightfv (GL_LIGHT0,m_lighttype,m_light);
+      glLightfv (GL_LIGHT0,GL_POSITION,m_lightpos);
+    }
 }
-
 void OpenglContext::SetLightType( int type )
 {
   m_lighttype = type;

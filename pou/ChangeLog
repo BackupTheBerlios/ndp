@@ -1,3 +1,8 @@
+2004-04-02  Loic Martin  <lomartin@liszt.emi.u-bordeaux.fr>
+
+	* PoUgui/src/openglview.cc (initializeGL): light ok.
+	* PoUgui/src/context.cc : light ok.
+
 2004-04-02  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/mwindow.cc: Trivial: Changed progress dialog text.

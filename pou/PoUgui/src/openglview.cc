@@ -71,10 +71,12 @@ void OpenglWidget::initializeGL()
   gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
   glEnable( GL_CULL_FACE );
   glEnable( GL_DEPTH );
-  glCullFace( GL_FRONT );
+  glCullFace( GL_BACK );
   vb -> Bind();
   if( m_idledraw )
     startTimer( FRAME_DELAY );
+  SetLighting (true,GL_DIFFUSE,1.0,1.0,1.0);
+
 }
 
 void OpenglWidget::clearGL() 
@@ -165,7 +167,10 @@ void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
 
 void OpenglWidget::SetLighting( bool state, int type, float x, float y, 
 				float z ){
-
+  glcontext -> SetLightType (type);
+  glcontext -> SetLightPosition (x, y, z);
+  glcontext -> SetLighting ( state );
+  glcontext -> DrawLightPosition (false);
 }
 
 void OpenglWidget::timerEvent( QTimerEvent *e) {
