@@ -55,8 +55,17 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_lightry = 0;
   m_lightdistance = 0;
   m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
+  m_polygonMode = false;
+  /*material*/
+  m_matR = 0.5;
+  m_matG = 0.5;
+  m_matB = 0.5;
+  m_lightDiff = 1;
+  m_lightSpec = 0.5;
+  m_shininess = 30;
+  m_colorFlag = true;
   /* init font */
-  m_font.setStyleStrategy( QFont::OpenGLCompatible );
+  //m_font.setStyleStrategy( QFont::OpenGLCompatible );
   m_font.setFamily("fixed");
   m_font.setRawMode(true);
   m_font.setPixelSize(10);           // Workaround for a bug with renderText()
@@ -194,6 +203,7 @@ void OpenglContext::SetLighting( bool state )
       glEnable (GL_LIGHT0);
       float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
       glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+      SetMaterial ();
     }
   else{
       glDisable (GL_LIGHTING);
@@ -232,6 +242,25 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
   m_lightpos.y = m_lightdistance * cPhi;
   float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
   glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+}
+
+void OpenglContext::SetMaterial ()
+{
+  float matGray[3] = {0.2, 0.2, 0.2};  
+  float matDiffuse[3] = { m_matR, m_matG, m_matB};
+  glMaterialfv(GL_FRONT, GL_AMBIENT, matGray);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
+  glMaterialf(GL_FRONT, GL_SHININESS, m_shininess);
+}
+
+void OpenglContext::OppositeColorFlags ()
+{
+  m_colorFlag = !m_colorFlag;
+}
+
+void OpenglContext::OppositePolygonMode ()
+{
+  m_polygonMode = ! m_polygonMode;
 }
 
 void OpenglContext::DrawHud()
@@ -341,4 +370,19 @@ void OpenglContext::SyncContext()
     /* Apply Zoom */
     glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
   }
+  if (m_colorFlag)
+    {
+      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+      glEnable(GL_COLOR_MATERIAL);
+    }
+  else
+    {
+      glDisable(GL_COLOR_MATERIAL);
+      SetMaterial ();
+    }
+  if (m_polygonMode)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  else
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glShadeModel(m_lighttype);
 }

@@ -43,10 +43,13 @@ class OpenglView : public QMainWindow {
   OpenglView( QWorkspace *parent, VertexBuffer *vbuffer );
   ~OpenglView();
 
-  inline void SetLighting( bool state, int type ){
-    glwidget -> SetLighting( state, type );
-  }
+
+  //inline void SetLighting( bool state, int type, float x, float y, float z ){
+  //  glwidget -> SetLighting( state, type, x, y, z );
+  //}
+  void SetLighting( bool state, int type, float x, float y, float z );
   
+
  protected:
   void closeEvent( QCloseEvent * );
   void keyPressEvent( QKeyEvent *e );

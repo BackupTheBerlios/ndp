@@ -43,7 +43,9 @@ class OpenglContext {
   void SetLighting( bool state );
   void SetLightType( int type );
   void MoveLight( int anglex, int angley, double distance );
-  
+  void SetMaterial ();
+  void OppositeColorFlags ();
+  void OppositePolygonMode ();
  protected:
   void mapToSphere(Vec3f &dest);  
 
@@ -78,6 +80,17 @@ class OpenglContext {
   bool m_lightstate;
   bool m_lightdraw;
   int m_lighttype;
+
+  /* Polygon Mode*/
+  bool m_polygonMode;
+  /* Material*/
+  float m_matR;
+  float m_matG;
+  float m_matB;
+  float m_lightDiff;
+  float m_lightSpec;
+  float m_shininess;
+  bool m_colorFlag;
 
   /* Stats */
   bool m_showstats;

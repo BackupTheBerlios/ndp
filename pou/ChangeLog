@@ -1,3 +1,14 @@
+2004-04-05  loic martin  <lemartinpecheur@berlios.de>
+
+	* PoUgui/src/context.cc: Light
+	Color is OK
+	* PoUgui/src/openglview.cc: Light 
+	Use 'c' to disable or not color
+	Use 'q' to disable or not ploygonal mode
+	Use 'g' to enable the mode GL_SMOOTH
+	Use 'h' to enable the mode GL_FLAT
+	
+
 2004-04-05  Ben  <leserpent@berlios.de>
 
 	* libpou/src/PointSet.h (class PointSet): Added a method clear()

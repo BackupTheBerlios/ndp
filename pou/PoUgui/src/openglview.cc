@@ -72,7 +72,7 @@ void OpenglWidget::initializeGL()
 
   if( m_idledraw ){
     startTimer( FRAME_DELAY );
-    SetLighting (true, GL_DIFFUSE );
+    SetLighting (true, GL_SMOOTH);
     glcontext->SetDepthTest( true );
     /* Don't cull points only polys */
     glEnable( GL_CULL_FACE );
@@ -138,8 +138,20 @@ void OpenglWidget::ParseKey( int key, int key_ascii )
   if( tolower(key_ascii) == 'p' )
     glcontext -> ShowLightPosition( !(glcontext -> getLightPositionState()) );
 
+  if( tolower(key_ascii) == 'c' )
+    glcontext -> OppositeColorFlags ();
+
+  if( tolower(key_ascii) == 'g' )
+    glcontext -> SetLightType (GL_SMOOTH);
+
+  if( tolower(key_ascii) == 'h' )
+    glcontext -> SetLightType (GL_FLAT);
+
+  if( tolower(key_ascii) == 'q' )
+    glcontext ->  OppositePolygonMode ();
+
   if( key == Qt::Key_Left)
-    glcontext -> MoveLight( 0, 5, 0.0 );
+   glcontext -> MoveLight( 0, 5, 0.0 );
 
   if(  key == Qt::Key_Right )
     glcontext -> MoveLight( 0, -5, 0.0 );
@@ -155,7 +167,6 @@ void OpenglWidget::ParseKey( int key, int key_ascii )
 
   if( tolower(key_ascii) == '-' )
     glcontext -> MoveLight( 0, 0, 0.2 );
-
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
