@@ -1,3 +1,11 @@
+/*$Log: mc2.h,v $
+/*Revision 1.2  2004/04/01 20:38:41  leserpent
+/*Moved private methods from mc2.h to mc2.cc
+/*Removed useless typedef.
+/**/
+#ifndef MC_H
+#define MC_H
+
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -16,98 +24,98 @@
 #include "box3d.h"
 
 class Mc {
-public:
+private:
   std::vector<unsigned int> indices;
+  void (*progress_callback)(int v, int max);
+  unsigned int progress_step;
+  unsigned int progress_max;
+  ImplicitSurface3D *is;
+
+public:
+  Mc(void (*callback)(int, int), int step);
   
+  void mc_setcallback(void (*c)(int, int), unsigned int step) {
+    progress_callback = c;
+    progress_step = step;
+  }
+
+  const std::vector<unsigned int>& getIndices();
+  void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals);
+  void domc(ImplicitSurface3D *imps, const Box3f &bbox);
+
+private:
   int RES; /* # converge iterations    */
 
   enum Direction {L=0,R,B,T,N,F};
   enum Corner {LBN=0,LBF,LTN,LTF,RBN,RBF,RTN,RTF};
+  enum {LB=0, LT, LN, LF, RB, RT, RN, RF, BN, BF, TN, TF} edge;
 
-
-  double RAND() { return (rand()&32767)/32767.0; }
   static const unsigned int HASHBIT=5;
   static const unsigned int HASHSIZE=1<<(3*HASHBIT);
   static const unsigned int MASK=(1<<HASHBIT)-1;
 
-  int HASH(int i, int j, int k) {
-    return ((((i&MASK)<<HASHBIT)|(j&MASK))<<HASHBIT)|(k&MASK);
-  }
-
-  int BIT(int i, int bit) {
-    return (i>>bit)&1;
-  }
-
-  int FLIP(int i, int bit) {
-    return i^1<<bit;
-  }
-
-  typedef double (*FUN)(double, double, double);
-
-  typedef struct point {		   /* a three-dimensional point */
+  struct POINT {		   /* a three-dimensional point */
     double x, y, z;		   /* its coordinates */
-  } POINT;
+  };
 
-  typedef struct test {		   /* test the function for a signed value */
+  struct TEST {		   /* test the function for a signed value */
     POINT p;			   /* location of test */
     double value;		   /* function value at p */
     int ok;			   /* if value is of correct sign */
-  } TEST;
+  };
 
-  typedef struct vertex {		   /* surface vertex */
+  struct VERTEX {		   /* surface vertex */
     POINT position, normal;	   /* position and surface normal */
-  } VERTEX;
+  };
 
-  typedef struct vertices {	   /* list of vertices in polygonization */
+  struct VERTICES {	   /* list of vertices in polygonization */
     int count, max;		   /* # vertices, max # allowed */
     VERTEX *ptr;		   /* dynamically allocated */
-  } VERTICES;
+  };
 
-  typedef int (*TRI)(int, int, int, VERTICES);
-
-  typedef struct corner {		   /* corner of a cube */
+  struct CORNER {		   /* corner of a cube */
     int i, j, k;		   /* (i, j, k) is index within lattice */
     double x, y, z, value;	   /* location and function value */
-  } CORNER;
+  };
 
-  typedef struct cube {		   /* partitioning cell (cube) */
+  struct CUBE {		   /* partitioning cell (cube) */
     int i, j, k;		   /* lattice location of cube */
     CORNER *corners[8];		   /* eight corners */
-  } CUBE;
+  };
 
-  typedef struct cubes {		   /* linked list of cubes acting as stack */
+  struct CUBES {		   /* linked list of cubes acting as stack */
     CUBE cube;			   /* a single cube */
-    struct cubes *next;		   /* remaining elements */
-  } CUBES;
+    CUBES *next;		   /* remaining elements */
+  };
 
-  typedef struct centerlist {	   /* list of cube locations */
+  struct CENTERLIST {	   /* list of cube locations */
     int i, j, k;		   /* cube location */
-    struct centerlist *next;	   /* remaining elements */
-  } CENTERLIST;
+    CENTERLIST *next;	   /* remaining elements */
+  };
 
-  typedef struct cornerlist {	   /* list of corners */
+  struct CORNERLIST {	   /* list of corners */
     int i, j, k;		   /* corner id */
     double value;		   /* corner value */
-    struct cornerlist *next;	   /* remaining elements */
-  } CORNERLIST;
+    CORNERLIST *next;	   /* remaining elements */
+  };
 
-  typedef struct edgelist {	   /* list of edges */
+  struct EDGELIST {	   /* list of edges */
     int i1, j1, k1, i2, j2, k2;	   /* edge corner ids */
     int vid;			   /* vertex id */
-    struct edgelist *next;	   /* remaining elements */
-  } EDGELIST;
+    EDGELIST *next;	   /* remaining elements */
+  };
 
-  typedef struct intlist {	   /* list of integers */
+  struct INTLIST {	   /* list of integers */
     int i;			   /* an integer */
-    struct intlist *next;	   /* remaining elements */
-  } INTLIST;
+    INTLIST *next;	   /* remaining elements */
+  };
 
-  typedef struct intlists {	   /* list of list of integers */
+  struct INTLISTS {	   /* list of list of integers */
     INTLIST *list;		   /* a list of integers */
-    struct intlists *next;	   /* remaining elements */
-  } INTLISTS;
+    INTLISTS *next;	   /* remaining elements */
+  };
 
-  typedef struct process {	   /* parameters, function, storage */
+  struct PROCESS {	   /* parameters, function, storage */
     double size, delta;		   /* cube size, normal delta */
     int bounds;			   /* cube range within lattice */
     POINT start;		   /* start point on surface */
@@ -116,648 +124,49 @@ public:
     CENTERLIST **centers;	   /* cube center hash table */
     CORNERLIST **corners;	   /* corner value hash table */
     EDGELIST **edges;		   /* edge and vertex id hash table */
-  } PROCESS;
+  };
 
-  void (*progress_callback)(int v, int max);
-  unsigned int progress_step;
-  unsigned int progress_max;
-
-  int gntris;	     /* global needed by application */
-  VERTICES gvertices;  /* global needed by application */
-  ImplicitSurface3D *is;
-
-  /* triangle: called by polygonize() for each triangle; write to stdout */
-
-  int triangle (int i1, int i2, int i3, VERTICES vertices)
-    {
-      gvertices = vertices;
-      gntris++;
-
-      indices.push_back(i1);
-      indices.push_back(i2);
-      indices.push_back(i3);
-    
-      return 1;
-    }
-
-
-/**** An Implicit Surface Polygonizer ****/
-
-
-/* polygonize: polygonize the implicit surface function
- *   arguments are:
- *	 double function (x, y, z)
- *		 double x, y, z (an arbitrary 3D point)
- *	     the implicit surface function
- *	     return negative for inside, positive for outside
- *	 double size
- *	     width of the partitioning cube
- *	 int bounds
- *	     max. range of cubes (+/- on the three axes) from first cube
- *	 double x, y, z
- *	     coordinates of a starting point on or near the surface
- *	     may be defaulted to 0., 0., 0.
- *	 int triproc (i1, i2, i3, vertices)
- *		 int i1, i2, i3 (indices into the vertex array)
- *		 VERTICES vertices (the vertex array, indexed from 0)
- *	     called for each triangle
- *	     the triangle coordinates are (for i = i1, i2, i3):
- *		 vertices.ptr[i].position.x, .y, and .z
- *	     vertices are ccw when viewed from the out (positive) side
- *		 in a left-handed coordinate system
- *	     vertex normals point outwards
- *	     return 1 to continue, 0 to abort
- *	 int mode
- *	     TET: decompose cube and polygonize six tetrahedra
- *	     NOTET: polygonize cube directly
- *   returns error or NULL
- */
-  char *polygonize (double size, 
-                    int bounds, 
-                    double x, double y, double z, 
-                    bool enableTet)
-    {
-      PROCESS p;
-      int n, noabort;
-      unsigned int i=0;
-//      CORNER *setcorner();
-      TEST in, out;
-  
-      p.size = size;
-      p.bounds = bounds;
-      p.delta = size/(double)(RES*RES);
-      //p.delta = size/(double)(1000);
-  
-      /* allocate hash tables and build cube polygon table: */
-      p.centers = (CENTERLIST **) mycalloc(HASHSIZE,sizeof(CENTERLIST *));
-      p.corners = (CORNERLIST **) mycalloc(HASHSIZE,sizeof(CORNERLIST *));
-      p.edges =	(EDGELIST   **) mycalloc(2*HASHSIZE,sizeof(EDGELIST *));
-      makecubetable();
-  
-      /* find point on surface, beginning search at (x, y, z): */
-      srand(1);
-      in = find(1, &p, x, y, z);
-      out = find(0, &p, x, y, z);
-      if (!in.ok || !out.ok) return "can't find starting point";
-      converge(&in.p, &out.p, in.value, &p.start);
-  
-      /* push initial cube on stack: */
-      p.cubes = (CUBES *) mycalloc(1, sizeof(CUBES)); /* list of 1 */
-      p.cubes->cube.i = p.cubes->cube.j = p.cubes->cube.k = 0;
-      p.cubes->next = NULL;
-
-      /* set corners of initial cube: */
-      for (n = 0; n < 8; n++)
-        p.cubes->cube.corners[n] = setcorner(&p, BIT(n,2), BIT(n,1), BIT(n,0));
-  
-      p.vertices.count = p.vertices.max = 0; /* no vertices yet */
-      p.vertices.ptr = NULL;
-  
-      setcenter(p.centers, 0, 0, 0);
-
-      while (p.cubes != NULL) { /* process active cubes till none left */
-        i++;
-        CUBE c;
-        CUBES *temp = p.cubes;
-        c = p.cubes->cube;
-    
-        noabort = enableTet?
-                  /* either decompose into tetrahedra and polygonize: */
-                  dotet(&c, LBN, LTN, RBN, LBF, &p) &&
-                  dotet(&c, RTN, LTN, LBF, RBN, &p) &&
-                  dotet(&c, RTN, LTN, LTF, LBF, &p) &&
-                  dotet(&c, RTN, RBN, LBF, RBF, &p) &&
-                  dotet(&c, RTN, LBF, LTF, RBF, &p) &&
-                  dotet(&c, RTN, LTF, RTF, RBF, &p)
-                  :
-                  /* or polygonize the cube directly: */
-                  docube(&c, &p);
-        if (! noabort) return "aborted";
-    
-        /* pop current cube from stack */
-        p.cubes = p.cubes->next;
-        free((char *) temp);
-        /* test six face directions, maybe add to stack: */
-        testface(c.i-1, c.j, c.k, &c, L, LBN, LBF, LTN, LTF, &p);
-        testface(c.i+1, c.j, c.k, &c, R, RBN, RBF, RTN, RTF, &p);
-        testface(c.i, c.j-1, c.k, &c, B, LBN, LBF, RBN, RBF, &p);
-        testface(c.i, c.j+1, c.k, &c, T, LTN, LTF, RTN, RTF, &p);
-        testface(c.i, c.j, c.k-1, &c, N, LBN, LTN, RBN, RTN, &p);
-        testface(c.i, c.j, c.k+1, &c, F, LBF, LTF, RBF, RTF, &p);
-#if 0
-        if(i%progress_step==0)
-          if(i<progress_max)
-            progress_callback(i,progress_max);
-          else
-            progress_callback(99, 100);
-#endif
-      }
-//    progress_callback(100, 100);
-
-      return NULL;
-    }
-
-
-/* testface: given cube at lattice (i, j, k), and four corners of face,
- * if surface crosses face, compute other four corners of adjacent cube
- * and add _new cube to cube stack */
-
-  void testface (int i, int j, int k, 
-                 CUBE *old, int face, 
-                 int c1, int c2, int c3, int c4, PROCESS *p)
-    //CUBE *old;
-    //PROCESS *p;
-    //int i, j, k, face, c1, c2, c3, c4;
-    {
-      CUBE _new;
-      CUBES *oldcubes = p->cubes;
-//      CORNER *setcorner();
-      static int facebit[6] = {2, 2, 1, 1, 0, 0};
-      int n, pos = old->corners[c1]->value > 0.0 ? 1 : 0, bit = facebit[face];
-
-      /* test if no surface crossing, cube out of bounds, or already visited: */
-      if ((old->corners[c2]->value > 0) == pos &&
-          (old->corners[c3]->value > 0) == pos &&
-          (old->corners[c4]->value > 0) == pos) return;
-      if (abs(i) > p->bounds || abs(j) > p->bounds || abs(k) > p->bounds) return;
-      if (setcenter(p->centers, i, j, k)) return;
-
-      /* create _new cube: */
-      _new.i = i;
-      _new.j = j;
-      _new.k = k;
-      for (n = 0; n < 8; n++) _new.corners[n] = NULL;
-      _new.corners[FLIP(c1, bit)] = old->corners[c1];
-      _new.corners[FLIP(c2, bit)] = old->corners[c2];
-      _new.corners[FLIP(c3, bit)] = old->corners[c3];
-      _new.corners[FLIP(c4, bit)] = old->corners[c4];
-      for (n = 0; n < 8; n++)
-	if (_new.corners[n] == NULL)
-          _new.corners[n] = setcorner(p, i+BIT(n,2), j+BIT(n,1), k+BIT(n,0));
-
-      /*add cube to top of stack: */
-      p->cubes = (CUBES *) mycalloc(1, sizeof(CUBES));
-      p->cubes->cube = _new;
-      p->cubes->next = oldcubes;
-    }
-
-
-/* setcorner: return corner with the given lattice location
-   set (and cache) its function value */
-
-  CORNER *setcorner (PROCESS *p, int i, int j, int k)
-    //int i, j, k;
-    //PROCESS *p;
-    {
-      /* for speed, do corner value caching here */
-      CORNER *c = (CORNER *) mycalloc(1, sizeof(CORNER));
-      int index = HASH(i, j, k);
-      CORNERLIST *l = p->corners[index];
-      c->i = i; c->x = p->start.x+((double)i-.5)*p->size;
-      c->j = j; c->y = p->start.y+((double)j-.5)*p->size;
-      c->k = k; c->z = p->start.z+((double)k-.5)*p->size;
-      for (; l != NULL; l = l->next)
-	if (l->i == i && l->j == j && l->k == k) {
-          c->value = l->value;
-          return c;
-        }
-      l = (CORNERLIST *) mycalloc(1, sizeof(CORNERLIST));
-      l->i = i; l->j = j; l->k = k;
-      l->value = c->value = fun(c->x, c->y, c->z);
-      l->next = p->corners[index];
-      p->corners[index] = l;
-      return c;
-    }
-
-
-/* find: search for point with value of given sign (0: neg, 1: pos) */
-
-  TEST find (int sign, PROCESS *p, double x, double y, double z)
-    //int sign;
-    //PROCESS *p;
-    //double x, y, z;
-    {
-      int i;
-      TEST test;
-      double range = p->size;
-      test.ok = 1;
-      for (i = 0; i < 10000; i++) {
-	test.p.x = x+range*(RAND()-0.5);
-	test.p.y = y+range*(RAND()-0.5);
-	test.p.z = z+range*(RAND()-0.5);
-	test.value = fun(test.p.x, test.p.y, test.p.z);
-	if (sign == (test.value > 0.0)) return test;
-	range = range*1.0005; /* slowly expand search outwards */
-      }
-      test.ok = 0;
-      return test;
-    }
-
-
-/**** Tetrahedral Polygonization ****/
-
-
-/* dotet: triangulate the tetrahedron
- * b, c, d should appear clockwise when viewed from a
- * return 0 if client aborts, 1 otherwise */
-
-  int dotet (CUBE *cube, 
-             int c1, int c2, int c3, int c4, 
-             PROCESS *p)
-    //CUBE *cube;
-    //int c1, c2, c3, c4;
-    //PROCESS *p;
-    {
-      CORNER *a = cube->corners[c1];
-      CORNER *b = cube->corners[c2];
-      CORNER *c = cube->corners[c3];
-      CORNER *d = cube->corners[c4];
-      int index = 0, apos, bpos, cpos, dpos, e1, e2, e3, e4, e5, e6;
-      if ((apos = (a->value > 0.0))) index += 8;
-      if ((bpos = (b->value > 0.0))) index += 4;
-      if ((cpos = (c->value > 0.0))) index += 2;
-      if ((dpos = (d->value > 0.0))) index += 1;
-      /* index is now 4-bit number representing one of the 16 possible cases */
-      if (apos != bpos) e1 = vertid(a, b, p);
-      if (apos != cpos) e2 = vertid(a, c, p);
-      if (apos != dpos) e3 = vertid(a, d, p);
-      if (bpos != cpos) e4 = vertid(b, c, p);
-      if (bpos != dpos) e5 = vertid(b, d, p);
-      if (cpos != dpos) e6 = vertid(c, d, p);
-      /* 14 productive tetrahedral cases (0000 and 1111 do not yield polygons */
-      switch (index) {
-      case 1:	 return triangle(e5, e6, e3, p->vertices);
-      case 2:	 return triangle(e2, e6, e4, p->vertices);
-      case 3:	 return triangle(e3, e5, e4, p->vertices) &&
-                   triangle(e3, e4, e2, p->vertices);
-      case 4:	 return triangle(e1, e4, e5, p->vertices);
-      case 5:	 return triangle(e3, e1, e4, p->vertices) &&
-                   triangle(e3, e4, e6, p->vertices);
-      case 6:	 return triangle(e1, e2, e6, p->vertices) &&
-                   triangle(e1, e6, e5, p->vertices);
-      case 7:	 return triangle(e1, e2, e3, p->vertices);
-      case 8:	 return triangle(e1, e3, e2, p->vertices);
-      case 9:	 return triangle(e1, e5, e6, p->vertices) &&
-                   triangle(e1, e6, e2, p->vertices);
-      case 10: return triangle(e1, e3, e6, p->vertices) &&
-                 triangle(e1, e6, e4, p->vertices);
-      case 11: return triangle(e1, e5, e4, p->vertices);
-      case 12: return triangle(e3, e2, e4, p->vertices) &&
-                 triangle(e3, e4, e5, p->vertices);
-      case 13: return triangle(e6, e2, e4, p->vertices);
-      case 14: return triangle(e5, e3, e6, p->vertices);
-      }
-      return 1;
-    }
 
 /**** Cubical Polygonization (optional) ****/
+  int gntris;	     /* global needed by application */
+  VERTICES gvertices;  /* global needed by application */
 
-  enum {LB=0, LT, LN, LF, RB, RT, RN, RF, BN, BF, TN, TF} edge;
 
   INTLISTS *cubetable[256];
 
-  static const Corner corner1[12];// = {LBN,LTN,LBN,LBF,RBN,RTN,RBN,RBF,LBN,LBF,LTN,LTF};
-  static const Corner corner2[12];// = {LBF,LTF,LTN,LTF,RBF,RTF,RTN,RTF,RBN,RBF,RTN,RTF};
-  static const Direction leftface[12];// = {B,  L,  L,  F,  R,  T,  N,  R,  N,  B,  T,  F};
-  static const Direction rightface[12];// = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F,  N,  T};
+  static const Corner corner1[12];
+  static const Corner corner2[12];
+  static const Direction leftface[12];
+  static const Direction rightface[12];
 
+  double RAND();
+  int HASH(int i, int j, int k);
+  int BIT(int i, int bit);
+  int FLIP(int i, int bit);
 
-/* docube: triangulate the cube directly, without decomposition */
-
-  int docube (CUBE *cube, PROCESS * p)
-    //CUBE *cube;
-    //PROCESS *p;
-    {
-      INTLISTS *polys;
-      int i, index = 0;
-      for (i = 0; i < 8; i++) if (cube->corners[i]->value > 0.0) index += (1<<i);
-      for (polys = cubetable[index]; polys; polys = polys->next) {
-	INTLIST *edges;
-	int a = -1, b = -1, count = 0;
-	for (edges = polys->list; edges; edges = edges->next) {
-          CORNER *c1 = cube->corners[corner1[edges->i]];
-          CORNER *c2 = cube->corners[corner2[edges->i]];
-          int c = vertid(c1, c2, p);
-          if (++count > 2 && ! triangle(a, b, c, p->vertices)) return 0;
-          if (count < 3) a = b;
-          b = c;
-	}
-      }
-      return 1;
-    }
-
-
-/* nextcwedge: return next clockwise edge from given edge around given face */
-
-  int nextcwedge (int edge, int face)
-    //int edge, face;
-    {
-      switch (edge) {
-      case LB: return (face == L)? LF : BN;
-      case LT: return (face == L)? LN : TF;
-      case LN: return (face == L)? LB : TN;
-      case LF: return (face == L)? LT : BF;
-      case RB: return (face == R)? RN : BF;
-      case RT: return (face == R)? RF : TN;
-      case RN: return (face == R)? RT : BN;
-      case RF: return (face == R)? RB : TF;
-      case BN: return (face == B)? RB : LN;
-      case BF: return (face == B)? LB : RF;
-      case TN: return (face == T)? LT : RN;
-      case TF: return (face == T)? RT : LF;
-      }
-      return 0;
-    }
-
-
-/* otherface: return face adjoining edge that is not the given face */
-
-  int otherface (int edge, int face)
-    //int edge, face;
-    {
-      int other = leftface[edge];
-      return face == other? rightface[edge] : other;
-    }
-
-
-/* makecubetable: create the 256 entry table for cubical polygonization */
-
-  void makecubetable (void) {
-      int i, e, c, done[12], pos[8];
-      for (i = 0; i < 256; i++) {
-	for (e = 0; e < 12; e++) done[e] = 0;
-	for (c = 0; c < 8; c++) pos[c] = BIT(i, c);
-	for (e = 0; e < 12; e++)
-          if (!done[e] && (pos[corner1[e]] != pos[corner2[e]])) {
-            INTLIST *ints = 0;
-            INTLISTS *lists = (INTLISTS *) mycalloc(1, sizeof(INTLISTS));
-            int start = e, edge = e;
-            /* get face that is to right of edge from pos to neg corner: */
-            int face = pos[corner1[e]]? rightface[e] : leftface[e];
-            while (1) {
-              edge = nextcwedge(edge, face);
-              done[edge] = 1;
-              if (pos[corner1[edge]] != pos[corner2[edge]]) {
-                INTLIST *tmp = ints;
-                ints = (INTLIST *) mycalloc(1, sizeof(INTLIST));
-                ints->i = edge;
-                ints->next = tmp; /* add edge to head of list */
-                if (edge == start) break;
-                face = otherface(edge, face);
-              }
-            }
-            lists->list = ints; /* add ints to head of table entry */
-            lists->next = cubetable[i];
-            cubetable[i] = lists;
-          }
-      }
-
-      for(i=0;i<256;i++) {
-        if(!cubetable[i]) continue;
-        INTLIST *list = cubetable[i]->list;
-        std::cerr << "mc2 cubetable[" << i<<"]= ";
-        while(list) {
-          std::cerr << list->i << " ";
-          list = list->next;
-        }
-        std::cerr << std::endl;
-      }
-    }
-
-
-/**** Storage ****/
-
-
-/* mycalloc: return successful calloc or exit program */
-
-  void *mycalloc (int nitems, int nbytes)
-    //int nitems, nbytes;
-    {
-      void *ptr = calloc(nitems, nbytes);
-      if (ptr != NULL) return ptr;
-      fprintf(stderr, "can't calloc %d bytes\n", nitems*nbytes);
-      exit(1);
-    }
-
-
-/* setcenter: set (i,j,k) entry of table[]
- * return 1 if already set; otherwise, set and return 0 */
-
-  int setcenter(CENTERLIST **table, int i, int j, int k)
-    //CENTERLIST *table[];
-    //int i, j, k;
-    {
-      int index = HASH(i, j, k);
-      CENTERLIST *_new, *l, *q = table[index];
-      for (l = q; l != NULL; l = l->next)
-	if (l->i == i && l->j == j && l->k == k) return 1;
-      _new = (CENTERLIST *) mycalloc(1, sizeof(CENTERLIST));
-      _new->i = i; _new->j = j; _new->k = k; _new->next = q;
-      table[index] = _new;
-      return 0;
-    }
-
-
-/* setedge: set vertex id for edge */
-
-  void setedge (EDGELIST **table, 
-                int i1, int j1, int k1, 
-                int i2, int j2, int k2, 
-                int vid)
-    //EDGELIST *table[];
-    //int i1, j1, k1, i2, j2, k2, vid;
-    {
-      unsigned int index;
-      EDGELIST *_new;
-      if (i1>i2 || (i1==i2 && (j1>j2 || (j1==j2 && k1>k2)))) {
-	int t=i1; i1=i2; i2=t; t=j1; j1=j2; j2=t; t=k1; k1=k2; k2=t;
-      }
-      index = HASH(i1, j1, k1) + HASH(i2, j2, k2);
-      _new = (EDGELIST *) mycalloc(1, sizeof(EDGELIST));
-      _new->i1 = i1; _new->j1 = j1; _new->k1 = k1;
-      _new->i2 = i2; _new->j2 = j2; _new->k2 = k2;
-      _new->vid = vid;
-      _new->next = table[index];
-      table[index] = _new;
-    }
-
-
-/* getedge: return vertex id for edge; return -1 if not set */
-
-  int getedge (EDGELIST **table,
-               int  i1, int j1, int  k1,
-               int  i2, int  j2,int  k2)
-    //EDGELIST *table[];
-    //int i1, j1, k1, i2, j2, k2;
-    {
-      EDGELIST *q;
-      if (i1>i2 || (i1==i2 && (j1>j2 || (j1==j2 && k1>k2)))) {
-	int t=i1; i1=i2; i2=t; t=j1; j1=j2; j2=t; t=k1; k1=k2; k2=t;
-      };
-      q = table[HASH(i1, j1, k1)+HASH(i2, j2, k2)];
-      for (; q != NULL; q = q->next)
-	if (q->i1 == i1 && q->j1 == j1 && q->k1 == k1 &&
-	    q->i2 == i2 && q->j2 == j2 && q->k2 == k2)
-          return q->vid;
-      return -1;
-    }
-
-
-/**** Vertices ****/
-
-
-/* vertid: return index for vertex on edge:
- * c1->value and c2->value are presumed of different sign
- * return saved index if any; else compute vertex and save */
-
-  int vertid (CORNER* c1, CORNER* c2, PROCESS* p)
-    {
-      VERTEX v;
-      POINT a, b;
-      int vid = getedge(p->edges, c1->i, c1->j, c1->k, c2->i, c2->j, c2->k);
-      if (vid != -1) return vid;			     /* previously computed */
-      a.x = c1->x; a.y = c1->y; a.z = c1->z;
-      b.x = c2->x; b.y = c2->y; b.z = c2->z;
-      converge(&a, &b, c1->value, &v.position); /* position */
-      vnormal(&v.position, p, &v.normal);			   /* normal */
-      addtovertices(&p->vertices, v);			   /* save vertex */
-      vid = p->vertices.count-1;
-      setedge(p->edges, c1->i, c1->j, c1->k, c2->i, c2->j, c2->k, vid);
-      return vid;
-    }
-
-
-/* addtovertices: add v to sequence of vertices */
-
-  void addtovertices (VERTICES *vertices,VERTEX v)
-    {
-      if (vertices->count == vertices->max) {
-	int i;
-	VERTEX *_new;
-	vertices->max = vertices->count == 0 ? 10 : 2*vertices->count;
-	_new = (VERTEX *) mycalloc(vertices->max, sizeof(VERTEX));
-	for (i = 0; i < vertices->count; i++) _new[i] = vertices->ptr[i];
-	if (vertices->ptr != NULL) free((char *) vertices->ptr);
-	vertices->ptr = _new;
-      }
-      vertices->ptr[vertices->count++] = v;
-    }
-
-  void vnormal (POINT* point, PROCESS* p, POINT* v)
-    {
-      Vec3f norm, dest(point->x, point->y, point->z);
-  
-      is->evalNormal(dest, norm);
-      //is.evalNormalAna(dest, norm);
-      v->x = norm[0];
-      v->y = norm[1];
-      v->z = norm[2];
-    }
-
-
-/* converge: from two points of differing sign, converge to zero crossing */
-
-  void converge (POINT* p1, POINT* p2, 
-                 double v, 
-                 POINT* p)
-    {
-      int i = 0;
-      POINT pos, neg;
-      if (v < 0) {
-	pos.x = p2->x; pos.y = p2->y; pos.z = p2->z;
-	neg.x = p1->x; neg.y = p1->y; neg.z = p1->z;
-      }
-      else {
-	pos.x = p1->x; pos.y = p1->y; pos.z = p1->z;
-	neg.x = p2->x; neg.y = p2->y; neg.z = p2->z;
-      }
-      while (1) {
-	p->x = 0.5*(pos.x + neg.x);
-	p->y = 0.5*(pos.y + neg.y);
-	p->z = 0.5*(pos.z + neg.z);
-	if (i++ == RES) return;
-	if ((fun(p->x, p->y, p->z)) > 0.0)
-        {pos.x = p->x; pos.y = p->y; pos.z = p->z;}
-	else {neg.x = p->x; neg.y = p->y; neg.z = p->z;}
-      }
-    }
-
-
-  double fun(double x, double y, double z)
-    {
-      return -is->eval(Vec3f(x,y,z));
-    }
-
-public:
-  Mc():RES(10) {
-    memset(cubetable, 0, 256*sizeof(int));
-  }
-  
-  void mc_setcallback(void (*c)(int, int), unsigned int step) {
-    progress_callback = c;
-    progress_step = step;
-  }
-
-
-  void domc(ImplicitSurface3D *imps){
-          is = imps;
-
-      char *err;
-      gntris = 0;
-
-  
-      if ((err = polygonize(0.05, 200,
-                            0, 0, 0,
-                            false)) != NULL) 
-      {
-        std::cout << "Error " << err << std::endl;
-      }
-
-      std::cout << gntris << " triangles, " 
-           << gvertices.count << "  vertices\n" << std::endl; 
-  }
-
-  void domc(ImplicitSurface3D *imps, const Box3f &bbox)
-    {
-      is = imps;
-
-      char *err;
-      gntris = 0;
-
-  
-//BUG: The Pointset bounding box doesn't seem to be a good bounding
-//	box for the surface
-      Vec3f size=bbox.getSize();
-      int bounds = (int)(size.maxValue()/(2*0.05))+20;
-//  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
-      progress_max = (int)((size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)/8);
-      if ((err = polygonize(0.05, bounds, 
-                            0, 0, 0,
-                            false)) != NULL) 
-      {
-        std::cout << "Error " << err << std::endl;
-      }
-
-      std::cout << gntris << " triangles, " 
-           << gvertices.count << "  vertices\n" << std::endl; 
-    }
-
-  void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals) {
-    for (int i = 0; i < gvertices.count; i++) {
-      VERTEX v;
-      v = gvertices.ptr[i];
-    
-      vertices.push_back(Vec3f(v.position.x, v.position.y, v.position.z));
-      normals.push_back(Vec3f(v.normal.x, v.normal.y, v.normal.z));
-    }
-  }
-
-  const std::vector<unsigned int>& getIndices() {
-    return indices;
-  }
+  int triangle (int i1, int i2, int i3, VERTICES vertices);
+  char *polygonize (double size, int bounds, double x, double y, double z, 
+                        bool enableTet);
+  void testface (int i, int j, int k, CUBE *old, int face, int c1, int c2,
+                     int c3, int c4, PROCESS *p);
+  CORNER *setcorner (PROCESS *p, int i, int j, int k);
+  TEST find (int sign, PROCESS *p, double x, double y, double z);
+  int dotet (CUBE *cube, int c1, int c2, int c3, int c4, PROCESS *p);
+  int docube (CUBE *cube, PROCESS * p);
+  int nextcwedge (int edge, int face);
+  int otherface (int edge, int face);
+  void makecubetable (void);
+  void *mycalloc (int nitems, int nbytes);
+  int setcenter(CENTERLIST **table, int i, int j, int k);
+  void setedge (EDGELIST **table, int i1, int j1, int k1, int i2, int j2,
+                    int k2, int vid);
+  int getedge (EDGELIST **table, int  i1, int j1, int  k1, int  i2, int  j2,int  k2);
+  int vertid (CORNER* c1, CORNER* c2, PROCESS* p);
+  void addtovertices (VERTICES *vertices,VERTEX v);
+  void vnormal (POINT* point, PROCESS* p, POINT* v);
+  void converge (POINT* p1, POINT* p2, double v,   POINT* p);
+  double fun(double x, double y, double z);
 };
 
-const Mc::Corner Mc::corner1[12] = {LBN,LTN,LBN,LBF,RBN,RTN,RBN,RBF,LBN,LBF,LTN,LTF};
-const Mc::Corner Mc::corner2[12] = {LBF,LTF,LTN,LTF,RBF,RTF,RTN,RTF,RBN,RBF,RTN,RTF};
-const Mc::Direction Mc::leftface[12] = {B,  L,  L,  F,  R,  T,  N,  R,  N,  B,  T,  F};
-const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F,  N,  T};
+
+#endif
