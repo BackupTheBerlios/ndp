@@ -76,6 +76,10 @@ public:
     return conjugate()/norm();
   }
 
+  void toIdentity() {
+    setValues(0, 0, 0, 1);
+  }
+  
   void unitToMatrix44(T m[4][4]) const {
     T x2=v.x*v.x;
     T y2=v.y*v.y;
@@ -94,6 +98,7 @@ public:
     m[3][3] = 1;  
   }
 
+  // Reference: Stan Melax, Game Programming Gems
   void toRotationArc(Vector3<T> &u, Vector3<T> &v) {
     u.normalize();
     v.normalize();
