@@ -15,10 +15,6 @@ template<class T> class Matrix3{
     data[2][0] = x; data[2][1] = x; data[2][2] = x;
   }
 
-  Matrix3( Matrix3<T>& m ) {
-    memcpy( data, m.data, 9*sizeof( T ) );
-  }
-
   inline void Zero() {
     memset( data, 0, 9*sizeof( T ) );
   }
@@ -28,7 +24,7 @@ template<class T> class Matrix3{
     data[0][0] = 1.0; data[1][1] = 1.0; data[2][2] = 1.0;
   }
 
-  inline Matrix3<T>& operator*( Matrix3<T>& m ) {
+  inline Matrix3<T> operator*( const Matrix3<T>& m ) {
     Matrix3<T> o;
     for( int i=0; i<3; i++){
       o.data[i][0] = data[i][0] * m.data[0][0] +
@@ -41,17 +37,17 @@ template<class T> class Matrix3{
     return o;
   }
 
-  inline Matrix3<T>& operator+( Matrix3<T>& m ) {
+  inline Matrix3<T> operator+( const Matrix3<T>& m ) {
     Matrix3<T> o;    
     for( int i=0; i<3; i++){
       o.data[i][0] = m.data[i][0] + data[i][0];
       o.data[i][1] = m.data[i][1] + data[i][1];
       o.data[i][2] = m.data[i][2] + data[i][2];			     
     }
-    return *o;
+    return o;
   }
 
-  inline Matrix3<T>& operator-( Matrix3<T>& m ) {
+  inline Matrix3<T>& operator-( const Matrix3<T>& m ) {
     Matrix3<T> o;    
     for( int i=0; i<3; i++){
       o.data[i][0] = m.data[i][0] - data[i][0];
@@ -61,7 +57,7 @@ template<class T> class Matrix3{
     return o;
   }
 
-  inline Matrix3<T>& operator+=( Matrix3<T>& m ) {
+  inline Matrix3<T>& operator+=( const Matrix3<T>& m ) {
     for( int i=0; i<3; i++){
       data[i][0] += m.data[i][0] ;
       data[i][1] += m.data[i][1] ;
@@ -70,7 +66,7 @@ template<class T> class Matrix3{
     return *this;
   }
 
-  inline Matrix3<T>& operator-=( Matrix3<T>& m ) {
+  inline Matrix3<T>& operator-=( const Matrix3<T>& m ) {
     for( int i=0; i<3; i++){
       data[i][0] -= m.data[i][0] ;
       data[i][1] -= m.data[i][1] ;
@@ -79,7 +75,7 @@ template<class T> class Matrix3{
     return *this;
   }
 
-  inline Matrix3<T>& operator*=( Matrix3<T>& m ) {
+  inline Matrix3<T>& operator*=( const Matrix3<T>& m ) {
     T a,b,c;
     for( int i=0; i<3; i++){
       a = data[i][0]; b = data[i][1]; c = data[i][2];
@@ -101,11 +97,6 @@ template<class T> class Matrix3{
     data[0][0] /= f;  data[0][1] /= f;  data[0][2] /= f;
     data[1][0] /= f;  data[1][1] /= f;  data[1][2] /= f;
     data[2][0] /= f;  data[2][1] /= f;  data[2][2] /= f;
-    return *this;
-  }
-
-  inline Matrix3<T>& operator=( Matrix3<T>& m ) {
-    memcpy( data, m.data, 9*sizeof( T ));
     return *this;
   }
 

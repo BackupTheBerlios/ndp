@@ -15,10 +15,6 @@ template<class T> class Matrix4{
     data[3][0] = x; data[3][1] = x; data[3][2] = x; data[3][3] = x;
   }
 
-  Matrix4( Matrix4<T>& m ) {
-    memcpy( data, m.data, 16*sizeof( T ) );
-  }
-
   inline void Zero() {
     memset( data, 0, 16*sizeof( T ) );
   }
@@ -28,7 +24,7 @@ template<class T> class Matrix4{
     data[0][0] = 1.0; data[1][1] = 1.0; data[2][2] = 1.0; data[3][3] = 1.0;
   }
 
-  Matrix4<T>& operator*( Matrix4<T>& m ) {
+  Matrix4<T> operator*( const Matrix4<T>& m ) {
     Matrix4<T> o;
     for( int i=0; i<4; i++){
       o.data[i][0] = data[i][0] * m.data[0][0] + data[i][1] * m.data[1][0] + 
@@ -43,7 +39,7 @@ template<class T> class Matrix4{
     return o;
   }
   
-  Matrix4<T>& operator+( Matrix4<T>& m ) {
+  Matrix4<T> operator+( const Matrix4<T>& m ) {
     Matrix4<T> o;    
     for( int i=0; i<4; i++){
       o.data[i][0] = m.data[i][0] + data[i][0];
@@ -54,7 +50,7 @@ template<class T> class Matrix4{
     return o;
   }
   
-  Matrix4<T>& operator-( Matrix4<T>& m ) {
+  Matrix4<T> operator-( const Matrix4<T>& m ) {
     Matrix4<T> o;    
     for( int i=0; i<4; i++){
       o.data[i][0] = m.data[i][0] - data[i][0];
@@ -62,10 +58,10 @@ template<class T> class Matrix4{
       o.data[i][2] = m.data[i][2] - data[i][2];
       o.data[i][3] = m.data[i][3] - data[i][3];
     }
-    return *o;
+    return o;
   }
 
-  Matrix4<T>& operator+=( Matrix4<T>& m ) {
+  Matrix4<T>& operator+=( const Matrix4<T>& m ) {
     for( int i=0; i<4; i++){
       data[i][0] += m.data[i][0];
       data[i][1] += m.data[i][1];
@@ -75,7 +71,7 @@ template<class T> class Matrix4{
     return *this;
   }
 
-  Matrix4<T>& operator-=( Matrix4<T>& m ) {
+  Matrix4<T>& operator-=( const Matrix4<T>& m ) {
     for( int i=0; i<4; i++){
       data[i][0] -= m.data[i][0] ;
       data[i][1] -= m.data[i][1] ;
@@ -85,7 +81,7 @@ template<class T> class Matrix4{
     return *this;
   }
 
-  Matrix4<T>& operator*=( Matrix4<T>& m ) {
+  Matrix4<T>& operator*=( const Matrix4<T>& m ) {
     T a,b,c,d;
     for( int i=0; i<4; i++){
       a = data[i][0]; b = data[i][1]; c = data[i][2]; d = data[i][3];
@@ -115,11 +111,6 @@ template<class T> class Matrix4{
       data[i][0] /= f; data[i][1] /= f;  
       data[i][2] /= f; data[i][3] /= f;
     }
-    return *this;
-  }
-
-  Matrix4<T>& operator=( Matrix4<T>& m ) {
-    memcpy( data, m.data, 16*sizeof( T ));
     return *this;
   }
 
