@@ -267,8 +267,8 @@ void MWindow::menu_rendering_render() {
     /* normal coords*/
     vertices[i*3+1] = vec_normals[i];
     /* color */
-    //ims->evalColorRGB( vertices[i*3], vertices[i*3+2] );
-    vertices[i*3+2] = Vec3f( 0.5, 0.5, 0.5 );
+    ims->evalColorRGB( vertices[i*3], vertices[i*3+2] );
+    //    vertices[i*3+2] = Vec3f( 0.5, 0.5, 0.5 );
   }
 
   for( i=0; i< nindices; i++ )

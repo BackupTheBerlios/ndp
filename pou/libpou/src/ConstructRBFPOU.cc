@@ -21,9 +21,9 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 {
   int result;
   applyFilter(cs);
-  if (octree)
-    cells=const_cast<AreaSet *>(octree);
-  else {
+  //  if (octree)
+  //    cells=const_cast<AreaSet *>(octree);
+  //  else {
     dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
 
   unsigned int size=cells->size();
@@ -64,7 +64,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       rbf.push_back(newrbf);
       flag.push_back(OK_FLAG);
     }
-  }
+  //  }
 }
 
 void
