@@ -1,7 +1,8 @@
 /*
  *  OpenglWidget and OpenglView class
  *
- *  Copyright(C) 2004  Dalla Rosa Damien
+ *  Copyright(C) 2004  Damien Dalla Rosa, Thomas Arcila,
+ *                      Loic Martin, Benjamin Grange
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -19,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.39  2004/04/27 18:37:10  leserpent
+ * Changed authors
+ *
  * Revision 1.38  2004/04/27 17:55:37  lemartinpecheur
  * added light control
  *

@@ -1,3 +1,7 @@
+/*  Authors: Benjamin Grange, Damien Dalla Rosa, Thomas Arcila,
+ *           Loic Martin 
+ *  Original C code by Jules Bloomenthal, Xerox PARC.
+ */
 #ifndef MC_H
 #define MC_H
 
@@ -173,6 +177,9 @@ private:
 
 /* History:
 * $Log: mc.h,v $
+* Revision 1.9  2004/04/27 18:37:10  leserpent
+* Changed authors
+*
 * Revision 1.8  2004/04/26 07:46:11  leserpent
 * doMc throws std::runtime_error.
 * doMc stop when callback returns false.

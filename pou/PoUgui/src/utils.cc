@@ -1,7 +1,8 @@
 /*
  *  Useful functions
  *
- *  Copyright(C) 2004  Dalla Rosa Damien
+ *  Copyright(C) 2004  Damien Dalla Rosa, Thomas Arcila,
+ *                      Loic Martin, Benjamin Grange
  *
  *
  *  This program is free software; you can redistribute it and/or modify

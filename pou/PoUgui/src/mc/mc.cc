@@ -1,3 +1,8 @@
+/*  Authors: Benjamin Grange, Damien Dalla Rosa, Thomas Arcila,
+ *           Loic Martin 
+ *
+ *  Original C code by Jules Bloomenthal, Xerox PARC.
+ */
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -646,6 +651,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc.cc,v $
+* Revision 1.12  2004/04/27 18:37:10  leserpent
+* Changed authors
+*
 * Revision 1.11  2004/04/27 13:01:12  pumpkins
 * marching cubes portable
 * constructrbfpou asserts instead of exception
