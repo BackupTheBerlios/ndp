@@ -39,6 +39,7 @@ class MainWindow : public QMainWindow
 
  private:
   void CleanMemory();
+  void FillVector ( const PointSet &ps, std::vector<Point> &points );
 
   /* Application */
   QWorkspace *m_workspace;
@@ -48,7 +49,7 @@ class MainWindow : public QMainWindow
   SettingsForm *m_settingsform;
  
   /* Geometry */
-  PointSet m_pointset;
+  PointSet m_pointset, m_pointset_filtered;
   Vec3f m_initpoint;
   VertexBuffer *m_points;
   VertexBuffer *m_polys;

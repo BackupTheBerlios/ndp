@@ -20,6 +20,11 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.48  2004/04/28 21:14:37  leserpent
+ * Started to add show only selected points.
+ * Call settingsform->exec() instead of show()(must wait).
+ * BUG:the number of points into the vertexbuffer is not updated.
+ *
  * Revision 1.47  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -223,6 +228,15 @@ MainWindow::closeEvent( QCloseEvent *event )
 }
 
 void 
+MainWindow::FillVector( const PointSet &ps, std::vector<Point> &points )
+{
+  PointList::const_iterator psend = ps.end();
+  
+  for( PointList::const_iterator i = ps.begin(); i != psend; ++i)
+    points.push_back(**i);
+}
+
+void 
 MainWindow::MenuFileOpen() 
 {
   QString filename = QFileDialog::
@@ -243,10 +257,8 @@ MainWindow::MenuFileOpen()
 	return;
       }
 
-    PointList::iterator psend = m_pointset.end();
-    
-    for( PointList::iterator i=m_pointset.begin(); i != psend; ++i)
-      vecPoints.push_back(**i);
+    m_pointset_filtered.randomFilter(m_pointset, m_settingsform->getPointsCount ());
+    FillVector( m_pointset_filtered, vecPoints );
 
     m_points = new VertexBuffer(vecPoints, VertexBuffer::POLY_POINTS);
 
@@ -269,10 +281,22 @@ MainWindow::MenuFileClose()
   CleanMemory();
 }
 
+//FIXME: vertexbuffer is not modified
 void 
 MainWindow::MenuSettingsArgs() 
 {
-  m_settingsform->show();
+  unsigned int newNumPoints, oldNumPoints = m_settingsform->getPointsCount ();
+  m_settingsform->exec();
+  newNumPoints = m_settingsform->getPointsCount ();
+  if (oldNumPoints != newNumPoints) {
+    m_pointset_filtered.randomFilter(m_pointset, newNumPoints);
+    m_points->LockBuffer();
+    std::vector<Point> points = m_points->getDataPointer();
+    points.clear();
+    FillVector( m_pointset_filtered, points );
+    m_points->unLockBuffer();
+  }
+  std::cerr << oldNumPoints << " " << newNumPoints << std::endl;
 }
 
 void 
@@ -304,9 +328,7 @@ namespace
 void 
 MainWindow::MenuRenderingRender() 
 {
-  ImplicitSurface3D *ims;
   std::vector<Point> vecPoints;
-  int filter_npoints = m_settingsform->getPointsCount ();
   int mc_maxit = m_settingsform->getMaxIteration ();
   float mc_cubesize = m_settingsform->getCubeSize ();
   bool enabletet = m_settingsform->isTetEnable ();
@@ -327,31 +349,28 @@ MainWindow::MenuRenderingRender()
   m_qtgui->processEvents ();
 
   /* Start ImplicitSurface reconstruction */
-  /* First check if api is OK */
-  ims = new ImplicitSurface3D (id2rbftype [phi]);
-  if( !ims )
-    return ;
-  ims->setThresholds (tmin, tmax);
-  ims->setCallBack (callback, 10);
+  ImplicitSurface3D ims (id2rbftype [phi]);
+  ims.setThresholds (tmin, tmax);
+  ims.setCallBack (callback, 10);
 
-  ims->computeRGB (m_pointset, filter_npoints);
+  ims.computeRGB (m_pointset_filtered);
   if (!qpd)
     return;
   qpd->setLabelText ("Computing geometry...");
-  ims->computeGeometry (m_pointset, filter_npoints);
+  ims.computeGeometry (m_pointset_filtered);
 
   if (!qpd)
     return;
 
   qpd->setLabelText ("Polygonizing surface...");
-  boundingbox = ((AreaSetOctree *)ims->getOctree())->getBBox();
+  boundingbox = ((AreaSetOctree *)ims.getOctree())->getBBox();
   Mc MCubes(callback, 10);
   MCubes.setMaxIteration (mc_maxit);
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
   try
     {
-      MCubes.doMc (ims, boundingbox);
+      MCubes.doMc (&ims, boundingbox);
     } 
   catch(std::exception e) 
     {
