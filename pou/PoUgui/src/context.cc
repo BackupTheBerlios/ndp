@@ -37,7 +37,7 @@
 const float OpenglContext::DEF_ZOOM;
 const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
 
-OpenglContext::helpStruct OpenglContext::helpInfos[] = {
+OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
   'h', "Hide/Unhide this help screen",
   'p', "Hide/Unhide light",
   's', "Hide/Unhide statistics",

@@ -99,7 +99,7 @@ class OpenglContext {
     const QChar key;
     const QString helpString;
   };
-  static helpStruct helpInfos[];
+  static helpStruct helpInfos[10];
 
 };
 
