@@ -1,5 +1,7 @@
 2004-04-27  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/*: Added everybody to authors.
+
 	* libpou/src/math/matrix4.h: Trivial: removed useless comment
 
 2004-04-27 loic martin  <lemartinpecheur@berlios.de>
