@@ -6,6 +6,10 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.10  2004/04/06 16:49:32  leserpent
+ * ConstructRBFPOU::setcallback() can take two more parameters in order
+ * to show only one progress dialog during color computing.
+ *
  * Revision 1.9  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -45,7 +49,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
 
       if (i % step == 0 && callback)
-	callback(i, size);
+	callback(i+pass*size, size*numPass);
 
 //       std::cerr << "Region " << i << "/" << cells->size()
 //                 << " --> " << std::flush;

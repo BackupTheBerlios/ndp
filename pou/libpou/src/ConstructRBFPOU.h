@@ -6,6 +6,10 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.7  2004/04/06 16:49:32  leserpent
+ * ConstructRBFPOU::setcallback() can take two more parameters in order
+ * to show only one progress dialog during color computing.
+ *
  * Revision 1.6  2004/04/06 16:15:22  leserpent
  * Changed getThresholds() to getThreMin/ThreMax().
  *
@@ -56,9 +60,10 @@ class ConstructRBFPOU {
   const AreaSet *getOctree();  
   void setFilter(ConstraintFilter *f, int p);
 
-  void setCallBack(void (*c)(int, int), int s) {
-    if (s!=0)
-      step=s;
+  void setCallBack(void (*c)(int, int), int s, int pass = 0, int numPass = 1) {
+    step = (s!=0)?s:step;
+    this->pass = pass;
+    this->numPass = (numPass!=0)?numPass:1;
     callback=c;
   }
 
@@ -79,7 +84,7 @@ class ConstructRBFPOU {
   
   void applyFilter(ConstraintSet &cs);
   void (*callback)(int v, int max);
-  int step;
+  int step, pass, numPass;
 };
 
 inline const AreaSet *

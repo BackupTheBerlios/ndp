@@ -6,6 +6,10 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.9  2004/04/06 16:49:32  leserpent
+ * ConstructRBFPOU::setcallback() can take two more parameters in order
+ * to show only one progress dialog during color computing.
+ *
  * Revision 1.8  2004/04/06 16:16:11  leserpent
  * Splitted compute() into computeRGB() and computeGeometry().
  * The Constraints Set is now a local variable in computeRGB/Geometry()
@@ -59,9 +63,9 @@ class ImplicitSurface3D {
   void setCallBack(void (*c)(int, int), int s) {
     assert(rbf&&r&&g&&b);
     rbf->setCallBack(c, s);
-    r->setCallBack(c, s);
-    g->setCallBack(c, s);
-    b->setCallBack(c, s);
+    r->setCallBack(c, s, 0, 3);
+    g->setCallBack(c, s, 1, 3);
+    b->setCallBack(c, s, 2, 3);
   }
 
   const ConstructRBFPOU *getRBFPOU() const;
