@@ -78,6 +78,27 @@ void Mc::getPoints(std::vector<Point> &points) {
 
 
 /*****************Wrapped code*********************************************/
+/*
+ * C code from the article
+ * "An Implicit Surface Polygonizer"
+ * by Jules Bloomenthal, jbloom@beauty.gmu.edu
+ * in "Graphics Gems IV", Academic Press, 1994
+ */
+
+/* implicit.c
+ *     an implicit surface polygonizer, translated from Mesa
+ *     applications should call polygonize()
+ *
+ * to compile a test program for ASCII output:
+ *     cc implicit.c -o implicit -lm
+ *
+ * to compile a test program for display on an SGI workstation:
+ *     cc -DSGIGFX implicit.c -o implicit -lgl_s -lm
+ *
+ * Authored by Jules Bloomenthal, Xerox PARC.
+ * Copyright (c) Xerox Corporation, 1991.  All rights reserved.
+ * Permission is granted to reproduce, use and distribute this code for
+ * any and all purposes, provided that this notice appears in all copies. */
 double Mc::RAND() {
   return (rand()&32767)/32767.0;
 }
@@ -616,6 +637,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.6  2004/04/03 11:34:02  leserpent
+* Added original mc's licence
+*
 * Revision 1.5  2004/04/03 11:16:00  leserpent
 * Added methods: set{InitPoint, CubeSize,	MaxIteration} and enableTet to class Mc
 * Added a destructor which free previously allocated vertices.
