@@ -5,8 +5,8 @@ noinst_PROGRAMS=$(TESTS)
 
 INCLUDES=-I../modules
 osg_compatible_SOURCES=osg-compatible.cc apply.h equal.h
-osg_compatible_CXXFLAGS=$(shell osg-config --cflags) -O
-osg_compatible_LDFLAGS=$(shell osg-config --libs)
+osg_compatible_CXXFLAGS=$(shell osg-config --cflags Base) -O
+osg_compatible_LDFLAGS=$(shell osg-config --libs Base)
 quaterniontest_SOURCES=quaterniontest.cc
 constructrbf_SOURCES=constructrbf.cc
 LDADD=../src/libpou.la
