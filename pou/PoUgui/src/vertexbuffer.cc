@@ -1,15 +1,17 @@
 #include <string>
 #include <iostream>
 #include "opengl.h"
+//#include "vector3.h"
 //TODO: virer include que pour Vertex3f
-#include "ims.h"
+//#include "ims.h"
 
 VertexBuffer::VertexBuffer() {
   if( !HasVBO() )
     type = TYPE_VERTEXBUFFER;
   else
     type = TYPE_VBO;
-  std::cout<<"New Buffer: type = "<< type <<"\n";
+  contents = POLY_COORDS;
+  //std::cout<<"New Buffer: type = "<< type <<"\n";
   isLocked = false;
   ptr = NULL;
   mapptr = NULL;
@@ -26,27 +28,28 @@ VertexBuffer::~VertexBuffer() {
 }
 
 
-int VertexBuffer::CreateVertexBuffer( Vertex3f *dataptr, int size, 
-				      int polytype ) {
+int VertexBuffer::CreateVertexBuffer( Vec3f *dataptr, int size, int step, 
+				      int polytype) {
   if( type == TYPE_VERTEXBUFFER ) {
     if( ptr )
       delete [] ptr;
     this->size = size;
+    this->step = step;
     this->polytype = polytype;
-    ptr = new Vertex3f [ size ];
+    ptr = new Vec3f [ size*step ];
     if( !ptr )
       return -1;
-    memcpy( ptr, dataptr, size*sizeof(Vertex3f) );
+    memcpy( ptr, dataptr, size*step*sizeof(Vec3f) );
   }
   
   if( type == TYPE_VBO ) {
     
   }
-
+  this->contents = contents;
   return 0;
 }
 
-Vertex3f *VertexBuffer::GetDataPointer() {
+Vec3f *VertexBuffer::getDataPointer() {
   if( !isLocked )
     return NULL;
 
@@ -54,7 +57,7 @@ Vertex3f *VertexBuffer::GetDataPointer() {
     MapBuffer();
 
   if( type == TYPE_VBO )
-    return (Vertex3f *)mapptr;
+    return (Vec3f *)mapptr;
 
   return ptr;
 }
@@ -69,7 +72,7 @@ void VertexBuffer::unLockBuffer() {
     unMapBuffer();
 }
 
-int VertexBuffer::ResizeBuffer( Vertex3f *dataptr, int size ) {
+int VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) {
   return 0;
 }
 

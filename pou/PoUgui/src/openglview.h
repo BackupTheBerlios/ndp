@@ -5,11 +5,13 @@
 #include <qmainwindow.h>
 #include <qworkspace.h>
 #include <qframe.h>
+#include <qevent.h>
 
 class VertexBuffer;
 class OpenGLContext;
 
-class OpenglWidget : public QGLWidget {
+class OpenglWidget : public QGLWidget 
+{
  public:
   OpenglWidget( QWidget *parent, const char *name, VertexBuffer *vbuffer );
   ~OpenglWidget();
@@ -19,6 +21,11 @@ class OpenglWidget : public QGLWidget {
   void resizeGL( int w, int h );
   void paintGL();
   inline OpenGLContext *getOpenGLContext(){ return glcontext; }
+
+ private:
+  void mousePressEvent( QMouseEvent *e );
+  void mouseMoveEvent( QMouseEvent *e );
+    
  private:
   VertexBuffer *vb;
   OpenGLContext *glcontext;

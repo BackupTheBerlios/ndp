@@ -12,7 +12,9 @@
 
 #include "libgui.h"
 #include "opengl.h"
-#include "ims.h"
+#include "ImplicitSurface3D.h"
+#include "PointSet.h"
+//#include "ims.h"
 
 /*****************************************************************************/
 // vertex buffers
@@ -22,9 +24,9 @@ VertexBuffer *vbPolys = NULL;
 int nPoints;
 int nPolys;
 /*****************************************************************************/
-// IMS API class
+// ImpliciteSurface3D API class
 /*****************************************************************************/
-IMS *ims;
+ImplicitSurface3D *ims;
 /*****************************************************************************/
 // Main Window class
 /*****************************************************************************/
@@ -124,28 +126,36 @@ void MWindow::closeEvent( QCloseEvent *event ) {
 }
 
 void MWindow::menu_file_open() {
+  /*TODO: à virer*/
+  int i;
   QString filename = QFileDialog::
     getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
 		     "Sur -- Ouvrir Fichier" );
 
   if( !filename.isEmpty() ){
-    if( ims->Load( filename ) != 0 ){
-      std::cout<<"Error reading "<<filename<<"\n";
-      return ;
+    /* TODO REMOVE: getPoints() is missing in ImplictSurface3D (thomas :-) )*/
+    PointSet *ps;
+    Vec3f *vPoints;
+    Point *p;
+    int step = sizeof(Point) / sizeof(Vec3f);
+
+    ps = new PointSet();    
+    ps -> load( filename ); 
+    PointList::iterator psiterator = ps->getBegin();
+    nPoints = ps->size(); 
+    vPoints = new Vec3f [ nPoints * step];
+    
+    for( i=0; i<nPoints; i++, psiterator++){
+      p = *psiterator;
+      memcpy( (void *)&vPoints[i*step], (void *)p,sizeof( Point ) );
     }
-    Vertex3f *vPoints;
-    vPoints = ims->getPoints( &nPoints );
+
     vbPoints = new VertexBuffer();
-    vbPoints -> CreateVertexBuffer( vPoints, nPoints, POLY_POINTS );
-    //Object *obj = new Object( filename, DATA_POINTS ); 
-
-    //if( obj -> GetSize() > 0 ){
-    //SetMainObject( obj );
-    //OpenglView *mw = new OpenglView( MW_workspace, obj );
-    //mw -> resize( 200, 200 );
-    //  mw -> show();
-    //}
-
+    vbPoints -> CreateVertexBuffer( vPoints, nPoints,step, POLY_POINTS );
+    
+    OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
+    mw -> resize( 200, 200 );
+    mw -> show();
   }
 }
 
@@ -179,7 +189,7 @@ QApplication *QT_Gui;
 
 int CreateMainWindow( int argc, char **argv ) {
   /* First check if api is OK */
-  ims = new IMS();
+  ims = new ImplicitSurface3D();
   if( !ims )
     return -1;
   /* Create the QT Application */

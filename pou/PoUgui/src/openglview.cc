@@ -1,5 +1,6 @@
 #include "libgui.h"
 #include "opengl.h"
+#include "vector3.h"
 
 bool isOpenglReady = false;
 
@@ -54,20 +55,60 @@ void OpenglWidget::paintGL() {
     qglColor( white );
 
     glBegin( GL_POINTS );
-    /*
-      for( int i=0; i< data ->GetSize(); i++ ) {
-      
-      glColor3f( data->Data()[i].color[0], data->Data()[i].color[1], 
-      data->Data()[i].color[2] );
-      
-      glVertex3f( data->Data()[i].pos[0], data->Data()[i].pos[1], 
-      data->Data()[i].pos[2] );
+    vb->LockBuffer();
+    Vec3f *ptr = (Vec3f *)vb->getDataPointer();
     
-      }
-    */
+    for( int i=0; i< vb -> getSize()*vb -> getStep(); i+= vb -> getStep() ) {
+      
+      glColor3f( ptr[i+2].x, ptr[i+2].y, ptr[i+2].z);
+     
+      glVertex3f( ptr[i].x, ptr[i].y, ptr[i].z );
+      
+    }
+    vb->unLockBuffer();
     glEnd();
+    swapBuffers();
   }
   
+}
+
+int mouse_x, mouse_y;
+int mouse_angle_x=0, mouse_angle_y=0;
+bool flag_move, flag_edit;
+
+void OpenglWidget::mousePressEvent( QMouseEvent *e ){
+  flag_move = false;
+  flag_edit = false;
+
+  if( e->button() == 1 ){
+    flag_move = true;
+    mouse_x = e->x();
+    mouse_y = e->y();
+  }
+  if( e->button() == 1 ){
+    flag_edit = true;
+  }
+  //printf("Mouse Buttons Pressed: %d\n", e->button() );
+}
+
+void OpenglWidget::mouseMoveEvent( QMouseEvent *e ) {
+  if( flag_move == true ){
+    int rel_x = e->x() - mouse_x;
+    int rel_y = e->y() - mouse_y;
+    int angle_x = 2 * rel_x / 6;
+    int angle_y = 2 * rel_y / 6;
+    mouse_angle_x = (mouse_angle_x + angle_x) % 360;    
+    mouse_angle_y = (mouse_angle_y + angle_y) % 360;    
+    mouse_x = e->x();
+    mouse_y = e->y();
+    if( angle_x || angle_y ){
+      glLoadIdentity();
+      gluLookAt( -3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
+      glRotatef( mouse_angle_y, 1.0, 0.0, 0.0 );
+      glRotatef( mouse_angle_x, 0.0, 1.0, 0.0 );
+      paintGL();
+    }
+  }
 }
 
 /* -+-+-+-+-+-+-+-+-+ OpenglView +-+-+-+-+-+-+-+-+-+-+-+-*/
