@@ -132,6 +132,7 @@ OpenglContext::SetViewSize (int width, int height)
   m_width = width;
   m_height = height;
   m_updateproj = true;
+  m_tball->setScreenSize(width, height); 
 }
 
 void 

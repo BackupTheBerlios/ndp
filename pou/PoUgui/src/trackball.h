@@ -21,6 +21,10 @@ public:
     orientation.toIdentity();
   }
 
+  void setScreenSize(unsigned int screenWidth, unsigned int screenHeight) { 
+    this->screenHeight = screenHeight;
+    this->screenWidth = screenWidth;
+  }
   void startRotation(int x, int y);
   void stopRotation();
   void computeOrientation(int x, int y);
