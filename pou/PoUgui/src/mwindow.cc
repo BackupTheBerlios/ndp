@@ -158,6 +158,8 @@ void MWindow::closeEvent( QCloseEvent *event ) {
   QMainWindow::closeEvent( event );
 }
 
+//WARNING: if you add a return on't forget to call killTimers();
+
 void MWindow::menu_file_open() {
   int i;
   QString filename = QFileDialog::
@@ -165,6 +167,9 @@ void MWindow::menu_file_open() {
 		     "Sur -- Ouvrir Fichier" );
 
   if( !filename.isEmpty() ){
+
+    startTimer( 1000 );
+
     Vec3f *vPoints;
     Point *p;
     int step = sizeof(Point) / sizeof(Vec3f);
@@ -193,6 +198,8 @@ void MWindow::menu_file_open() {
     OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
     mw -> resize( 200, 200 );
     mw -> show();
+    
+    killTimers();
   }
 }
 
@@ -284,6 +291,11 @@ void MWindow::menu_rendering_render() {
   PolysWindow->resize( 1024, 768 );
   PolysWindow->show();
   delete qpd;
+}
+
+void MWindow::timerEvent( QTimerEvent *e )
+{
+  QT_Gui->processEvents();
 }
 
 void MWindow::CleanMemory() 

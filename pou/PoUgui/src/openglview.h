@@ -29,12 +29,12 @@ class OpenglWidget : public QGLWidget
   void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
-  void wheelEvent ( QWheelEvent * e );
-  
+  void wheelEvent ( QWheelEvent *e );
+  void timerEvent( QTimerEvent *e ); 
  private:
   VertexBuffer *vb;
   OpenglContext *glcontext;
-
+  bool m_idledraw;
 };
 
 class OpenglView : public QMainWindow {
@@ -47,7 +47,7 @@ class OpenglView : public QMainWindow {
   }
   
  protected:
-
+  void closeEvent( QCloseEvent * );
  private:
   OpenglWidget *glwidget;
   QFrame *glframe;

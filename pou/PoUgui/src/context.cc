@@ -26,6 +26,8 @@
 
 
 #include <cmath>
+#include <sys/time.h>
+#include <qdatetime.h>
 #include "context.h"
 #include "opengl.h"
 
@@ -45,10 +47,12 @@ OpenglContext::OpenglContext()
   m_viewaspect = 1024.0/768.0;
   m_updatemview = true;  
   m_updateproj = true;
+  m_lasttime = -1;
+  m_showfps = false;
 }
 
-OpenglContext::~OpenglContext() {
-}
+OpenglContext::~OpenglContext() 
+{ }
 
 //Find Z so that point v(mousex,mousey,Z) is on a unit sphere.
 //if we are out of the sphere, we find Z so that point v is on a hyperbole.
@@ -57,7 +61,8 @@ OpenglContext::~OpenglContext() {
 //the hyperbole 1/2x
 //Reference: Terence J. Grant nehe.gamedev.net and nvidia's
 //trackball.h(Gavin Bell)
-void OpenglContext::mapToSphere(Vec3f &v) {
+void OpenglContext::mapToSphere(Vec3f &v) 
+{
   float len2;
       
   v.x = (2*v.x)/float(m_width-1)-1;
@@ -69,25 +74,29 @@ void OpenglContext::mapToSphere(Vec3f &v) {
       v.z = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
 }
 
-void OpenglContext::StartRotationMode( int x, int y ){
+void OpenglContext::StartRotationMode( int x, int y )
+{
   m_startVector.setValues(x, y, 0);
   mapToSphere(m_startVector);
   m_updatemview = true;
 }
 
-void OpenglContext::StopRotationMode(){
+void OpenglContext::StopRotationMode()
+{
   m_startOrientation = m_orientation;
   m_updatemview = true;
 }
 
-void OpenglContext::InitRotationMode(){
+void OpenglContext::InitRotationMode()
+{
     m_orientation.toIdentity();
     m_startOrientation.toIdentity();
     m_zoomfactor = DEF_ZOOM;
     m_updatemview = true;
 }
 
-void OpenglContext::RotateView( int x, int y ) {
+void OpenglContext::RotateView( int x, int y ) 
+{
   Quaternionf q;
   Vec3f endVector(x, y, 0);
   mapToSphere(endVector);
@@ -97,7 +106,8 @@ void OpenglContext::RotateView( int x, int y ) {
   m_updatemview = true;
 }
 
-void OpenglContext::ZoomView( double factor ){
+void OpenglContext::ZoomView( double factor )
+{
   if( factor < 0 )
     m_zoomfactor *= 0.9;
   else
@@ -106,25 +116,89 @@ void OpenglContext::ZoomView( double factor ){
   m_updatemview = true;
 }
 
-void OpenglContext::SetViewSize( int width, int height ){
+void OpenglContext::SetViewSize( int width, int height )
+{
   m_viewaspect = (double) width / (double) height;
   m_width = width;
   m_height = height;
   m_updateproj = true;
 }
 
-void OpenglContext::SetFov( double fov ){
+void OpenglContext::SetFov( double fov )
+{
   m_fov = fov;
   m_updateproj = true;
 }
 
-void OpenglContext::SetClipDistance( double near, double far ) {
+void OpenglContext::SetClipDistance( double near, double far ) 
+{
   m_near = near;
   m_far = far;
   m_updateproj = true;
 }
 
-void OpenglContext::SyncContext() {
+void OpenglContext::SetLighting( bool state )
+{
+  m_lightstate = state;
+}
+
+void OpenglContext::SetLightingType( int type )
+{
+  m_lighttype = type;
+}
+
+void OpenglContext::SetLightingPosition( float x, float y, float z )
+{
+  m_lightx = x;
+  m_lighty = y;
+  m_lightz = z;
+}
+
+void OpenglContext::DrawLightingPosition( bool flag )
+{
+  m_lightdraw = flag;
+}
+
+//struct timeval tv;
+
+void OpenglContext::DrawHud()
+{
+  if( m_showfps ){
+    int curtime;
+    QTime t = QTime::currentTime();
+    curtime = ( t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
+    //gettimeofday( &tv, NULL );
+    /* convert time in ms */
+    //curtime = tv.tv_usec * 1000;
+    
+    m_frames ++;
+    
+    if( m_lasttime == -1 ) {
+      m_lasttime = curtime;
+      m_frames = 0;
+      m_fps = 0.0f;
+      return ;
+    }
+    
+    if( (curtime - m_lasttime) > 1000 ){
+      m_fps = 1000.0 * (float)m_frames /(curtime - m_lasttime);
+      printf("FPS: %f\n", m_fps );
+      m_frames = 0;
+      m_lasttime = curtime;
+    }
+  }
+  
+}
+
+void OpenglContext::ShowFps( bool flag )
+{
+  m_showfps = flag;
+  if( !m_showfps )
+    m_lasttime = -1;
+}
+
+void OpenglContext::SyncContext() 
+{
   if( m_updateproj ){
     m_updateproj = false;
     glMatrixMode( GL_PROJECTION );

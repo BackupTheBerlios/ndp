@@ -19,7 +19,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * Wednesday 31 March 2004:
- *      - glDrawElements fixed by Benjamin Grange.
+ *      - glDrawElements fixed thanks to Ben.
  *
  */
 

@@ -20,7 +20,7 @@ class MWindow : public QMainWindow
  
  protected:
   void closeEvent( QCloseEvent * );
-  
+  void timerEvent( QTimerEvent * );
  signals:
   
   private slots:

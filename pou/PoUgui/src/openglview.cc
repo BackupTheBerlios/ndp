@@ -33,6 +33,8 @@
 
 bool isOpenglReady = false;
 
+#define FRAME_DELAY 1 //MAX = 1000 fps
+
 /* -+-+-+-+-+-+-+-+-+ OpenglWidget +-+-+-+-+-+-+-+-+-+-+-+-*/
 OpenglWidget::OpenglWidget( QWidget *parent, const char *name, 
 			    VertexBuffer *vbuffer ) 
@@ -40,11 +42,17 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
 {
   vb = vbuffer;
   glcontext = new OpenglContext();
+  m_idledraw = false;
+  /* Polygon window => show fps */
+  if( vb -> getPolyType() == POLY_TRIANGLES ){
+    m_idledraw = true;
+    glcontext -> ShowFps( true );
+  }
 }
 
 OpenglWidget::~OpenglWidget() {
-  if( glcontext )
-    delete glcontext;
+  killTimers();
+  delete glcontext;
 }
 
 void OpenglWidget::initializeGL() 
@@ -60,6 +68,8 @@ void OpenglWidget::initializeGL()
   gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
   glEnable( GL_DEPTH );
   vb -> Bind();
+  if( m_idledraw )
+    startTimer( FRAME_DELAY );
 }
 
 void OpenglWidget::clearGL() 
@@ -75,8 +85,8 @@ void OpenglWidget::resizeGL( int w, int h )
   glcontext -> SetFov( 60.0 );
   glcontext -> SetViewSize( w, h );
   glcontext -> SyncContext();
-  
-  paintGL();
+  if( !m_idledraw )
+    paintGL();
 }
 
 void OpenglWidget::paintGL() {
@@ -88,6 +98,8 @@ void OpenglWidget::paintGL() {
   if( vb )
     vb -> DrawBuffer();
 
+  glcontext -> DrawHud();
+  
   swapBuffers();
 }
 
@@ -98,7 +110,8 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
     break;
   case QMouseEvent::RightButton: // Reset transformation
     glcontext -> InitRotationMode();
-    updateGL();
+    if( !m_idledraw )
+      updateGL();
     break;
   default:
     break;
@@ -111,7 +124,8 @@ void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
   case QMouseEvent::LeftButton:
     glcontext->StopRotationMode();
     glcontext->SyncContext();
-    updateGL();
+    if( !m_idledraw )
+      updateGL();
     break;
   default:
     break;
@@ -122,7 +136,8 @@ void OpenglWidget::mouseMoveEvent( QMouseEvent *e ) {
   if(e->state()&QMouseEvent::LeftButton) {
     glcontext->RotateView( e->x(), e->y() );
     glcontext->SyncContext();
-    updateGL();
+    if( !m_idledraw )
+      updateGL();
   }
 }
 
@@ -130,13 +145,19 @@ void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
   e->accept();
   glcontext -> ZoomView( e->delta() );
   glcontext -> SyncContext();
-  updateGL();
+  if( !m_idledraw )
+    updateGL();
 }
 
 
 void OpenglWidget::SetLighting( bool state, int type, float x, float y, 
 				float z ){
 
+}
+
+void OpenglWidget::timerEvent( QTimerEvent *e) {
+  //printf("DRAW\n");
+  updateGL();
 }
 
 /* -+-+-+-+-+-+-+-+-+ OpenglView +-+-+-+-+-+-+-+-+-+-+-+-*/
@@ -151,7 +172,13 @@ OpenglView::OpenglView( QWorkspace *parent, VertexBuffer *vbuffer )
 
 OpenglView::~OpenglView() 
 {
-  if( glwidget )
-    delete glwidget;
+  delete glwidget;
 }
 
+void OpenglView::closeEvent( QCloseEvent *e )
+{
+  delete glwidget;
+  glwidget = NULL;
+  //e->accept();
+  close();
+}
