@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 class Area

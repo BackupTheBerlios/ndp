@@ -4,7 +4,7 @@
 #include <vector>
 #include <gsl/gsl_linalg.h>
 #include <iostream>
-#include "vector3.h"
+#include "math/vector3.h"
 
 
 class Solver

@@ -1,6 +1,6 @@
 #include "AreaSphere.h"
 #include "W.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 static const float SPHERE_INTERSECT_EPSILON = 0.0001;

@@ -2,7 +2,7 @@
 #define CONSTRAINT_H
 
 #include <ostream>
-#include "vector3.h"
+#include "math/vector3.h"
 
 class Constraint {
   Vec3f v;

@@ -1,6 +1,6 @@
 #include "AreaCube.h"
 #include "W.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 bool 

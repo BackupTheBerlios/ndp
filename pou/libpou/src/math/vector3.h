@@ -91,6 +91,10 @@ public:
     return Vector3<T>(x-v.x, y-v.y, z-v.z);
   }
   
+  Vector3<T> operator^(const Vector3<T> &v) const {
+    return cross(v);
+  }
+
   T operator*(const Vector3<T> &v) const {
     return dot(v);
   }
@@ -145,6 +149,10 @@ public:
     return Vector3<T>(y*v.z - z*v.y,
                       z*v.x - x*v.z,
                       x*v.y - y*v.x);
+  }
+
+  friend Vector3<T> operator*(T k, const Vector3<T>&v) {
+    return v*k;
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Vector3<T>& v) {

@@ -6,7 +6,7 @@
 #include <fstream>
 
 #include "AreaSetOctree.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 #include "ConstructRBF.h"
 #include "ConstructRBFBiHarmonic.h"

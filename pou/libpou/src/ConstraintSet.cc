@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "ConstraintSet.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 ConstraintSet::ConstraintSet (const ConstraintSet &cs):

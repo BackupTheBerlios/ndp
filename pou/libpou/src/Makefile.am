@@ -6,9 +6,10 @@ libpou_la_SOURCES=AreaCube.cc AreaSet.cc \
 
 pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h \
-	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h vector3.h \
+	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h \
 	ConstraintFilter.h Solver.h ConstructRBF.h W.h \
-	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h
+	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h \
+	math/vector3.h
 
 
 libpou_la_CXXFLAGS=@GSL_CFLAGS@

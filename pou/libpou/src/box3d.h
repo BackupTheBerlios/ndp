@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include "vector3.h"
+#include "math/vector3.h"
 
 template<class T>
 class Box3D

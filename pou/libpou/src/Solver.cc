@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Solver.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 #include <gsl/gsl_linalg.h>

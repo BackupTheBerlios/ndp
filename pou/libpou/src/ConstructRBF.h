@@ -6,7 +6,7 @@
 #include "Constraint.h"
 #include "ConstraintSet.h"
 #include "ConstraintFilter.h"
-#include "vector3.h"
+#include "math/vector3.h"
 
 #include <iostream>
 

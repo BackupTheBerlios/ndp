@@ -1,7 +1,7 @@
 #ifndef AREASPHERE_H
 #define AREASPHERE_H
 
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 #include "Area.h"
 

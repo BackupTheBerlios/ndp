@@ -1,5 +1,5 @@
 #include "AreaSet.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 unsigned int 

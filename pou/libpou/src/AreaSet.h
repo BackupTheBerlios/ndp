@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Area.h"
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 

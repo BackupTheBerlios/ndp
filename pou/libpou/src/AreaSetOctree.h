@@ -8,7 +8,7 @@
 #include <fstream>
 #include <vector>
 #include <ext/hash_set>
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 class AreaSetOctree: public AreaSet
