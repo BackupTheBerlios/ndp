@@ -1,5 +1,8 @@
 2004-03-25  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/Makefile.am (INCLUDES): Moved
+	-I../$(top_srcdir)/libpou/src/ to INCLUDES
+
 	* PoUgui/src/mc/: Temporary mc wrapper
 
 2004-03-22  Thomas <thomas@pumpkins.snapshotlinux.org>
