@@ -6,6 +6,9 @@
  * @brief  Area set
  *
  * $Log: AreaSet.h,v $
+ * Revision 1.7  2004/04/29 08:57:30  leserpent
+ * Use a vector for getArea
+ *
  * Revision 1.6  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -79,7 +82,7 @@ public:
 
   // tab is a table of index of Areas that contient p
   // result is a numet of these Areas 
-  virtual unsigned int getAreas(const Vec3f& p, unsigned int* tab);
+  virtual unsigned int getAreas(const Vec3f& p, std::vector<unsigned int>& tab);
 
   // flag=true  - copy this[index] to desination
   // flag=false - copy all but this[index] to destination

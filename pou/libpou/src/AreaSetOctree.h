@@ -6,6 +6,9 @@
  * @brief  Area set construction, octree based
  * 
  * $Log: AreaSetOctree.h,v $
+ * Revision 1.10  2004/04/29 08:57:30  leserpent
+ * Use a vector for getArea
+ *
  * Revision 1.9  2004/04/28 19:27:37  pumpkins
  * hash_set removal
  *
@@ -108,7 +111,7 @@ public:
   void fillOctreeTableRec(AreaSetOctree::Node* node, int level);
   
   /// Fill tab with all the leaf node's index of the octree containing p.
-  unsigned int getAreas(const Vec3f& p, unsigned int *tab);
+  unsigned int getAreas(const Vec3f& p, std::vector<unsigned int>& tab);
   
   /// fill vec with all the intersections of a ray (defined by origin and direction)  with the octree
   void getIntersectionList (const Vec3f& origin, 

@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.18  2004/04/29 08:57:30  leserpent
+ * Use a vector for getArea
+ *
  * Revision 1.17  2004/04/27 13:38:42  pumpkins
  * missing header
  *
@@ -137,27 +140,24 @@ ConstructRBFPOU::newRBF()
 float
 ConstructRBFPOU::eval(const Vec3f &p) const
 {
-  unsigned int size = rbf.size();
-  unsigned int nbIntersect;
-
-  unsigned int *tab = new unsigned int[size];
-  
-  nbIntersect = cells->getAreas(p, tab);
-
+  std::vector<unsigned int> tab;
   float sum=0, sumW=0;
+  
+  cells->getAreas(p, tab);
 
-  for (unsigned int i=0; i<nbIntersect; i++) {
-    if (!rbf[tab[i]])
+  while(!tab.empty()) {
+    unsigned int i = tab.back();
+    tab.pop_back();
+    if (!rbf[i])
       continue;
 
-    float w = (*cells)[tab[i]]->w(p);
-    float s = rbf[tab[i]]->eval(p);
+    float w=(*cells)[i]->w(p);
+    float s=rbf[i]->eval(p);
     
-    sumW += w;
-    sum += s * w;
+    sumW+=w;
+    sum+=s * w;
   }
 
-  delete[] tab;
   if (sumW == 0)
     return -1e8;
   else
@@ -167,46 +167,45 @@ ConstructRBFPOU::eval(const Vec3f &p) const
 void
 ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
 {
-  unsigned int size = rbf.size();
-  unsigned int nbIntersect;
-  unsigned int * tab = new unsigned int[size];
+  std::vector<unsigned int> tab;
   Vec3f localNormal, localWd;
   float sumWdX = 0 , sumWdY = 0, sumWdZ = 0 ;
   float sumfdWX = 0, sumfdWY = 0, sumfdWZ = 0 ;
   float sumfWdX =0, sumfWdY = 0, sumfWdZ = 0;
 
-  nbIntersect = cells->getAreas(p, tab);
+  cells->getAreas(p, tab);
   
   float sum=0, sumW=0;
-  
-  for(unsigned int i=0; i<nbIntersect; i++)
-    {
-      if (!rbf[tab[i]])
-	continue;
+ 
+  while(!tab.empty()) {
+    unsigned int i = tab.back();
+    tab.pop_back();
+    
+    if (!rbf[i])
+      continue;
 
-      float w = (*cells)[tab[i]]->w(p);      
-      (*cells)[tab[i]]->wd(p, localWd);      
+    float w = (*cells)[i]->w(p);      
+    (*cells)[i]->wd(p, localWd);      
       
-      float f = rbf[tab[i]]->eval(p);
-      rbf[tab[i]]->evalGradient(p, localNormal);
+    float f = rbf[i]->eval(p);
+    rbf[i]->evalGradient(p, localNormal);
       
-      sumW += w;
-      sum += f * w;
+    sumW += w;
+    sum += f * w;
       
-      sumWdX += localWd.x;
-      sumWdY += localWd.y;
-      sumWdZ += localWd.z;
+    sumWdX += localWd.x;
+    sumWdY += localWd.y;
+    sumWdZ += localWd.z;
       
-      sumfdWX += localNormal[0] * w;
-      sumfdWY += localNormal[1] * w;
-      sumfdWZ += localNormal[2] * w;
+    sumfdWX += localNormal[0] * w;
+    sumfdWY += localNormal[1] * w;
+    sumfdWZ += localNormal[2] * w;
       
-      sumfWdX += f * localWd.x;
-      sumfWdY += f * localWd.y;
-      sumfWdZ += f * localWd.z;
-    }
+    sumfWdX += f * localWd.x;
+    sumfWdY += f * localWd.y;
+    sumfWdZ += f * localWd.z;
+  }
 
-  delete [] tab;
   if (sumW == 0) 
       v.setValues(0,0,0);
   else 

@@ -6,6 +6,9 @@
  * @brief  Area set
  * 
  * $Log: AreaSet.cc,v $
+ * Revision 1.6  2004/04/29 08:57:30  leserpent
+ * Use a vector for getArea
+ *
  * Revision 1.5  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -14,26 +17,23 @@
  *
  * 
  */
+#include <vector>
+
 #include "AreaSet.h"
 #include "math/vector3.h"
 #include "box3d.h"
 
 unsigned int 
-AreaSet::getAreas(const Vec3f& p, unsigned int* tab)
+AreaSet::getAreas(const Vec3f& p, std::vector<unsigned int>& tab)
 {
   unsigned int size = cells.size();
   unsigned int counter = 0;
 
   for(unsigned int i=0; i<size; i++)
-    {
       if (cells[i]->intersect(p))
-        {
-          tab[counter] = i;
-          counter++;
-        }
-    }
+          tab.push_back(i);
  
-  return counter;
+  return tab.size();
 }
 
 void 
