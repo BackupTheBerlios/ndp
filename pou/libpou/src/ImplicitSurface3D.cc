@@ -13,12 +13,11 @@ public:
     ps=_ps;
   }
   void filter(ConstraintSet& cs, int parm) {
-    PointList::const_iterator begin=ps->getBegin();
     PointList::const_iterator end=ps->getEnd();
     PointList::const_iterator i;
     int j;
     
-    for( i=begin, j=0; i!=end; i++, j++) {
+    for( i=ps->getBegin(), j=0; i!=end; i++, j++) {
       Point *p=*i;
       cs[j]->setConstraint(p->getRGB()[parm]);
     }
@@ -36,17 +35,16 @@ public:
   }
   void filter(ConstraintSet& cs, int parm) {
     std::cout << "filter nz" << std::endl;
-    PointList::const_iterator begin=ps->getBegin();
     PointList::const_iterator end=ps->getEnd();
     PointList::const_iterator i;
     int j;
     
-    for( i=begin, j=0; i!=end; i++, j++) {
+    for( i=ps->getBegin(), j=0; i!=end; i++, j++) {
       Point *p=*i;
       Vec3f center;
       Vec3f c=p->getNorm();
       cs[j]->setConstraint(0);
-      if (c[0]==0 && c[1]==0 && c[2]==0)
+      if (c.isNull())
 	continue;
       center= p->getPos() - (c*projDist);
       cs.add(new Constraint(center, 1));
@@ -61,6 +59,7 @@ ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
   r = new ConstructRBFPOU(_type);
   g = new ConstructRBFPOU(_type);
   b = new ConstructRBFPOU(_type);
+  cs = new ConstraintSet();
   projDist=0.03f;
 }
 
@@ -72,23 +71,23 @@ ImplicitSurface3D::~ImplicitSurface3D() {
 }
 
 void ImplicitSurface3D::compute(PointSet &ps) {
-  PointList::const_iterator begin=ps.getBegin();
   PointList::const_iterator end=ps.getEnd();
   PointList::const_iterator i;
   
   rgb = new ConstraintFilterRGB(&ps);
   nz = new ConstraintFilterNonZero(&ps, projDist);
   
-  for(i=begin; i!=end; i++) {
+  for(i=ps.getBegin(); i!=end; i++) {
     Point *p=*i;
     cs->add(new Constraint(p->getPos(), p->getRGB()[0]));
   } 
   std::cout << std::endl;
-  r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
+  //r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
+  r->setFilter(rgb, 0);
   r->compute(*cs);
   g->setFilter(rgb, 1);
   g->compute(*cs);
-  g->setFilter(rgb, 2);
+  b->setFilter(rgb, 2); //BUG?:setFilter can't be called again after a compute
   b->compute(*cs);
   rbf->setFilter(nz, 0);
   rbf->compute(*cs);

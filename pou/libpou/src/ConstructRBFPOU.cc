@@ -3,6 +3,7 @@
 #include "AreaSphere.h"
 #include "AreaSetOctree.h"
 #include <fstream>
+#include <iostream>
 
 ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF _type) 
 {
@@ -23,9 +24,14 @@ ConstructRBFPOU::compute(ConstraintSet& cs)
   int result;
   applyFilter(cs);
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
+  std::cerr << "octree fini" << std::endl;
   for(unsigned int i=0; i<cells->size(); i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
+
+      std::cerr << "Region " << i << "/" << cells->size()
+                << " --> " << std::flush;
+
       while(1)
 	{
 	  ConstraintSet filtered(cs, &area);
@@ -38,8 +44,10 @@ ConstructRBFPOU::compute(ConstraintSet& cs)
 	  else
 	    break;
 	}
-	  
+
+      /*BUG: Ne doit pas filtrer les contraintes geometriques!=0*/
       ConstraintSet filtered(cs, &area);
+      std::cerr << filtered.size() << " points "<< std::endl << std::flush;
       
       ConstructRBF* newrbf = newRBF(); 
       /*      newrbf->setProjDist(_projDist);
