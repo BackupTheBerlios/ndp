@@ -2,6 +2,8 @@
 #define OPENGL_CONTEXT_H
 
 #include "matrix.h"
+#include "math/vector3.h"
+#include "math/quaternion.h"
 
 class OpenglContext {
  public:
@@ -13,26 +15,38 @@ class OpenglContext {
   /********************/
   /* NEED SyncContext() */
   /********************/
-
-  void RotateView( int relx, int rely );
-  void RotateView( double rx, double ry, double rz );
-  void ZoomView( int factor );
+  void StartRotationMode( int x, int y );
+  void StopRotationMode();
+  void InitRotationMode();
+  void RotateView( int x, int y );
+  void ZoomView( double factor );
   
-  void ResizeView( int width, int height );
+  void SetViewSize( int width, int height );
   void SetFov( double fov );
-
+  void SetClipDistance( double near, double far );
+  /****************************/
   /* DON'T NEED SyncContext() */
+  /****************************/
+  
 
  protected:
-  
+  void mapToSphere(Vec3f &dest);  
+
  private:
-  Matrix4d *m_modelview;
+  Matrix4f *m_modelview;
   Matrix4d *m_projection;
-  double m_zoomfactor;
   double m_fov;
   double m_viewaspect;
+  int m_width, m_height;
+  double m_far;
+  double m_near;
   bool m_updateproj;
   bool m_updatemview;
+
+  double m_zoomfactor;
+  Vec3f startVector;
+  Quaternionf orientation, startOrientation;
+  static const float DEF_ZOOM = 0.5;
 };
 
 

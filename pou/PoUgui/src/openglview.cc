@@ -1,17 +1,39 @@
+/*
+ *  OpenglWidget and OpenglView class
+ *
+ *  Copyright(C) 2004  Dalla Rosa Damien
+ *
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  Sunday 28 March 2004:
+ *      - Motion support (Dalla Rosa Damien )
+ */
+
 #include <iostream>
 
 #include "libgui.h"
 #include "opengl.h"
 #include "math/vector3.h"
 
-const float OpenglWidget::DEF_ZOOM;
-
 bool isOpenglReady = false;
 
 /* -+-+-+-+-+-+-+-+-+ OpenglWidget +-+-+-+-+-+-+-+-+-+-+-+-*/
 OpenglWidget::OpenglWidget( QWidget *parent, const char *name, 
 			    VertexBuffer *vbuffer ) 
-  :QGLWidget( parent, name ), zoom(DEF_ZOOM)
+  :QGLWidget( parent, name )
 {
   vb = vbuffer;
   glcontext = new OpenglContext();
@@ -44,24 +66,21 @@ void OpenglWidget::resizeGL( int w, int h )
 {
   glViewport( 0, 0, (GLint)w, (GLint)h );
 
-  glMatrixMode( GL_PROJECTION );
-  glLoadIdentity();
-  gluPerspective( 60.0, (float)width()/(float)height(), 0.001, 1500.0 );
-  glMatrixMode( GL_MODELVIEW);
+  glcontext -> SetClipDistance( 0.001, 1500.0 );
+  glcontext -> SetFov( 60.0 );
+  glcontext -> SetViewSize( w, h );
+  glcontext -> SyncContext();
 
   paintGL();
 }
 
 void OpenglWidget::paintGL() {
-  float m[4][4];
+  //float m[4][4];
 
   glClear( GL_COLOR_BUFFER_BIT );
   
-  glPushMatrix();
-  orientation.unitToMatrix44(m);
-  glMultMatrixf((float *)m);
-  glScalef(zoom, zoom, zoom);
-
+  //glPushMatrix();
+  glcontext -> SyncContext();
   if( vb ) {
     qglColor( white );
 
@@ -76,46 +95,31 @@ void OpenglWidget::paintGL() {
     vb->unLockBuffer();
     glEnd();
   }
-  glPopMatrix();
+  //glPopMatrix();
   swapBuffers();
-}
-
-//Trouve le point (mousex,mousey,Z)
-//qui se trouve sur la sphere de rayon 1
-//Reference: Terence J. Grant nehe.gamedev.net
-void OpenglWidget::mapToSphere(Vec3f &v) {
-  float len2;
-  Vec3f tmp;
-      
-  tmp.x = (2*v.x)/float(size().width()-1)-1;
-  tmp.y = 1-(2*v.y)/float(size().height()-1);
-  tmp.z = 0;
-  if((len2 = tmp.length2())<1)
-    tmp.z = std::sqrt(1.0-len2); // Dans la sphere, on augmente Z
-  v = tmp;
 }
 
 void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
   switch(e->button()) {
   case QMouseEvent::LeftButton:
-    startVector.setValues(e->x(), e->y(), 0);
-    mapToSphere(startVector);
+    glcontext -> StartRotationMode( e->x(), e->y() );
     break;
   case QMouseEvent::RightButton: // Reset transformation
-    orientation.toIdentity();
-    startOrientation.toIdentity();
-    zoom = DEF_ZOOM;
+    glcontext -> InitRotationMode();
     updateGL();
     break;
   default:
     break;
   }    
+  glcontext -> SyncContext();
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
   switch(e->button()) {
   case QMouseEvent::LeftButton:
-    startOrientation = orientation;
+    glcontext->StopRotationMode();
+    glcontext->SyncContext();
+    updateGL();
     break;
   default:
     break;
@@ -124,22 +128,16 @@ void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
 
 void OpenglWidget::mouseMoveEvent( QMouseEvent *e ) {
   if(e->state()&QMouseEvent::LeftButton) {
-    Quaternionf q;
-    Vec3f endVector(e->x(), e->y(), 0);
-    mapToSphere(endVector);
-    q.toRotationArc(startVector, endVector);
-    orientation = q*startOrientation;
-    orientation.normalize();
+    glcontext->RotateView( e->x(), e->y() );
+    glcontext->SyncContext();
     updateGL();
   }
 }
 
 void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
   e->accept();
-  if(e->delta()<0)
-    zoom *= 0.9;
-  else
-    zoom *= 1.1;
+  glcontext -> ZoomView( e->delta() );
+  glcontext -> SyncContext();
   updateGL();
 }
 

@@ -1,3 +1,7 @@
+2004-03-28 Damien
+	* Roation functions moved from openglview.cc to context.cc
+	* Copyright notice added to *.cc files
+
 2004-03-28  Ben  <leserpent@berlios.de>
 
 	* libpou/src/math/vector3.h (class Vector3): sqrtf->std::sqrt
