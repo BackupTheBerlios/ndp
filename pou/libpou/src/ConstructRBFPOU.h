@@ -1,3 +1,17 @@
+/**
+ * @file   ConstructRBFPOU.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:43:35 2004
+ * 
+ * @brief  rbf reconstruction using an octree
+ *
+ * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.5  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
+
 #ifndef CONSTRUCTRBFPOU_H
 #define CONSTRUCTRBFPOU_H
 

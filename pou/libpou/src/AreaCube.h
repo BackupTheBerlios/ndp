@@ -1,3 +1,16 @@
+/**
+ * @file   AreaCube.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:48:35 2004
+ * 
+ * @brief  Area management using cubes
+ * 
+ * $Log: AreaCube.h,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #ifndef AREACUBE_H
 #define AREACUBE_H
 

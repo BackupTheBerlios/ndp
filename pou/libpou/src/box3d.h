@@ -1,3 +1,17 @@
+/**
+ * @file   box3d.h
+ * @author Benjamin Grange
+ * @date   March 
+ * 
+ * @brief  Support for bounding boxes
+ * 
+ * $Log: box3d.h,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ */
+
+
 #ifndef BOX3D_H
 #define BOX3D_H
 

@@ -1,3 +1,16 @@
+/**
+ * @file   AreaSet.cc
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:54:34 2004
+ * 
+ * @brief  Area set
+ * 
+ * $Log: AreaSet.cc,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #include "AreaSet.h"
 #include "math/vector3.h"
 #include "box3d.h"

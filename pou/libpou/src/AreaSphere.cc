@@ -1,3 +1,16 @@
+/**
+ * @file   AreaSphere.cc
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:53:34 2004
+ * 
+ * @brief  Area management using spheres
+ *
+ * $Log: AreaSphere.cc,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #include "AreaSphere.h"
 #include "W.h"
 #include "math/vector3.h"

@@ -1,3 +1,15 @@
+/**
+ * @file   W.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:38:23 2004
+ *
+ * $Log: W.h,v $
+ * Revision 1.2  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #ifndef FUNCTION_W_H
 #define FUNCTION_W_H
 

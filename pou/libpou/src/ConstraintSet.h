@@ -1,3 +1,16 @@
+/**
+ * @file   ConstraintSet.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:45:15 2004
+ * 
+ * @brief  Constraint set support
+ * 
+ * $Log: ConstraintSet.h,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #ifndef CONSTRAINTSET_H
 #define CONSTRAINTSET_H
 

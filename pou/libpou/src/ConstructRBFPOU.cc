@@ -1,3 +1,16 @@
+/**
+ * @file   ConstructRBFPOU.cc
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:51:23 2004
+ * 
+ * @brief  rbf reconstruction using an octree
+ *
+ * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.9  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #include "ConstructRBFPOU.h"
 #include "AreaCube.h"
 #include "AreaSphere.h"

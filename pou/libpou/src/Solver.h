@@ -1,3 +1,16 @@
+/**
+ * @file   Solver.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:39:13 2004
+ * 
+ * $Log: Solver.h,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ * 
+ */
+
 #ifndef SOLVER_H
 #define SOLVER_H
 

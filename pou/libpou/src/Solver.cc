@@ -1,3 +1,16 @@
+/**
+ * @file   Solver.cc
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:49:19 2004
+ * 
+ * @brief  Solver 
+ * 
+ * $Log: Solver.cc,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #include <fstream>
 
 #include "Solver.h"

@@ -1,3 +1,12 @@
+/**
+ * @file   AreaSetOctree.cc
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:54:02 2004
+ * 
+ * @brief  Area set construction, octree based
+ * 
+ * 
+ */
 #include "AreaSetOctree.h"
 #include "AreaSphere.h"
 #include "AreaCube.h"

@@ -1,3 +1,17 @@
+/**
+ * @file   ImplicitSurface3D.cc
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:50:25 2004
+ * 
+ * @brief  Implicit surface support
+ * 
+ * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.9  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #include "ImplicitSurface3D.h"
 #include "PointSet.h"
 #include "ConstraintSet.h"

@@ -1,3 +1,16 @@
+/**
+ * @file   ConstraintSet.cc
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:53:20 2004
+ * 
+ * @brief  ConstraintSet management
+ * 
+ * $Log: ConstraintSet.cc,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #include <fstream>
 #include <iostream>
 #include "ConstraintSet.h"

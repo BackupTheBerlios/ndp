@@ -1,3 +1,16 @@
+/**
+ * @file   AreaSetOctree.h
+ * @author Irek Tobor, Patrik Reuter
+ * @date   Mon Apr  5 20:47:36 2004
+ * 
+ * @brief  Area set construction, octree based
+ * 
+ * $Log: AreaSetOctree.h,v $
+ * Revision 1.6  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
 #ifndef AREASETOCTREE_H
 #define AREASETOCTREE_H
 

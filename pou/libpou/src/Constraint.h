@@ -1,3 +1,17 @@
+/**
+ * @file   Constraint.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:45:59 2004
+ * 
+ * @brief  One Constraint management
+ *
+ * $Log: Constraint.h,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #ifndef CONSTRAINT_H
 #define CONSTRAINT_H
 

@@ -1,3 +1,16 @@
+/**
+ * @file   AreaCube.cc
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:55:00 2004
+ * 
+ * @brief  Area management using cubes
+ *
+ * $Log: AreaCube.cc,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #include "AreaCube.h"
 #include "W.h"
 #include "math/vector3.h"

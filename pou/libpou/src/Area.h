@@ -1,3 +1,16 @@
+/**
+ * @file   Area.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:49:01 2004
+ * 
+ * @brief  One Area
+ *
+ * $Log: Area.h,v $
+ * Revision 1.4  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #ifndef AREA_H
 #define AREA_H
 

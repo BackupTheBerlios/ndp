@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 # Project related configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME           = Enyar
+PROJECT_NAME           = @PACKAGE_NAME@
 PROJECT_NUMBER         = @VERSION@
 OUTPUT_DIRECTORY       = ./doc
 OUTPUT_LANGUAGE        = English
@@ -29,7 +29,7 @@ SUBGROUPING            = YES
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
-EXTRACT_ALL            = NO
+EXTRACT_ALL            = YES
 EXTRACT_PRIVATE        = NO
 EXTRACT_STATIC         = NO
 EXTRACT_LOCAL_CLASSES  = YES
@@ -62,8 +62,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /home/thomas/Develop/enyar/modules/ \
-                         /home/thomas/Develop/enyar/src/
+INPUT                  = src
 FILE_PATTERNS          = 
 RECURSIVE              = NO
 EXCLUDE                = 

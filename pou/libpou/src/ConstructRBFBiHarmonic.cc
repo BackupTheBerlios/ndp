@@ -1,3 +1,16 @@
+/**
+ * @file   ConstructRBFBiHarmonic.cc
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:52:15 2004
+ * 
+ * @brief  rbf reconstruction using biharmonics
+ *
+ * $Log: ConstructRBFBiHarmonic.cc,v $
+ * Revision 1.6  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #include "ConstructRBFBiHarmonic.h"
 #include "Solver.h"
 

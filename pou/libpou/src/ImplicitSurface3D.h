@@ -1,3 +1,17 @@
+/**
+ * @file   ImplicitSurface3D.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:40:38 2004
+ * 
+ * @brief Support for implicit surface
+ * 
+ * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.7  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #ifndef IMPLICITESURFACE3D_H
 #define IMPLICITESURFACE3D_H
 

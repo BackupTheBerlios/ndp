@@ -1,3 +1,15 @@
+/**
+ * @file   PointSet.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:40:07 2004
+ * 
+ * $Log: PointSet.h,v $
+ * Revision 1.5  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ * 
+ */
 #ifndef POINTSET_H
 #define POINTSET_H
 

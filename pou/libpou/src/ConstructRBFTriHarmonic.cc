@@ -1,3 +1,17 @@
+/**
+ * @file   ConstructRBFTriHarmonic.cc
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:43:17 2004
+ * 
+ * @brief  rbf reconstruction using triharmonics
+ * 
+ * $Log: ConstructRBFTriHarmonic.cc,v $
+ * Revision 1.6  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #include "ConstructRBFTriHarmonic.h"
 #include "Solver.h"
 #include <iostream>

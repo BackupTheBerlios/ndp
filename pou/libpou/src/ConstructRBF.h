@@ -1,3 +1,17 @@
+/**
+ * @file   ConstructRBF.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:44:49 2004
+ * 
+ * @brief  Radial Basis Functions
+ * 
+ * $Log: ConstructRBF.h,v $
+ * Revision 1.6  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #ifndef CONSTRUCTRBF_H
 #define CONSTRUCTRBF_H
 

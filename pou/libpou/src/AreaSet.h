@@ -1,3 +1,16 @@
+/**
+ * @file   AreaSet.h
+ * @author Arcila Thomas
+ * @date   Mon Apr  5 20:48:14 2004
+ * 
+ * @brief  Area set
+ *
+ * $Log: AreaSet.h,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ * 
+ * 
+ */
 #ifndef AREASET_H
 #define AREASET_H
 

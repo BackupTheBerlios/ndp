@@ -1,3 +1,17 @@
+/**
+ * @file   AreaSphere.h
+ * @author Irek Tobor, Patrick Reuter
+ * @date   Mon Apr  5 20:46:50 2004
+ * 
+ * @brief  Area management using a sphere
+ * 
+ * $Log: AreaSphere.h,v $
+ * Revision 1.3  2004/04/05 19:14:36  pumpkins
+ * File documentation
+ *
+ * 
+ */
+
 #ifndef AREASPHERE_H
 #define AREASPHERE_H
 
