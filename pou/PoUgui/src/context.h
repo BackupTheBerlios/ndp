@@ -3,6 +3,8 @@
 
 #include <qfont.h>
 
+#include "light.h"
+#include "material.h"
 #include "trackball.h"
 #include "math/matrix.h"
 #include "math/vector3.h"
@@ -53,12 +55,10 @@ class OpenglContext {
   void ChangeShininess (float change);
   void ChangeDiffuse (float changex, float changey, float changez);
   void ChangeSpecular (float changex, float changey, float changez);
-  void SetMaterial ();
   void OppositeColorFlags ();
   void OppositePolygonMode ();
 
  protected:
-  void mapToSphere (Vec3f &dest);  
   void DrawHelp ();
 
  private:
@@ -66,7 +66,6 @@ class OpenglContext {
 
   /* View */
   Matrix4f m_modelview;
-  Matrix4d m_projection;
   double m_fov, m_viewaspect;
   int m_width, m_height;
   double m_far, m_near;
@@ -77,18 +76,11 @@ class OpenglContext {
   double m_zoomfactor;
   static const float DEF_ZOOM = 0.5;
 
-  /* Light Motion */
-  double m_lightdistance;
-  int m_lightrx, m_lightry;
-  Vec3f m_lightpos;
-  
   /* Lighting */
+  Light m_light;
+  Material m_material;
   bool m_lightstate, m_lightdraw;
   int m_lighttype;
-  Vec3f m_light_ambient, m_light_diffuse, m_light_specular;
-  float m_light_cst_atenuation, m_light_lin_atenuation, m_light_quad_atenuation;
-  Vec3f m_material_ambient, m_material_diffuse, m_material_specular;
-  float m_material_shininess;
   /* Polygon Mode*/
   bool m_polygonmode;
   /* Material*/

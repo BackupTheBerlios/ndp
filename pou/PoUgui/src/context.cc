@@ -48,7 +48,7 @@ OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
 };
 
 OpenglContext::OpenglContext (OpenglWidget *parent) 
-  : m_zoomfactor(DEF_ZOOM) 
+  : m_zoomfactor(DEF_ZOOM), m_light(0)
 {
   m_modelview.Identity();
   m_projection.Identity();
@@ -64,21 +64,6 @@ OpenglContext::OpenglContext (OpenglWidget *parent)
   m_showfps = false;
   m_showhelp = false;
   m_parent = parent;
-  /*lighting / material*/
-  m_lightrx = 0;
-  m_lightry = 0;
-  m_lightdistance = 0;
-  m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
-  //m_light_ambient = Vec3f( 0.3, 0.3, 0.3 );
-  m_light_diffuse = Vec3f( 0.2, 0.2, 0.2 );
-  m_light_specular = Vec3f( 0.4, 0.4, 0.4 );
-  m_light_cst_atenuation = 1.0;
-  m_light_lin_atenuation = 0.1;
-  m_light_quad_atenuation = 0.1;
-  m_material_ambient = Vec3f( 0.3, 0.3, 0.3 ) ;
-  m_material_diffuse = Vec3f( 0.2, 0.2, 0.2 );
-  m_material_specular = Vec3f( 0.4, 0.4, 0.4 );
-  m_material_shininess = 0.0f;
 
   m_polygonmode = false;
   m_colorflag = true;
@@ -176,35 +161,22 @@ OpenglContext::SetLighting (bool state)
 {
   m_lightstate = state;
   if (m_lightstate)
-    {
-      glPushMatrix ();
-      glLoadIdentity ();
-      gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
-      glEnable (GL_LIGHTING);
-      glEnable (GL_LIGHT0);
-      float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
-      glLightfv (GL_LIGHT0, GL_POSITION, (float *)pos);
-      SetLight ();
-      SetMaterial ();
-      glPopMatrix ();
-      glEnable (GL_NORMALIZE);
-    }
+  {
+    glEnable (GL_NORMALIZE);
+    glEnable (GL_LIGHTING);
+    glPushMatrix ();
+     glLoadIdentity ();
+     gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
+     m_light.Enable();
+     m_light.ToOpenGL();
+     m_material.ToOpenGL();
+    glPopMatrix ();
+  }
   else
-    {
-      glDisable (GL_NORMALIZE);
-      glDisable (GL_LIGHTING);
-      glDisable (GL_LIGHT0);
-    }
-}
-
-void 
-OpenglContext::SetLight ()
-{
-  glLightfv (GL_LIGHT0, GL_POSITION, &m_light_diffuse.x);
-  glLightfv (GL_LIGHT0, GL_SPECULAR, &m_light_specular.x);
-  glLightfv (GL_LIGHT0, GL_CONSTANT_ATTENUATION, &m_light_cst_atenuation);
-  glLightfv (GL_LIGHT0, GL_LINEAR_ATTENUATION, &m_light_lin_atenuation);
-  glLightfv (GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &m_light_quad_atenuation);
+  {
+    glDisable (GL_NORMALIZE);
+    glDisable (GL_LIGHTING);
+  }
 }
 
 void 
@@ -213,17 +185,17 @@ OpenglContext::SetLightType (OpenglContext::LightType type)
   m_lighttype = type;
 
   switch (type) 
-    {
-    case LIGHT_FLAT:
-      glShadeModel (GL_FLAT);
-      break;
-    case LIGHT_SMOOTH:
-      glShadeModel (GL_SMOOTH);
-      break;
-    default:
-      assert(0);
-      break;
-    }
+  {
+  case LIGHT_FLAT:
+    glShadeModel (GL_FLAT);
+    break;
+  case LIGHT_SMOOTH:
+    glShadeModel (GL_SMOOTH);
+    break;
+  default:
+    assert(0);
+    break;
+  }
 }
 
 void 
@@ -233,87 +205,32 @@ OpenglContext::ShowLightPosition (bool flag)
 }
 
 void 
-OpenglContext::MoveLight (int anglex, int angley, double distance){
-  double cTheta, sTheta, cPhi, sPhi, theta, phi;
-  m_lightdistance += distance;
-  m_lightrx += anglex;
-  m_lightry += angley;
-  
-  theta = deg2rad ((double)m_lightry);
-  phi = deg2rad ((double)m_lightrx);
-
-  cTheta = cos (theta);
-  cPhi = cos (phi);
-  sTheta = sin (theta);
-  sPhi = sin (phi);
-
-  m_lightpos.x = m_lightdistance * cTheta * sPhi;
-  m_lightpos.z = m_lightdistance * sTheta * sPhi;
-  m_lightpos.y = m_lightdistance * cPhi;
-  float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
+OpenglContext::MoveLight (int anglex, int angley, double distance) {
+  glEnable (GL_NORMALIZE);
   glPushMatrix ();
-  glLoadIdentity ();
-  glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+   glLoadIdentity ();
+   gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
+   m_light.MoveLight (anglex, angley, distance);
+   m_light.ToOpenGL();
   glPopMatrix ();
 }
 
 void 
 OpenglContext::ChangeShininess (float change)
 {
-  m_material_shininess += change;
-  m_material_shininess = (m_material_shininess < 0.0)?0.0:m_material_shininess;
-  m_material_shininess = (m_material_shininess > 128.0)?128.0:m_material_shininess;
-  glPushMatrix ();
-  glLoadIdentity ();
-  glMaterialfv (GL_FRONT_AND_BACK, GL_SHININESS, &m_material_shininess);
-  glPopMatrix ();
-
+  m_material.ChangeShininess (change);
 }
 
 void 
 OpenglContext::ChangeDiffuse (float changex, float changey, float changez)
 {
-  m_light_diffuse.x += changex;
-  m_light_diffuse.x = (m_light_diffuse.x < 0.0)?0.0:m_light_diffuse.x;
-  m_light_diffuse.x = (m_light_diffuse.x > 1.0)?1.0:m_light_diffuse.x;
-  m_light_diffuse.y += changey;
-  m_light_diffuse.y = (m_light_diffuse.y < 0.0)?0.0:m_light_diffuse.y;
-  m_light_diffuse.y = (m_light_diffuse.y > 1.0)?1.0:m_light_diffuse.y;
-  m_light_diffuse.z += changez;
-  m_light_diffuse.z = (m_light_diffuse.z < 0.0)?0.0:m_light_diffuse.z;
-  m_light_diffuse.z = (m_light_diffuse.z > 1.0)?1.0:m_light_diffuse.z;
-  glPushMatrix ();
-  glLoadIdentity ();
-  glLightfv (GL_LIGHT0, GL_DIFFUSE, &m_light_diffuse.x);
-  glPopMatrix ();
-
+  m_light.ChangeDiffuse (changex, changey, changez);
 }
 
 void 
 OpenglContext::ChangeSpecular (float changex, float changey, float changez)
 {
-  m_material_specular.x += changex;
-  m_material_specular.x = (m_material_specular.x < 0.0)?0.0:m_material_specular.x;
-  m_material_specular.x = (m_material_specular.x > 1.0)?1.0:m_material_specular.x;
-  m_material_specular.y += changey;
-  m_material_specular.y = (m_material_specular.y < 0.0)?0.0:m_material_specular.y;
-  m_material_specular.y = (m_material_specular.y > 1.0)?1.0:m_material_specular.y;
-  m_material_specular.z += changez;
-  m_material_specular.z = (m_material_specular.z < 0.0)?0.0:m_material_specular.z;
-  m_material_specular.z = (m_material_specular.z > 1.0)?1.0:m_material_specular.z;
-  glPushMatrix ();
-  glLoadIdentity ();
-  glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR, &m_material_specular.x );
-  //glLightfv (GL_LIGHT0, GL_SPECULAR,  &m_material_specular.x);
-  glPopMatrix ();
-}
-
-void 
-OpenglContext::SetMaterial ()
-{
-  glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, &m_material_ambient.x );
-  glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, &m_material_diffuse.x );
-  glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, &m_material_specular.x );
+  m_material.ChangeSpecular (changex, changey, changez);
 }
 
 void 
@@ -322,12 +239,12 @@ OpenglContext::OppositeColorFlags ()
   m_colorflag = !m_colorflag;
 
   if (m_colorflag)
-    {
-      glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-      glEnable(GL_COLOR_MATERIAL);
-    }
+  {
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glEnable(GL_COLOR_MATERIAL);
+  }
   else
-      glDisable(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void 
@@ -349,12 +266,12 @@ OpenglContext::DrawHelp () {
   glColor3f( 1.0, 1.0, 1.0 );
 
   for (unsigned int i = 0; i < sizeof(helpInfos)/sizeof(helpStruct); i++) 
-    {
-      QString tmp(helpInfos[i].key);
-      tmp += " ";
-      tmp += helpInfos[i].helpString;
-      m_parent->renderText (10, cury+=m_font.pixelSize(), tmp, m_font);
-    }
+  {
+    QString tmp(helpInfos[i].key);
+    tmp += " ";
+    tmp += helpInfos[i].helpString;
+    m_parent->renderText (10, cury+=m_font.pixelSize(), tmp, m_font);
+  }
 }
 
 void 
@@ -368,23 +285,10 @@ OpenglContext::DrawHud()
   /* Draw the light position using 2 quads */
   if (m_lightdraw){
     glPushMatrix ();  
-    glLoadIdentity ();
-    gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
-    glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
-    glDisable (GL_CULL_FACE);
-    glColor3f (0.0, 1.0, 0.0);
-    glBegin (GL_QUADS);
-    glVertex3f (m_lightpos.x - 0.1, m_lightpos.y - 0.1, m_lightpos.z);
-    glVertex3f (m_lightpos.x + 0.1, m_lightpos.y - 0.1, m_lightpos.z);
-    glVertex3f (m_lightpos.x + 0.1, m_lightpos.y + 0.1, m_lightpos.z);
-    glVertex3f (m_lightpos.x - 0.1, m_lightpos.y + 0.1, m_lightpos.z);
-
-    glVertex3f (m_lightpos.x - 0.1, m_lightpos.y, m_lightpos.z-0.1);
-    glVertex3f (m_lightpos.x + 0.1, m_lightpos.y, m_lightpos.z-0.1);
-    glVertex3f (m_lightpos.x + 0.1, m_lightpos.y, m_lightpos.z+0.1);
-    glVertex3f (m_lightpos.x - 0.1, m_lightpos.y, m_lightpos.z+0.1);
-
-    glEnd ();
+     glLoadIdentity ();
+     gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
+     glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
+     m_light.Draw();
     glPopMatrix ();
   }
 
@@ -393,51 +297,54 @@ OpenglContext::DrawHud()
   
   glColor3f (1.0, 1.0, 1.0);
   if (m_showstats)
-    {
-      QString spolys ("Triangles ");
-      QString sshininess ("Shininess ");
-      QString sdiffuse ("Diffuse (");
-      QString sspecular ("Specular (");
-      VertexBuffer *vb = m_parent->getVertexBuffer ();
-      spolys += QString::number (vb->getSize ());
-      m_parent->renderText (10, starty+40, spolys, m_font);
-      sshininess += QString::number (m_material_shininess);
-      m_parent->renderText (10, starty+50, sshininess, m_font);
-      sdiffuse += QString::number(m_light_diffuse.x) + ", ";
-      sdiffuse += QString::number(m_light_diffuse.y) + ", ";
-      sdiffuse += QString::number(m_light_diffuse.z) + " )";
-      m_parent->renderText (10, starty+60, sdiffuse, m_font);
-      sspecular += QString::number (m_material_specular.x) + ", ";
-      sspecular += QString::number (m_material_specular.y) + ", ";
-      sspecular += QString::number (m_material_specular.z) + " )";
-      m_parent->renderText (10, starty+70, sspecular, m_font);
-    }
+  {
+    Vec3f tmp;
+    QString spolys ("Triangles ");
+    QString sshininess ("Shininess ");
+    QString sdiffuse ("Diffuse (");
+    QString sspecular ("Specular (");
+    VertexBuffer *vb = m_parent->getVertexBuffer ();
+    spolys += QString::number (vb->getSize ());
+    m_parent->renderText (10, starty+40, spolys, m_font);
+    sshininess += QString::number (m_material.GetShininess());
+    m_parent->renderText (10, starty+50, sshininess, m_font);
+    tmp = m_light.GetDiffuse();
+    sdiffuse += QString::number(tmp.x) + ", ";
+    sdiffuse += QString::number(tmp.y) + ", ";
+    sdiffuse += QString::number(tmp.z) + " )";
+    m_parent->renderText (10, starty+60, sdiffuse, m_font);
+    tmp = m_material.GetSpecular();
+    sspecular += QString::number (tmp.x) + ", ";
+    sspecular += QString::number (tmp.y) + ", ";
+    sspecular += QString::number (tmp.z) + " )";
+    m_parent->renderText (10, starty+70, sspecular, m_font);
+  }
 
   if (m_showfps)
-    {
-      int curtime;
-      QString sfps ("FPS: ");
-      QTime t = QTime::currentTime ();
-      curtime = (t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
-      m_frames++;
+  {
+    int curtime;
+    QString sfps ("FPS: ");
+    QTime t = QTime::currentTime ();
+    curtime = (t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
+    m_frames++;
     
     if (m_lasttime == -1) 
-      {
-	m_lasttime = curtime;
-	m_frames = 0;
-	m_fps = 0.0f;
-      }
+    {
+      m_lasttime = curtime;
+      m_frames = 0;
+      m_fps = 0.0f;
+    }
     
     if ((curtime - m_lasttime) > 500)
-      {
-	m_fps = 1000.0 * (float)m_frames /(curtime - m_lasttime);
-	m_frames = 0;
-	m_lasttime = curtime;
-      }
+    {
+      m_fps = 1000.0 * (float)m_frames /(curtime - m_lasttime);
+      m_frames = 0;
+      m_lasttime = curtime;
+    }
     
     sfps += QString::number (m_fps);
     m_parent->renderText (10,  starty+30, sfps, m_font);
-    }
+  }
   
   if (m_showhelp)
     DrawHelp ();
@@ -465,25 +372,25 @@ void
 OpenglContext::SyncContext () 
 {
   if (m_updateproj)
-    {
-      m_updateproj = false;
-      glMatrixMode (GL_PROJECTION);
-      glLoadIdentity ();
-      gluPerspective (m_fov, m_viewaspect, m_near, m_far);
-      glMatrixMode (GL_MODELVIEW);
-      /* Build the Projection Matrix */
-    }
+  {
+    m_updateproj = false;
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+    gluPerspective (m_fov, m_viewaspect, m_near, m_far);
+    glMatrixMode (GL_MODELVIEW);
+    /* Build the Projection Matrix */
+  }
   
   if (m_updatemview)
-    {
-      m_updatemview = false;
-      glMatrixMode (GL_MODELVIEW);
-      m_tball->getRotation (m_modelview);
-      /* Send the Matrix */
-      glLoadIdentity ();
-      gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
-      glMultMatrixf ((float *)m_modelview[0]);
-      /* Apply Zoom */
-      glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
-    }
+  {
+    m_updatemview = false;
+    glMatrixMode (GL_MODELVIEW);
+    m_tball->getRotation (m_modelview);
+    /* Send the Matrix */
+    glLoadIdentity ();
+    gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
+    glMultMatrixf ((float *)m_modelview[0]);
+    /* Apply Zoom */
+    glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
+  }
 }
