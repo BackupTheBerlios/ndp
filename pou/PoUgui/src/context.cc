@@ -197,13 +197,14 @@ void OpenglContext::SetLighting( bool state )
   m_lightstate = state;
   if (m_lightstate)
     {
-      glMatrixMode( GL_PROJECTION );
+      glPushMatrix();
       glLoadIdentity();
       glEnable (GL_LIGHTING);
       glEnable (GL_LIGHT0);
       float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
       glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
       SetMaterial ();
+      glPopMatrix();
     }
   else{
       glDisable (GL_LIGHTING);
@@ -241,7 +242,10 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
   m_lightpos.z = m_lightdistance * sTheta * sPhi;
   m_lightpos.y = m_lightdistance * cPhi;
   float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
+  glPushMatrix();
+  glLoadIdentity();
   glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+  glPopMatrix();
 }
 
 void OpenglContext::SetMaterial ()
@@ -270,6 +274,9 @@ void OpenglContext::DrawHud()
   
   /* Draw the light position using 2 quads */
   if( m_lightdraw ){
+    glPushMatrix();  
+    glLoadIdentity();
+    glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
     glDisable( GL_CULL_FACE );
     glColor3f( 0.0, 1.0, 0.0 );
     glBegin( GL_QUADS );
@@ -285,6 +292,7 @@ void OpenglContext::DrawHud()
 
     glEnd();
     glColor3f( 1.0, 1.0, 1.0 );
+    glPopMatrix();
   }
 
   /* Disable zbuffer for text rendering */

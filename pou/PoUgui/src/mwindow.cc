@@ -270,8 +270,10 @@ void MWindow::timerEvent( QTimerEvent *e )
 
 void MWindow::CleanMemory() 
 {
+/*	
   delete vbPoints;
   delete vbPolys;
+*/
   vbPoints = NULL;
   vbPolys = NULL;
 }
