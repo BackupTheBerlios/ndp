@@ -6,6 +6,9 @@
  * @brief  Radial Basis Functions
  *
  * $Log: ConstructRBF.cc,v $
+ * Revision 1.7  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.6  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -30,7 +33,7 @@ ConstructRBF::~ConstructRBF() {
 void
 ConstructRBF::evalNormal(const Vec3f &p, Vec3f &v) const
 { 
-  evalGradian(p, v);
+  evalGradient(p, v);
   v.normalize();  
 }
 

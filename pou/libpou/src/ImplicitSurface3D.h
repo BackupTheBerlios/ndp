@@ -6,6 +6,9 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.15  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.14  2004/04/26 07:45:34  leserpent
  * Added a typedef for the callback function
  *
@@ -76,8 +79,8 @@ class ImplicitSurface3D {
     return rbf->evalNormal(p, v);
   }
 
-  void evalGradian(const Vec3f &p, Vec3f &v) const {
-    return rbf->evalGradian(p, v);
+  void evalGradient(const Vec3f &p, Vec3f &v) const {
+    return rbf->evalGradient(p, v);
   }
 
   void evalColorRGB(const Vec3f &p, Vec3f &v) const {

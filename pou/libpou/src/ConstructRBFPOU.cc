@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.14  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.13  2004/04/25 15:19:48  pumpkins
  * callback fixes
  * exception fixes
@@ -151,7 +154,7 @@ ConstructRBFPOU::eval(const Vec3f &p) const
 }
 
 void
-ConstructRBFPOU::evalGradian(const Vec3f &p, Vec3f &v) const
+ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
 {
   unsigned int size = rbf.size();
   unsigned int nbIntersect;
@@ -174,7 +177,7 @@ ConstructRBFPOU::evalGradian(const Vec3f &p, Vec3f &v) const
       (*cells)[tab[i]]->wd(p, localWd);      
       
       float f = rbf[tab[i]]->eval(p);
-      rbf[tab[i]]->evalGradian(p, localNormal);
+      rbf[tab[i]]->evalGradient(p, localNormal);
       //float f = (i+1)*p.x()*p.x() + p.y()*p.y() + p.z()*p.z();
       //localNormal.setValues(2*p.x()*(i+1), 2*p.y(), 2*p.z());
       
@@ -219,7 +222,7 @@ ConstructRBFPOU::evalGradian(const Vec3f &p, Vec3f &v) const
 void
 ConstructRBFPOU::evalNormal(const Vec3f &p, Vec3f &v) const
 {
-  evalGradian(p, v);
+  evalGradient(p, v);
   v.normalize();
 }
 

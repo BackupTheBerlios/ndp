@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using triharmonics
  * 
  * $Log: ConstructRBFTriHarmonic.cc,v $
+ * Revision 1.8  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.7  2004/04/20 11:16:39  pumpkins
  * gzstream
  * authors
@@ -159,7 +162,7 @@ ConstructRBFTriHarmonic::getL(const BoxVolume& box) const {
 }
 
 void
-ConstructRBFTriHarmonic::evalGradian(const Vec3f &p, Vec3f &v) const
+ConstructRBFTriHarmonic::evalGradient(const Vec3f &p, Vec3f &v) const
 {  
   if (size == 0)
     {

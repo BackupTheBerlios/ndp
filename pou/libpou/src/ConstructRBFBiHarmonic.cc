@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using biharmonics
  *
  * $Log: ConstructRBFBiHarmonic.cc,v $
+ * Revision 1.8  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.7  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -47,7 +50,7 @@ ConstructRBFBiHarmonic::eval(const Vec3f &p) const
 }
 
 void 
-ConstructRBFBiHarmonic::evalGradian(const Vec3f& p, Vec3f& v) const
+ConstructRBFBiHarmonic::evalGradient(const Vec3f& p, Vec3f& v) const
 {
   if (size == 0)
     {

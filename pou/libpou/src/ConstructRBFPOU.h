@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.12  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.11  2004/04/26 07:45:34  leserpent
  * Added a typedef for the callback function
  *
@@ -72,7 +75,7 @@ class ConstructRBFPOU {
     throw (std::logic_error);
   void setThresholds(unsigned int tMin, unsigned tMax);
   float eval(const Vec3f &p) const;
-  void evalGradian(const Vec3f &p, Vec3f &v) const;
+  void evalGradient(const Vec3f &p, Vec3f &v) const;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
 
   void load(std::istream &stream);

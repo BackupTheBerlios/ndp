@@ -6,6 +6,9 @@
  * @brief  Radial Basis Functions
  * 
  * $Log: ConstructRBF.h,v $
+ * Revision 1.8  2004/04/26 08:05:22  pumpkins
+ * gradian->gradient
+ *
  * Revision 1.7  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -49,7 +52,7 @@ class ConstructRBF {
 
   virtual float eval(const Vec3f &p) const = 0;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
-  virtual void evalGradian(const Vec3f &p, Vec3f &v) const =0;
+  virtual void evalGradient(const Vec3f &p, Vec3f &v) const =0;
 
   virtual void load(std::istream &stream) = 0;
   virtual void save(std::ostream &stream) const = 0;
