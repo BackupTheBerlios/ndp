@@ -1,5 +1,12 @@
 2004-03-31  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mc/mc|mwindows.h|cc: Changed normals and vertices from
+	vector<double> to vector<Vec3f>
+	domc() now needs a bouding box in order to compute the bounds
+	parameter of polygonize().
+	Trying to estimate the progression of the marching cubes
+	algorithm(Not finished).
+
 	* libpou/src/ImplicitSurface3D.h: Added a setThresholds method
 	ImplicitSurface3D now uses three times bigger area for geometry's
 	constraints in order to avoid useless small area.
