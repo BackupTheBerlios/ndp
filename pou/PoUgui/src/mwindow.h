@@ -49,7 +49,7 @@ class MainWindow : public QMainWindow
   SettingsForm *m_settingsform;
  
   /* Geometry */
-  PointSet m_pointset, m_pointset_filtered;
+  PointSet m_pointset;
   Vec3f m_initpoint;
   VertexBuffer *m_points;
   VertexBuffer *m_polys;

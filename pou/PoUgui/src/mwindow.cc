@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.56  2004/04/29 16:43:37  leserpent
+ * Reverse to 1.47
+ *
  * Revision 1.55  2004/04/29 16:30:16  pumpkins
  * *** empty log message ***
  *
@@ -36,7 +39,7 @@
  * bugfix
  *
  * Revision 1.50  2004/04/29 08:59:17  ob821
- * exception
+ * exceptiona
  *
  * Revision 1.49  2004/04/29 08:49:42  ob821
  * exception
@@ -294,9 +297,7 @@ MainWindow::MenuFileClose()
 void 
 MainWindow::MenuSettingsArgs() 
 {
-  unsigned int newNumPoints, oldNumPoints = m_settingsform->getPointsCount ();
   m_settingsform->exec();
-  newNumPoints = m_settingsform->getPointsCount ();
 }
 
 void 
@@ -329,6 +330,7 @@ void
 MainWindow::MenuRenderingRender() 
 {
   std::vector<Point> vecPoints;
+  int filter_npoints = m_settingsform->getPointsCount ();
   int mc_maxit = m_settingsform->getMaxIteration ();
   float mc_cubesize = m_settingsform->getCubeSize ();
   bool enabletet = m_settingsform->isTetEnable ();
@@ -353,11 +355,11 @@ MainWindow::MenuRenderingRender()
   ims.setThresholds (tmin, tmax);
   ims.setCallBack (callback, 10);
 
-  ims.computeRGB (m_pointset_filtered);
+  ims.computeRGB (m_pointset, filter_npoints);
   if (!qpd)
     return;
   qpd->setLabelText ("Computing geometry...");
-  ims.computeGeometry (m_pointset_filtered);
+  ims.computeGeometry (m_pointset, filter_npoints);
 
   if (!qpd)
     return;
