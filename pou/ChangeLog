@@ -4,6 +4,8 @@
 
 2004-04-01  Damien
 	
+	* mwindow.cc: GUI use new version of mc (mc/mc2.h). Previous bug FIXED
+	
 	* BUG: Alpha channel ?!?!
 	
 	* openglview.cc: Culling on front polygons

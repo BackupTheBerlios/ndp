@@ -41,7 +41,7 @@
 #include "ImplicitSurface3D.h"
 #include "PointSet.h"
 #include "settings.h"
-#include "mc/mc.h"
+#include "mc/mc2.h"
 
 /*****************************************************************************/
 // vertex buffers
@@ -56,6 +56,10 @@ int nPolys;
 ImplicitSurface3D *ims;
 PointSet *objectPointSet;
 /*****************************************************************************/
+// MC API class
+/*****************************************************************************/
+Mc *MCubes;
+/*****************************************************************************/
 // Main Window class
 /*****************************************************************************/
 OpenglView *PolysWindow;
@@ -63,6 +67,7 @@ QMainWindow *MW_window;
 QApplication *QT_Gui;
 QWorkspace *MW_workspace;
 SettingsForm *settingsForm;
+
 
 MWindow::MWindow() 
   : QMainWindow( 0, NULL, 0 )
@@ -244,17 +249,19 @@ void MWindow::menu_rendering_render() {
   /* First check if api is OK */
   ims = new ImplicitSurface3D(ConstructRBFPOU::BIHARMONIC);
   ims->setCallBack (callback, 10);
-
   if( !ims )
+    return ;
+  MCubes = new Mc();
+  if( !MCubes )
     return ;
   printf("[D] Start Surface reconstruction\n");
   ims->compute( *objectPointSet, filter_npoints );
   // Start MC
   printf("[D] Start Marching Cubes\n");
-  mc_setcallback(callback, 10);
-  domc(ims, m_bbox);
-  getVertNorm( vec_vertices, vec_normals );
-  vec_indices = getIndices();
+  MCubes -> mc_setcallback(callback, 10);
+  MCubes -> domc(ims, m_bbox);
+  MCubes -> getVertNorm( vec_vertices, vec_normals );
+  vec_indices = MCubes -> getIndices();
   // Copy data
   nindices = vec_indices.size();
   nvertices = vec_vertices.size();
@@ -281,7 +288,8 @@ void MWindow::menu_rendering_render() {
 
   delete[] vertices;
   delete[] indices;
-
+  delete MCubes;
+ 
   PolysWindow = new OpenglView( NULL, vbPolys );
   PolysWindow->resize( 1024, 768 );
   PolysWindow->show();
