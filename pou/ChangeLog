@@ -1,3 +1,9 @@
+2004-03-28  Ben  <leserpent@berlios.de>
+
+	* libpou/src/math/matrix*.h: Replaced Dump() by operator<<()
+
+	* libpou/src/math/: Moved matrix* from PoUgui/src to libpou/src/math/
+
 2004-03-28 Damien
 	* Roation functions moved from openglview.cc to context.cc
 	* Copyright notice added to *.cc files
@@ -9,8 +15,6 @@
 
 	* libpou/src/ImplicitSurface3D.h: Added missing eval* methods and
 	and added rbf->load to ImplicitSurface3D::load
-
-	* libpou/configure.ac: gsl1.3->gsl1.1
 
 2004-03-27  Ben  <leserpent@berlios.de>
 
