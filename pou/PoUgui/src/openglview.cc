@@ -69,8 +69,8 @@ void OpenglWidget::initializeGL()
   //glMatrixMode( GL_MODELVIEW );
   //glLoadIdentity();
   //gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
-  glDisable( GL_CULL_FACE );
-  glEnable( GL_DEPTH );
+  glEnable( GL_CULL_FACE );
+  glEnable( GL_DEPTH_TEST );
   glDepthFunc( GL_LEQUAL );
   glCullFace( GL_FRONT );
   glDisable( GL_BLEND );
