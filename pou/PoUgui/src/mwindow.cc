@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.54  2004/04/29 12:58:42  ob821
+ * bugfix
+ *
  * Revision 1.53  2004/04/29 09:52:55  leserpent
  * Getdatapointer returns a pointer.
  *
@@ -313,6 +316,13 @@ MainWindow::MenuSettingsArgs()
     points->clear();
     FillVector( m_pointset_filtered, *points );
     m_points->unLockBuffer();
+
+    QWidgetList windows = m_workspace->windowList (QWorkspace::CreationOrder);
+    if (windows.count()) 
+      for (int i = 0; i < int(windows.count()); ++i) {
+	QWidget *window = windows.at (i);
+	window->update ();
+      }
   }
   std::cerr << oldNumPoints << " " << newNumPoints << std::endl;
 }
@@ -386,16 +396,15 @@ MainWindow::MenuRenderingRender()
   MCubes.setMaxIteration (mc_maxit);
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
-  MCubes.setInitPoint (Vec3f (-1000, -1000, -1000));
   try
     {
       MCubes.doMc (&ims, boundingbox);
     } 
   catch(std::exception& e) 
     {
-      ShowErrorMessage (this, QString (e.what ()));
       delete qpd;
       qpd = NULL;
+      ShowErrorMessage (this, QString (e.what ()));
       return;
     }
 
