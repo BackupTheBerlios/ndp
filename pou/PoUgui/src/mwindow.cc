@@ -181,7 +181,7 @@ void MWindow::menu_file_open() {
 
     vbPoints = new VertexBuffer();
     vbPoints -> CreateVertexBuffer( vPoints, nPoints,step, POLY_POINTS );
-    
+   
     OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
     mw -> resize( 200, 200 );
     mw -> show();

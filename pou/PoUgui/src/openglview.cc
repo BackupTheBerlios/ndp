@@ -55,6 +55,7 @@ void OpenglWidget::initializeGL()
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
   gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
+  // vb -> Bind();
 }
 
 void OpenglWidget::clearGL() 
@@ -83,7 +84,7 @@ void OpenglWidget::paintGL() {
   glcontext -> SyncContext();
   if( vb ) {
     qglColor( white );
-
+    
     glBegin( GL_POINTS );
     vb->LockBuffer();
     Vec3f *ptr = (Vec3f *)vb->getDataPointer();
@@ -94,6 +95,7 @@ void OpenglWidget::paintGL() {
     }
     vb->unLockBuffer();
     glEnd();
+    //vb -> DrawBuffer();
   }
   //glPopMatrix();
   swapBuffers();

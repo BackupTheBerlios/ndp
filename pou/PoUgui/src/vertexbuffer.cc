@@ -69,6 +69,7 @@ int VertexBuffer::CreateVertexBuffer( Vec3f *dataptr, int size, int step,
     
   }
   this->contents = contents;
+
   return 0;
 }
 
@@ -83,6 +84,15 @@ Vec3f *VertexBuffer::getDataPointer() {
     return (Vec3f *)mapptr;
 
   return ptr;
+}
+
+void VertexBuffer::Bind() {
+  //glEnableClientState(GL_COLOR_ARRAY);
+  glEnableClientState(GL_VERTEX_ARRAY);
+  
+  glVertexPointer( size*step*sizeof(Vec3f), GL_FLOAT, 
+		   step*sizeof(Vec3f), ptr );
+  //glColorPointer( size*step, GL_FLOAT, step, ptr + 2*sizeof(Vec3f) );
 }
 
 void VertexBuffer::LockBuffer() {
@@ -103,6 +113,9 @@ int VertexBuffer::DrawBuffer() {
   /* Don't draw locked buffers */
   if( isLocked )
     return -1;
+  glColor3f( 1.0,1.0,1.0 );
+  glDrawArrays( GL_POINTS, 0, size ); 
+
   return 0;
 }
 
