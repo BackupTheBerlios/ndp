@@ -1,3 +1,16 @@
+2004-03-30  Ben  <leserpent@berlios.de>
+
+	* libpou/src/math/matrix*.h: Added missing const and removed
+	superfluous methods(probably needs more fixing).
+
+	* PoUgui/src/context.cc: math.h -> cmath
+	Changed some names to pseudo-hungarian notation.
+
+	* PoUgui/src/context.h: Matrix4f m_modelview and co. are no more
+	dynamically allocated.
+
+	* PoUgui/src/context.cc (mapToSphere): Added continuity to mapToSphere
+
 2004-03-30 Damien
 	
 	* Bugs Fix in mwindow.cc
