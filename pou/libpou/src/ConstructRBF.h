@@ -22,11 +22,12 @@ class ConstructRBF {
  public:
   ConstructRBF();
   virtual ~ConstructRBF();
-  int compute(const ConstraintSet &cs)
-    {
-      applyFilter(const_cast<ConstraintSet&>(cs));
-      return computeRBF(cs);
-    }
+
+  int compute(const ConstraintSet &cs) {
+    applyFilter(const_cast<ConstraintSet&>(cs));
+    return computeRBF(cs);
+  }
+
   virtual float eval(const Vec3f &p) const = 0;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
   virtual void evalGradian(const Vec3f &p, Vec3f &v) const =0;
@@ -44,14 +45,13 @@ class ConstructRBF {
   void setW(const unsigned int index, const float val);
   void setCenter(const unsigned int index, const Vec3f& _center);
 
-  void setFilter(ConstraintFilter *f, int parm)
-    {
-      cf=f;
-      filterParm = parm;
-    }
+  void setFilter(ConstraintFilter *f, int parm) {
+    cf=f;
+    filterParm = parm;
+  }
+
   static const ConstraintFilter *NULL_FILTER;
-
-
+  
  protected:
   unsigned int size;
   float *w;
@@ -100,10 +100,9 @@ inline void
 ConstructRBF::setSize(const unsigned int _size)
 {
   size = _size;
-  /*  if (w)
-    delete[] w;
-  if (center)
-  delete[] center;*/
+
+  delete[] w;
+  delete[] center;
   
   w = new float[size];
   center = new Vec3f[size];

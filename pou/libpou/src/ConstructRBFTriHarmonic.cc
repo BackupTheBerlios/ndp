@@ -11,7 +11,7 @@ ConstructRBFTriHarmonic::ConstructRBFTriHarmonic()
 
 ConstructRBFTriHarmonic::~ConstructRBFTriHarmonic()
 {
-  delete c;
+  delete[] c;
 }
 
 

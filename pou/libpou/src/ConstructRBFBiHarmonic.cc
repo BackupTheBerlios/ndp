@@ -9,7 +9,7 @@ ConstructRBFBiHarmonic::ConstructRBFBiHarmonic()
 }
 
 ConstructRBFBiHarmonic::~ConstructRBFBiHarmonic() {
-  delete c;
+  delete[] c;
 }
 
 float

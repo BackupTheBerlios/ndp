@@ -1,20 +1,12 @@
 #include "ConstructRBF.h"
 
-ConstructRBF::ConstructRBF() {
-  size = 0;
-  center = 0;
-  w = 0;
-  c = 0;
+ConstructRBF::ConstructRBF(): size(0), w(NULL), center(NULL), c(NULL) {
   cf=const_cast<ConstraintFilter*>(NULL_FILTER);
 }
 
 ConstructRBF::~ConstructRBF() {
-  /*  if (w)
-    delete[] w;
-  if (center)
-    delete[] center;
-  if (c)
-  delete[] c;*/
+  delete[] w;
+  delete[] center;
 }
 
 void

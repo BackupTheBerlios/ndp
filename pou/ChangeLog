@@ -1,5 +1,10 @@
 2004-03-22  Ben  <leserpent@berlios.de>
 
+	* libpou/src/ConstructRBF.cc: c is allocated and deleted by
+	derivated class.
+
+2004-03-22  Ben  <leserpent@berlios.de>
+
 	* libpou/src/ConstructRBF.h (setSize): Removed comments around w's
 	and center's deletes
 	(setSize): Removed if(w), delete NULL is ok.
