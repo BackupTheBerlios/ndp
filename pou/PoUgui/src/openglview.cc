@@ -41,7 +41,7 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
   :QGLWidget( parent, name )
 {
   vb = vbuffer;
-  glcontext = new OpenglContext();
+  glcontext = new OpenglContext( this );
   m_idledraw = false;
   /* Polygon window => show fps */
   if( vb -> getPolyType() == POLY_TRIANGLES ){

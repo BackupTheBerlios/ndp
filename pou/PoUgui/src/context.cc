@@ -28,6 +28,7 @@
 #include <cmath>
 #include <qdatetime.h>
 #include "context.h"
+#include "openglview.h"
 #include "opengl.h"
 
 #define DEG2RAD( x ) (x) * M_PI / 180.0
@@ -35,7 +36,7 @@
 const float OpenglContext::DEF_ZOOM;
 const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
 
-OpenglContext::OpenglContext() 
+OpenglContext::OpenglContext( OpenglWidget *parent ) 
   : m_zoomfactor(DEF_ZOOM) 
 {
   m_modelview.Identity();
@@ -48,6 +49,7 @@ OpenglContext::OpenglContext()
   m_updateproj = true;
   m_lasttime = -1;
   m_showfps = false;
+  m_parent = parent;
 }
 
 OpenglContext::~OpenglContext() 
@@ -184,6 +186,7 @@ void OpenglContext::DrawHud()
 {
   if( m_showfps ){
     int curtime;
+    char sfps[32];
     QTime t = QTime::currentTime();
     curtime = ( t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
     m_frames ++;
@@ -195,12 +198,16 @@ void OpenglContext::DrawHud()
       return ;
     }
     
-    if( (curtime - m_lasttime) > 1000 ){
+    if( (curtime - m_lasttime) > 500 ){
       m_fps = 1000.0 * (float)m_frames /(curtime - m_lasttime);
-      printf("FPS: %f\n", m_fps );
       m_frames = 0;
       m_lasttime = curtime;
     }
+
+    sprintf( sfps, "FPS: %f", m_fps );
+    glColor3f( 1.0, 1.0, 1.0 );
+    m_parent -> renderText( 10, 10, sfps );
+
   }
   
 }

@@ -1,13 +1,17 @@
 #ifndef OPENGL_CONTEXT_H
 #define OPENGL_CONTEXT_H
 
+#include <qfont.h>
+
 #include "math/matrix.h"
 #include "math/vector3.h"
 #include "math/quaternion.h"
 
+class OpenglWidget;
+
 class OpenglContext {
  public:
-  OpenglContext();
+  OpenglContext( OpenglWidget *parent );
   ~OpenglContext();
 
   void SyncContext();
@@ -39,6 +43,7 @@ class OpenglContext {
   void mapToSphere(Vec3f &dest);  
 
  private:
+  OpenglWidget *m_parent;
   /* View */
   Matrix4f m_modelview;
   Matrix4d m_projection;
