@@ -47,6 +47,7 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
   if( vb -> getPolyType() == POLY_TRIANGLES ){
     m_idledraw = true;
     glcontext -> ShowFps( false );
+    glcontext -> ShowStats( false );
   }
   
   //setFocusProxy( this );
