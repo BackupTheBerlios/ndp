@@ -256,14 +256,13 @@ void MWindow::menu_rendering_render() {
   ims->setCallBack (callback, 10);
   if( !ims )
     return ;
-  MCubes = new Mc();
+  MCubes = new Mc(callback, 10);
   if( !MCubes )
     return ;
   printf("[D] Start Surface reconstruction\n");
   ims->compute( *objectPointSet, filter_npoints );
   // Start MC
   printf("[D] Start Marching Cubes\n");
-  MCubes -> mc_setcallback(callback, 10);
   MCubes -> domc(ims, m_bbox);
   MCubes -> getVertNorm( vec_vertices, vec_normals );
   vec_indices = MCubes -> getIndices();
