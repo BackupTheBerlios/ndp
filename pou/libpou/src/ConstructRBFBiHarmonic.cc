@@ -3,7 +3,8 @@
 
 #include <iostream>
 
-ConstructRBFBiHarmonic::ConstructRBFBiHarmonic() : ConstructRBF::ConstructRBF() {
+ConstructRBFBiHarmonic::ConstructRBFBiHarmonic()
+{
   c = new float[4];
 }
 

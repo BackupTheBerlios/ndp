@@ -4,8 +4,7 @@
 
 #include <fstream>
 
-ConstructRBFTriHarmonic::ConstructRBFTriHarmonic() :
-  ConstructRBF::ConstructRBF()
+ConstructRBFTriHarmonic::ConstructRBFTriHarmonic()
 {
   c = new float[10];
 }
