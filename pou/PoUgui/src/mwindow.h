@@ -30,6 +30,7 @@ class MWindow : public QMainWindow
   void menu_windows_new();
   void menu_rendering_render();
  private:
+  void CleanMemory();
 };
 
 int CreateMainWindow( int argc, char **argv );

@@ -10,10 +10,9 @@
 
 enum{ 
   POLY_POINTS = 0,
-    POLY_TRIANGLE,
-    POLY_QUAD
+    POLY_TRIANGLES=1,
+    POLY_QUADS=2
     };
-
 
 enum{
   POLY_COORDS = 1,
@@ -33,12 +32,17 @@ class VertexBuffer{
   void unBind();
   int ResizeBuffer( Vec3f *dataptr, int size, int step );
   int DrawBuffer();
+  void SetIndices( void *data, int size );
   inline int getSize(){ return size; }
   inline int getStep(){ return step; }
+  inline int getPolyType(){ return polytype; }
  private:
   void MapBuffer();
   void unMapBuffer();
  private:
+  /* Indices */
+  int *m_indices;
+  int m_indices_count;
 
   /* Both (vertexbuffer, vbo) */
   int size;

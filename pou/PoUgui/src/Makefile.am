@@ -6,12 +6,12 @@ INCLUDES=-I../$(top_srcdir)/libpou/src/
 
 bin_PROGRAMS=PoUgui
 PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc main.cc \
-	vertexbuffer.cc context.cc\
+	vertexbuffer.cc context.cc settings.ui.cc settings.ui.moc.cc\
 	ims.h   language.h  mwindow.h  openglview.h \
 	context.h  init.h  libgui.h    opengl.h   vertexbuffer.h
 
 PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@
-PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la
+PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la -lstdc++ mc/mc.o
 PoUgui_LDADD=@QT_LIBS@ @GL_LIBS@
 
 mostlyclean-local:

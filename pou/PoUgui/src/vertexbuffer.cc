@@ -23,9 +23,8 @@
 #include <string>
 #include <iostream>
 #include "opengl.h"
-//#include "math/vector3.h"
-//TODO: virer include que pour Vertex3f
-//#include "ims.h"
+
+int PolyTypes[3] = { GL_POINTS, GL_TRIANGLES, GL_QUADS };
 
 VertexBuffer::VertexBuffer() {
   if( !HasVBO() )
@@ -33,10 +32,10 @@ VertexBuffer::VertexBuffer() {
   else
     type = TYPE_VBO;
   contents = POLY_COORDS;
-  //std::cout<<"New Buffer: type = "<< type <<"\n";
   isLocked = false;
   ptr = NULL;
   mapptr = NULL;
+  m_indices = NULL;
 }
 
 VertexBuffer::~VertexBuffer() {
@@ -47,9 +46,13 @@ VertexBuffer::~VertexBuffer() {
   else
     if( ptr )
       delete [] ptr;
+
+  delete[] m_indices;
 }
 
-
+// size = number of points 
+// step = Vec3f per point
+// step * size = # of Vec3f in the buffer
 int VertexBuffer::CreateVertexBuffer( Vec3f *dataptr, int size, int step, 
 				      int polytype) {
   if( type == TYPE_VERTEXBUFFER ) {
@@ -58,7 +61,7 @@ int VertexBuffer::CreateVertexBuffer( Vec3f *dataptr, int size, int step,
     this->size = size;
     this->step = step;
     this->polytype = polytype;
-    printf("New: size = %d\n", size*step);
+
     ptr = new Vec3f [ size*step ];
     if( !ptr )
       return -1;
@@ -86,50 +89,100 @@ Vec3f *VertexBuffer::getDataPointer() {
   return ptr;
 }
 
-void VertexBuffer::Bind() {
-  //glEnableClientState(GL_COLOR_ARRAY);
-  glEnableClientState(GL_VERTEX_ARRAY);
-  
-  glVertexPointer( size*step*sizeof(Vec3f), GL_FLOAT, 
-		   step*sizeof(Vec3f), ptr );
-  //glColorPointer( size*step, GL_FLOAT, step, ptr + 2*sizeof(Vec3f) );
+void VertexBuffer::Bind() 
+{
+  glEnableClientState( GL_COLOR_ARRAY );
+  glEnableClientState( GL_VERTEX_ARRAY );
+  glEnableClientState( GL_NORMAL_ARRAY );
+  if( m_indices ){
+    printf("Enable indices\n");
+    //glEnableClientState( GL_INDEX_ARRAY );
+  }
+
+  if( type == TYPE_VERTEXBUFFER ){
+    glVertexPointer( 3, GL_FLOAT, step*sizeof(Vec3f), ptr );
+    glColorPointer( 3, GL_FLOAT, step*sizeof(Vec3f), ptr + 2 );
+    glNormalPointer( GL_FLOAT, step*sizeof(Vec3f), ptr + 1 );
+    //if( m_indices )
+    // glIndexPointer( GL_UNSIGNED_INT, 3, m_indices );
+  }
+
 }
 
-void VertexBuffer::LockBuffer() {
+void VertexBuffer::unBind() 
+{
+  glDisableClientState(GL_COLOR_ARRAY);
+  glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
+  //glDisableClientState(GL_INDEX_ARRAY);
+}
+
+void VertexBuffer::LockBuffer() 
+{
   isLocked = true;
 }
 
-void VertexBuffer::unLockBuffer() {
+void VertexBuffer::unLockBuffer() 
+{
   isLocked = false;
   if( (type == TYPE_VBO) && mapptr )
     unMapBuffer();
 }
 
-int VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) {
+int VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) 
+{
   return 0;
 }
 
-int VertexBuffer::DrawBuffer() {
+int VertexBuffer::DrawBuffer() 
+{
+  int n = m_indices?m_indices_count:size;
   /* Don't draw locked buffers */
   if( isLocked )
     return -1;
   glColor3f( 1.0,1.0,1.0 );
-  glDrawArrays( GL_POINTS, 0, size ); 
-
+  if( !m_indices )
+    glDrawArrays( PolyTypes[polytype], 0, n ); 
+  else{
+    
+    for( int z=0; z<m_indices_count;z+=3){
+      glBegin( PolyTypes[polytype] );
+      glArrayElement( m_indices[z] );
+      glArrayElement( m_indices[z+1] );
+      glArrayElement( m_indices[z+2] );
+      glEnd();
+    }
+  }
   return 0;
 }
 
-void VertexBuffer::MapBuffer() {
+void VertexBuffer::MapBuffer() 
+{
   if( type == TYPE_VBO )
     if( !mapptr ){
 
     }
 }
 
-void VertexBuffer::unMapBuffer() {
+void VertexBuffer::unMapBuffer() 
+{
   if( type == TYPE_VBO )
     if( mapptr ){
       
       mapptr = NULL;
     }
 }
+
+void VertexBuffer::SetIndices( void *data, int size )
+{
+  delete[] m_indices;
+  m_indices = NULL;
+
+  if( !data )
+    return ;
+  
+  m_indices = new int [size];
+  m_indices_count = size;
+  memcpy( m_indices, data, size*sizeof( int ) );
+}
+

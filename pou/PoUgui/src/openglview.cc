@@ -18,6 +18,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ *  Tuesday 30 March 2004:
+ *      - Use VertexBuffer::DrawBuffer() for rendering
+ *
  *  Sunday 28 March 2004:
  *      - Motion support (Dalla Rosa Damien )
  */
@@ -55,7 +58,8 @@ void OpenglWidget::initializeGL()
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
   gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
-  // vb -> Bind();
+  glEnable( GL_DEPTH );
+  vb -> Bind();
 }
 
 void OpenglWidget::clearGL() 
@@ -71,33 +75,19 @@ void OpenglWidget::resizeGL( int w, int h )
   glcontext -> SetFov( 60.0 );
   glcontext -> SetViewSize( w, h );
   glcontext -> SyncContext();
-
+  
   paintGL();
 }
 
 void OpenglWidget::paintGL() {
-  //float m[4][4];
-
   glClear( GL_COLOR_BUFFER_BIT );
+  glClear( GL_DEPTH_BUFFER_BIT );
   
-  //glPushMatrix();
   glcontext -> SyncContext();
-  if( vb ) {
-    qglColor( white );
-    
-    glBegin( GL_POINTS );
-    vb->LockBuffer();
-    Vec3f *ptr = (Vec3f *)vb->getDataPointer();
-    
-    for( int i=0; i< vb -> getSize()*vb -> getStep(); i+= vb -> getStep() ) {
-      glColor3f( ptr[i+2].x, ptr[i+2].y, ptr[i+2].z);
-      glVertex3f( ptr[i].x, ptr[i].y, ptr[i].z );
-    }
-    vb->unLockBuffer();
-    glEnd();
-    //vb -> DrawBuffer();
-  }
-  //glPopMatrix();
+
+  if( vb )
+    vb -> DrawBuffer();
+
   swapBuffers();
 }
 
