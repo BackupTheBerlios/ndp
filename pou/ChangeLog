@@ -1,3 +1,10 @@
+2004-04-06  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mc/mc2.cc (clear): Removed an useless if
+
+	* PoUgui/src/openglview.cc: Changed two glClear into one.
+	(resizeGL): Changed a paintGL to updateGL
+
 2004-04-06  Damien Dallarosa  <dallaros@liszt.emi.u-bordeaux.fr>
 
 	* PoUgui/src/context.cc (DrawHud): Light no longer moves with the
