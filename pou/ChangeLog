@@ -4,6 +4,8 @@
 	
 2004-04-29  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
 
+	* PoUgui/src/trackball.h|context*: Trackball supports resizing windows
+
 	* libpou/src/AreaSet.h (class AreaSet): Use a vector<unsigned int>
 	for area indices.
 
