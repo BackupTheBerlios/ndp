@@ -1,5 +1,5 @@
 EXTRA_DIST=settings.ui
-SUBDIRS=gl-headers mc
+SUBDIRS=gl-headers
 
 DEFS="-DDATADIR=\"${pkgdatadir}\""
 
