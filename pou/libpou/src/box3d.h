@@ -6,6 +6,10 @@
  * @brief  Support for bounding boxes
  * 
  * $Log: box3d.h,v $
+ * Revision 1.4  2004/04/25 15:25:30  leserpent
+ * Cleaned code
+ * Removed matrix3
+ *
  * Revision 1.3  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -36,7 +40,7 @@ public:
   Vector3<T> getMax() const { return max; }
   
   Vector3<T> getCenter() const {
-    return min + (max - min) * T(0.5);
+    return min + (max - min) / T(2);
   }
 
   void getCenter( Vector3<T>& v ) const {
@@ -78,10 +82,10 @@ public:
     }
   
   void extendBy(const Vector3<T>& v) {
-    min.setValues(std::min(min.x, v[0]), std::min(min.y, v[1]),
-                 std::min(min.z, v[2]));
-    max.setValues(std::max(max.x, v[0]), std::max(max.y, v[1]),
-                 std::max(max.z, v[2]));
+    min.setValues(std::min(min.x, v.x), std::min(min.y, v.y),
+                 std::min(min.z, v.z));
+    max.setValues(std::max(max.x, v.x), std::max(max.y, v.y),
+                 std::max(max.z, v.z));
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Box3D<T>& v) {

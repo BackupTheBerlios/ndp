@@ -13,7 +13,7 @@ pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 
 pkgincludemathdir=@includedir@/@PACKAGE_NAME@
 pkgincludemath_HEADERS=math/vector3.h math/quaternion.h math/matrix4.h \
-	math/matrix3.h math/matrix.h
+	math/matrix.h
 
 pkgincludehelpersdir=@includedir@/@PACKAGE_NAME@
 pkgincludehelpers_HEADERS=helpers/md5.h helpers/deletor.h helpers/gzstream.h
