@@ -1,3 +1,7 @@
+2004-04-27  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/context.cc (SyncContext): Added a gluLookAt
+
 2004-04-27 Damien
 	
 	* PoUgui/src/context.cc: Matrix removed, replaced by a gluPerspective ;-(

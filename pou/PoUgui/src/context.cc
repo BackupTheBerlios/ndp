@@ -200,6 +200,7 @@ void OpenglContext::SetLighting( bool state )
     {
       glPushMatrix();
       glLoadIdentity();
+      gluLookAt(0, 0, 2, 0, 0, 0, 0, 1, 0);
       glEnable (GL_LIGHTING);
       glEnable (GL_LIGHT0);
       float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
@@ -234,6 +235,7 @@ void OpenglContext::SetLightType( OpenglContext::LightType type )
     glShadeModel( GL_SMOOTH );
     break;
   default:
+    assert(0);
     break;
   }
 }
@@ -372,6 +374,7 @@ void OpenglContext::DrawHud()
   if( m_lightdraw ){
     glPushMatrix();  
     glLoadIdentity();
+    gluLookAt(0, 0, 2, 0, 0, 0, 0, 1, 0);
     glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
     glDisable( GL_CULL_FACE );
     glColor3f( 0.0, 1.0, 0.0 );
