@@ -18,6 +18,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * $Log: mwindow.cc,v $
+ * Revision 1.29  2004/04/06 16:18:29  leserpent
+ * Clear PointSet before loading a new file.
+ *
+ *
  *  Sunday 28 March 2004:
  *      - Motion support (Dalla Rosa Damien )
  */
@@ -173,7 +178,8 @@ void MWindow::menu_file_open() {
 
     CloseWindows();
     CleanMemory();
-    
+
+    ps.removeDeleteAll();       // Clean a previous load()
     ps.load( filename );
     m_bbox = ps.getBoundingBox();
     
