@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.55  2004/04/29 16:30:16  pumpkins
+ * *** empty log message ***
+ *
  * Revision 1.54  2004/04/29 12:58:42  ob821
  * bugfix
  *
@@ -37,11 +40,6 @@
  *
  * Revision 1.49  2004/04/29 08:49:42  ob821
  * exception
- *
- * Revision 1.48  2004/04/28 21:14:37  leserpent
- * Started to add show only selected points.
- * Call settingsform->exec() instead of show()(must wait).
- * BUG:the number of points into the vertexbuffer is not updated.
  *
  * Revision 1.47  2004/04/28 19:20:12  pumpkins
  * code cleanup
@@ -246,15 +244,6 @@ MainWindow::closeEvent( QCloseEvent *event )
 }
 
 void 
-MainWindow::FillVector( const PointSet &ps, std::vector<Point> &points )
-{
-  PointList::const_iterator psend = ps.end();
-  
-  for( PointList::const_iterator i = ps.begin(); i != psend; ++i)
-    points.push_back(**i);
-}
-
-void 
 MainWindow::MenuFileOpen() 
 {
   QString filename = QFileDialog::
@@ -277,9 +266,9 @@ MainWindow::MenuFileOpen()
 	ShowErrorMessage (this, QString (e.what ()));
 	return;
       }
-    m_pointset_filtered.randomFilter (m_pointset, 
-				      m_settingsform->getPointsCount ());
-    FillVector (m_pointset_filtered, vecPoints);
+    PointList::iterator psend = m_pointset.end();
+    for( PointList::iterator i=m_pointset.begin(); i != psend; ++i)
+      vecPoints.push_back(**i);
 
     m_points = new VertexBuffer (vecPoints, VertexBuffer::POLY_POINTS);
 
@@ -302,29 +291,12 @@ MainWindow::MenuFileClose()
   CleanMemory();
 }
 
-//FIXME: vertexbuffer is not modified
 void 
 MainWindow::MenuSettingsArgs() 
 {
   unsigned int newNumPoints, oldNumPoints = m_settingsform->getPointsCount ();
   m_settingsform->exec();
   newNumPoints = m_settingsform->getPointsCount ();
-  if ( (oldNumPoints != newNumPoints) && m_points) {
-    m_pointset_filtered.randomFilter(m_pointset, newNumPoints);
-    m_points->LockBuffer();
-    std::vector<Point> *points = m_points->getDataPointer();
-    points->clear();
-    FillVector( m_pointset_filtered, *points );
-    m_points->unLockBuffer();
-
-    QWidgetList windows = m_workspace->windowList (QWorkspace::CreationOrder);
-    if (windows.count()) 
-      for (int i = 0; i < int(windows.count()); ++i) {
-	QWidget *window = windows.at (i);
-	window->update ();
-      }
-  }
-  std::cerr << oldNumPoints << " " << newNumPoints << std::endl;
 }
 
 void 
