@@ -1,5 +1,5 @@
 EXTRA_DIST=settings.ui
-SUBDIRS=gl-headers
+SUBDIRS=gl-headers mc
 
 DEFS="-DDATADIR=\"${pkgdatadir}\""
 INCLUDES=-I../$(top_srcdir)/libpou/src/
