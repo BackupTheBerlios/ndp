@@ -172,7 +172,6 @@ void OpenglContext::SetLighting( bool state )
       glLoadIdentity();
       glEnable (GL_LIGHTING);
       glEnable (GL_LIGHT0);
-      glLightfv (GL_LIGHT0,m_lighttype,m_light);
       glLightfv (GL_LIGHT0,GL_POSITION,m_lightpos);
     }
 }

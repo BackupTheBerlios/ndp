@@ -76,10 +76,10 @@ void OpenglWidget::initializeGL()
   glDisable( GL_BLEND );
   glClearDepth( 1.0f );
   vb -> Bind();
-  if( m_idledraw )
+  if( m_idledraw ){
     startTimer( FRAME_DELAY );
-  SetLighting (true,GL_DIFFUSE,1.0,1.0,1.0);
-
+    SetLighting (true,GL_DIFFUSE,1.0,1.0,1.0);
+  }
 }
 
 void OpenglWidget::clearGL() 
