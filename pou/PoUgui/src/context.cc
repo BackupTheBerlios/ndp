@@ -34,7 +34,7 @@
 const float OpenglContext::DEF_ZOOM;
 
 //gcc 3.0 wants to have the size of the array
-OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
+OpenglContext::helpStruct OpenglContext::helpInfos[16] = {
   'h', "Hide/Unhide this help screen",
   'p', "Hide/Unhide light",
   's', "Hide/Unhide statistics",
@@ -44,7 +44,13 @@ OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
   '+', "Increase light distance from center",
   '-', "Decrease light distance from center",
   '1', "Enable flat shading",
-  '2', "Enable gouraud shading"
+  '2', "Enable gouraud shading",
+  '4', "Increase shininess",
+  '7', "Decrease shininess",
+  '5', "Increase diffuse",
+  '8', "Decrease diffuse",
+  '6', "Increase specular",
+  '7', "Decrease specular"
 };
 
 OpenglContext::OpenglContext (OpenglWidget *parent) 
