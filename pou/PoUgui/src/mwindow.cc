@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.50  2004/04/29 08:59:17  ob821
+ * exception
+ *
  * Revision 1.49  2004/04/29 08:49:42  ob821
  * exception
  *
@@ -259,7 +262,7 @@ MainWindow::MenuFileOpen()
       } 
     catch(std::exception e) 
       {
-	ShowErrorMessage (this, QString ("Error Loading ")+filename);
+	ShowErrorMessage (this, QString (e.what ()));
 	return;
       }
     m_pointset_filtered.randomFilter (m_pointset, 
