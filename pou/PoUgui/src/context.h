@@ -3,6 +3,7 @@
 
 #include <qfont.h>
 
+#include "trackball.h"
 #include "math/matrix.h"
 #include "math/vector3.h"
 #include "math/quaternion.h"
@@ -72,11 +73,9 @@ class OpenglContext {
   bool m_updateproj, m_updatemview, m_depthtest;
 
   /* Camera Motion */
+  Trackball *m_tball;
   double m_zoomfactor;
-  Vec3f m_startVector;
-  Quaternionf m_orientation, m_startOrientation;
   static const float DEF_ZOOM = 0.5;
-  static const float INVSQRT2;
 
   /* Light Motion */
   double m_lightdistance;

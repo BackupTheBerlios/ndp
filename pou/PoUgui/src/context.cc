@@ -32,7 +32,6 @@
 
 //Static members initialisation
 const float OpenglContext::DEF_ZOOM;
-const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
 
 //gcc 3.0 wants to have the size of the array
 OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
@@ -84,58 +83,36 @@ OpenglContext::OpenglContext (OpenglWidget *parent)
   m_polygonmode = false;
   m_colorflag = true;
   /* init font */
-  //m_font.setStyleStrategy( QFont::OpenGLCompatible );
   m_font.setFamily("fixed");
   m_font.setRawMode(true);
   m_font.setPixelSize(10);           // Workaround for a bug with renderText()
   m_font.setFixedPitch ( true )  ;   // and nvidia's driver
   m_font.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
+
+  m_tball = new Trackball(m_width, m_height);
 }
 
 OpenglContext::~OpenglContext () 
-{ }
-
-//Find Z so that point v(mousex,mousey,Z) is on a unit sphere.
-//if we are out of the sphere, we find Z so that point v is on a hyperbole.
-//The hyperbole allow continuity when we go away from the sphere.
-//X=1/sqrt(2) is the x-coordinate of the intersection between a unit circle and
-//the hyperbole 1/2x
-//Reference: Terence J. Grant nehe.gamedev.net and nvidia's
-//trackball.h(Gavin Bell)
-void 
-OpenglContext::mapToSphere (Vec3f &v) 
 {
-  float len2;
-      
-  v.x = (2*v.x)/float(m_width-1)-1;
-  v.y = 1-(2*v.y)/float(m_height-1);
-  v.z = 0;
-  if ((len2 = v.length2())<INVSQRT2)
-      v.z = std::sqrt(1.0-len2); // We are on the sphere
-  else 
-      v.z = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
+  delete m_tball;
 }
 
 void 
 OpenglContext::StartRotationMode (int x, int y)
 {
-  m_startVector.setValues (x, y, 0);
-  mapToSphere (m_startVector);
-  m_updatemview = true;
+  m_tball->startRotation(x, y);
 }
 
 void 
 OpenglContext::StopRotationMode ()
 {
-  m_startOrientation = m_orientation;
+  m_tball->stopRotation();
   m_updatemview = true;
 }
 
 void 
 OpenglContext::InitRotationMode ()
 {
-  m_orientation.toIdentity ();
-  m_startOrientation.toIdentity ();
   m_zoomfactor = DEF_ZOOM;
   m_updatemview = true;
 }
@@ -143,12 +120,7 @@ OpenglContext::InitRotationMode ()
 void 
 OpenglContext::RotateView (int x, int y) 
 {
-  Quaternionf q;
-  Vec3f endVector (x, y, 0);
-  mapToSphere (endVector);
-  q.toRotationArc (m_startVector, endVector);
-  m_orientation = q*m_startOrientation;
-  m_orientation.normalize ();
+  m_tball->computeOrientation(x, y);
   m_updatemview = true;
 }
 
@@ -506,8 +478,7 @@ OpenglContext::SyncContext ()
     {
       m_updatemview = false;
       glMatrixMode (GL_MODELVIEW);
-      /* Build the Matrix */
-      m_orientation.unitToMatrix44 (m_modelview);
+      m_tball->getRotation (m_modelview);
       /* Send the Matrix */
       glLoadIdentity ();
       gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
