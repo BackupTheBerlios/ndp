@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
 #include "opengl.h"
-//#include "vector3.h"
+//#include "math/vector3.h"
 //TODO: virer include que pour Vertex3f
 //#include "ims.h"
 

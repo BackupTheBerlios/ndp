@@ -6,7 +6,7 @@
 
 //TODO: ADD SUPPORT FOR: INDEX, VBO
 
-#include "vector3.h"
+#include "math/vector3.h"
 
 enum{ 
   POLY_POINTS = 0,

@@ -12,7 +12,7 @@
 #include <OpenSG/OSGVector.h>
 #include <OpenSG/OSGBoxVolume.h>
 
-#include "vector3.h"
+#include "math/vector3.h"
 #include "box3d.h"
 
 #define NUMVECTOR 100000

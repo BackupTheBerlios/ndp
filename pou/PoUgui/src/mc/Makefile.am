@@ -1,4 +1,4 @@
-INCLUDES=-I../$(top_srcdir)/libpou/src/
+INCLUDES=-I../$(top_srcdir)/libpou/src/ -I../$(top_srcdir)/libpou/src/math
 bin_PROGRAMS=mctest
 mctest_SOURCES=mctest.cc mc.cc mc.h
 

@@ -1,6 +1,6 @@
 #include "libgui.h"
 #include "opengl.h"
-#include "vector3.h"
+#include "math/vector3.h"
 
 bool isOpenglReady = false;
 
