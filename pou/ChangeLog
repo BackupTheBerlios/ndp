@@ -1,3 +1,11 @@
+2004-03-31  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mc/mc|mwindow.cc: Added the progress bar for mc, the
+	progess calculation is far from accurate but it has the look and
+	feel.
+	BUG: The pointset bounding box doesn't seem to be a good bounding
+	box for the surface in mc.
+
 2004-03-31  Damien
 	* mrproper in code
 
