@@ -4,7 +4,8 @@
 class QString;
 class QWidget;
 
-#define DEG2RAD( x ) (x) * M_PI / 180.0
+template<typename T>
+T deg2rad(T x) { return (x*M_PI)/T(180); }
 
 void CheckConfigPath();
 QString getConfigPath();
