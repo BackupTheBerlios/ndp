@@ -33,8 +33,8 @@ class OpenglContext {
   void mapToSphere(Vec3f &dest);  
 
  private:
-  Matrix4f *m_modelview;
-  Matrix4d *m_projection;
+  Matrix4f m_modelview;
+  Matrix4d m_projection;
   double m_fov;
   double m_viewaspect;
   int m_width, m_height;
@@ -44,9 +44,10 @@ class OpenglContext {
   bool m_updatemview;
 
   double m_zoomfactor;
-  Vec3f startVector;
-  Quaternionf orientation, startOrientation;
+  Vec3f m_startVector;
+  Quaternionf m_orientation, m_startOrientation;
   static const float DEF_ZOOM = 0.5;
+  static const float INVSQRT2;
 };
 
 

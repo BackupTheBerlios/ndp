@@ -25,21 +25,20 @@
  */
 
 
-#include <math.h>
+#include <cmath>
 #include "context.h"
 #include "opengl.h"
 
 #define DEG2RAD( x ) (x) * M_PI / 180.0
 
 const float OpenglContext::DEF_ZOOM;
+const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
 
 OpenglContext::OpenglContext() 
   : m_zoomfactor(DEF_ZOOM) 
 {
-  m_modelview = new Matrix4f();
-  m_projection = new Matrix4d();
-  m_modelview -> Identity();
-  m_projection -> Identity();
+  m_modelview.Identity();
+  m_projection.Identity();
   m_fov = 60.0;  
   m_width = 1024;
   m_height = 768;
@@ -49,41 +48,41 @@ OpenglContext::OpenglContext()
 }
 
 OpenglContext::~OpenglContext() {
-  if( m_modelview )
-    delete m_modelview;
-  if( m_projection )
-    delete m_projection;
 }
 
-//Trouve le point (mousex,mousey,Z)
-//qui se trouve sur la sphere de rayon 1
-//Reference: Terence J. Grant nehe.gamedev.net
+//Find Z so that point v(mousex,mousey,Z) is on a unit sphere.
+//if we are out of the sphere, we find Z so that point v is on a hyperbole.
+//The hyperbole allow continuity when we go away from the sphere.
+//X=1/sqrt(2) is the x-coordinate of the intersection between a unit circle and
+//the hyperbole 1/2x
+//Reference: Terence J. Grant nehe.gamedev.net and nvidia's
+//trackball.h(Gavin Bell)
 void OpenglContext::mapToSphere(Vec3f &v) {
   float len2;
-  Vec3f tmp;
       
-  tmp.x = (2*v.x)/float(m_width-1)-1;
-  tmp.y = 1-(2*v.y)/float(m_height-1);
-  tmp.z = 0;
-  if((len2 = tmp.length2())<1)
-    tmp.z = std::sqrt(1.0-len2); // Dans la sphere, on augmente Z
-  v = tmp;
+  v.x = (2*v.x)/float(m_width-1)-1;
+  v.y = 1-(2*v.y)/float(m_height-1);
+  v.z = 0;
+  if((len2 = v.length2())<INVSQRT2)
+      v.z = std::sqrt(1.0-len2); // We are on the sphere
+  else 
+      v.z = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
 }
 
 void OpenglContext::StartRotationMode( int x, int y ){
-  startVector.setValues(x, y, 0);
-  mapToSphere(startVector);
+  m_startVector.setValues(x, y, 0);
+  mapToSphere(m_startVector);
   m_updatemview = true;
 }
 
 void OpenglContext::StopRotationMode(){
-  startOrientation = orientation;
+  m_startOrientation = m_orientation;
   m_updatemview = true;
 }
 
 void OpenglContext::InitRotationMode(){
-    orientation.toIdentity();
-    startOrientation.toIdentity();
+    m_orientation.toIdentity();
+    m_startOrientation.toIdentity();
     m_zoomfactor = DEF_ZOOM;
     m_updatemview = true;
 }
@@ -92,9 +91,9 @@ void OpenglContext::RotateView( int x, int y ) {
   Quaternionf q;
   Vec3f endVector(x, y, 0);
   mapToSphere(endVector);
-  q.toRotationArc(startVector, endVector);
-  orientation = q*startOrientation;
-  orientation.normalize();
+  q.toRotationArc(m_startVector, endVector);
+  m_orientation = q*m_startOrientation;
+  m_orientation.normalize();
   m_updatemview = true;
 }
 
@@ -135,14 +134,14 @@ void OpenglContext::SyncContext() {
     double top = m_near * tfov;
     double right = top * m_viewaspect;
 
-    m_projection->data[0][0] = m_near / right ;
-    m_projection->data[1][1] = m_near / top ;
-    m_projection->data[2][2] = -( m_far + m_near ) / ( m_far - m_near ) ;
-    m_projection->data[2][3] = -1.0 ;
-    m_projection->data[3][2] = ( -2 * m_far * m_near ) / ( m_far - m_near ) ;
+    m_projection.data[0][0] = m_near / right ;
+    m_projection.data[1][1] = m_near / top ;
+    m_projection.data[2][2] = -( m_far + m_near ) / ( m_far - m_near ) ;
+    m_projection.data[2][3] = -1.0 ;
+    m_projection.data[3][2] = ( -2 * m_far * m_near ) / ( m_far - m_near ) ;
 
     /*Send the Matrix*/
-    glLoadMatrixd( (double *)m_projection->data );
+    glLoadMatrixd( (double *)m_projection.data );
     glMatrixMode( GL_MODELVIEW );
   }
 
@@ -150,9 +149,9 @@ void OpenglContext::SyncContext() {
     m_updateproj = false;
     glMatrixMode( GL_MODELVIEW );
     /* Build the Matrix */
-    orientation.unitToMatrix44( m_modelview->data );
+    m_orientation.unitToMatrix44( m_modelview.data );
     /* Send the Matrix */
-    glLoadMatrixf( (float *)m_modelview->data );
+    glLoadMatrixf( (float *)m_modelview.data );
     /* Apply Zoom */
     glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
   }
