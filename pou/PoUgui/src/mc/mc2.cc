@@ -25,13 +25,11 @@ Mc::~Mc() {
 
 // Free resulting vertices of a previous call to domc
 void Mc::clear() {
-  if(gvertices.ptr) {
-    gntris = 0;
-    free((char *) gvertices.ptr);
-    gvertices.ptr = NULL;
-    gvertices.max = 0;
-    gvertices.count = 0;
-  }
+  gntris = 0;
+  free((char *) gvertices.ptr);
+  gvertices.ptr = NULL;
+  gvertices.max = 0;
+  gvertices.count = 0;
 }
 
 void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
@@ -46,9 +44,9 @@ void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
 //	box for the surface
   Vec3f size=bbox.getSize();
   int bounds = (int)(size.maxValue()/(2*0.05))+20;
-//  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
+
   progress_max = (int)((size.x/cubeSize)*(size.y/cubeSize)*(size.z/cubeSize)/8);
-  if ((err = polygonize(cubeSize, bounds, 
+  if ((err = polygonize(cubeSize, 200/*bounds*/, 
                         initPoint.x, initPoint.y, initPoint.z,
                         tetActive)) != NULL) 
   {
@@ -171,7 +169,8 @@ char *Mc::polygonize (double size,
   int n, noabort;
   unsigned int i=0;
   TEST in, out;
-  
+
+  memset(&p, 0, sizeof(PROCESS));
   p.size = size;
   p.bounds = bounds;
   p.delta = size/(double)(maxIt*maxIt);
@@ -589,7 +588,6 @@ void Mc::vnormal (POINT* point, PROCESS* p, POINT* v)
   Vec3f norm, dest(point->x, point->y, point->z);
   
   is->evalNormal(dest, norm);
-  //is.evalNormalAna(dest, norm);
   v->x = norm[0];
   v->y = norm[1];
   v->z = norm[2];
@@ -637,6 +635,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.7  2004/04/06 14:31:32  leserpent
+* Removed an useless if in clear()
+*
 * Revision 1.6  2004/04/03 11:34:02  leserpent
 * Added original mc's licence
 *
