@@ -38,7 +38,7 @@ class OpenglContext {
   
   void SetViewSize (int width, int height);
   void SetFov (double fov);
-  void SetClipDistance (double near, double far);
+  void SetClipDistance (double dnear, double dfar);
   void OppositeShowHelp () { m_showhelp = !m_showhelp; }
 
   /****************************/

@@ -1,3 +1,12 @@
+2004-04-27 Damien
+	
+	* PoUgui/src/context.cc: Matrix removed, replaced by a gluPerspective ;-(
+	
+	* PoUgui/src/settings.ui: Fixed bug with enableTet.
+
+	* PoUgui/src/mwindow.cc: Fixed problems with the close button
+	  Now Close button close all windows but dosn't delete data
+
 2004-04-27  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/*: Added everybody to authors.

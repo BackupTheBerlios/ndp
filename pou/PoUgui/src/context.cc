@@ -61,6 +61,8 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_width = 1024;
   m_height = 768;
   m_viewaspect = 1024.0/768.0;
+  m_near = 0.1;
+  m_far = 1000.0;
   m_updatemview = true;  
   m_updateproj = true;
   m_lasttime = -1;
@@ -173,10 +175,10 @@ void OpenglContext::SetFov( double fov )
   m_updateproj = true;
 }
 
-void OpenglContext::SetClipDistance( double near, double far ) 
+void OpenglContext::SetClipDistance( double dnear, double dfar ) 
 {
-  m_near = near;
-  m_far = far;
+  m_near = dnear;
+  m_far = dfar;
   m_updateproj = true;
 }
 
@@ -361,7 +363,7 @@ OpenglContext::DrawHelp() {
 
 void OpenglContext::DrawHud()
 {
-  glPushAttrib( GL_ENABLE_BIT );
+  glPushAttrib (GL_ENABLE_BIT);
   glDisable (GL_LIGHTING);
 
   int starty = m_font.pixelSize()*sizeof(helpInfos)/sizeof(helpStruct);
@@ -457,34 +459,23 @@ void OpenglContext::ShowStats( bool flag )
 
 void OpenglContext::SyncContext() 
 {
-  if( m_updateproj ){
+  if (m_updateproj){
     m_updateproj = false;
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    /* Build the Matrix */
-    double tfov = tan( deg2rad( m_fov / 2.0 ) );
-    double top = m_near * tfov;
-    double right = top * m_viewaspect;
-
-    m_projection[0][0] = m_near / right ;
-    m_projection[1][1] = m_near / top ;
-    m_projection[2][2] = -( m_far + m_near ) / ( m_far - m_near ) ;
-    m_projection[2][3] = -1.0 ;
-    m_projection[3][2] = ( -2 * m_far * m_near ) / ( m_far - m_near ) ;
-
-    /*Send the Matrix*/
-    glLoadMatrixd( (double *)m_projection[0] );
-    glMatrixMode( GL_MODELVIEW );
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+    glMatrixMode (GL_MODELVIEW);
+    /* Build the Projection Matrix */
+    gluPerspective (m_fov, m_viewaspect, m_near, m_far);
   }
-
-  if( m_updatemview ){
-    m_updateproj = false;
-    glMatrixMode( GL_MODELVIEW );
+  
+  if (m_updatemview){
+    m_updatemview = false;
+    glMatrixMode (GL_MODELVIEW);
     /* Build the Matrix */
-    m_orientation.unitToMatrix44( m_modelview );
+    m_orientation.unitToMatrix44 (m_modelview);
     /* Send the Matrix */
-    glLoadMatrixf( (float *)m_modelview[0] );
+    glLoadMatrixf ((float *)m_modelview[0]);
     /* Apply Zoom */
-    glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
+    glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
   }
 }

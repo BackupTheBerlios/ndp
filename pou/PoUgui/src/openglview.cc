@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.40  2004/04/27 18:42:38  ob821
+ * BUG ADDED
+ *
  * Revision 1.39  2004/04/27 18:37:10  leserpent
  * Changed authors
  *
@@ -155,7 +158,7 @@ OpenglWidget::resizeGL (int w, int h)
 {
   glViewport (0, 0, (GLint)w, (GLint)h);
 
-  m_glcontext->SetClipDistance (0.001, 1500.0);
+  m_glcontext->SetClipDistance (1.0,1500.0);
   m_glcontext->SetFov (60.0);
   m_glcontext->SetViewSize (w, h);
   m_glcontext->SyncContext();
@@ -286,6 +289,8 @@ OpenglWidget::ParseKey (int key, int key_ascii)
   
   if( !m_idledraw )
     updateGL();
+
+  m_glcontext->SyncContext ();
 }
 
 void 
