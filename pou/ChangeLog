@@ -1,3 +1,7 @@
+2004-04-29  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
+
+	* libpou/src/ConstructRBF.cc: Removed useless if.
+
 2004-04-28 Loic
 
 	* PoUgui/src/context.cc : added helper for light control

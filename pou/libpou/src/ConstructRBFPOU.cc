@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.19  2004/04/29 09:28:12  leserpent
+ * Removed usuless test
+ *
  * Revision 1.18  2004/04/29 08:57:30  leserpent
  * Use a vector for getArea
  *
@@ -105,7 +108,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       ConstructRBF* newrbf = newRBF(); 
 
       if (filtered.size() != 0) 
-	  result = newrbf -> compute(filtered);
+	  result = newrbf->compute(filtered);
         
       rbf.push_back (newrbf);
       flag.push_back (OK_FLAG);
@@ -148,8 +151,6 @@ ConstructRBFPOU::eval(const Vec3f &p) const
   while(!tab.empty()) {
     unsigned int i = tab.back();
     tab.pop_back();
-    if (!rbf[i])
-      continue;
 
     float w=(*cells)[i]->w(p);
     float s=rbf[i]->eval(p);
@@ -181,9 +182,6 @@ ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
     unsigned int i = tab.back();
     tab.pop_back();
     
-    if (!rbf[i])
-      continue;
-
     float w = (*cells)[i]->w(p);      
     (*cells)[i]->wd(p, localWd);      
       

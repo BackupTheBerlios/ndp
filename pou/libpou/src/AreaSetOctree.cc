@@ -264,7 +264,6 @@ AreaSetOctree::getAreas(const Vec3f& p, std::vector<unsigned int>& tab)
   q.reserve (OCTREE_BUFFER_SIZE);
   unsigned int front = 0;
   q.push_back (root);
-  int count=0;
 
   while (front < q.size ()) 
     {

@@ -6,6 +6,9 @@
  * @brief  Area set
  * 
  * $Log: AreaSet.cc,v $
+ * Revision 1.7  2004/04/29 09:28:12  leserpent
+ * Removed usuless test
+ *
  * Revision 1.6  2004/04/29 08:57:30  leserpent
  * Use a vector for getArea
  *
@@ -27,7 +30,6 @@ unsigned int
 AreaSet::getAreas(const Vec3f& p, std::vector<unsigned int>& tab)
 {
   unsigned int size = cells.size();
-  unsigned int counter = 0;
 
   for(unsigned int i=0; i<size; i++)
       if (cells[i]->intersect(p))
