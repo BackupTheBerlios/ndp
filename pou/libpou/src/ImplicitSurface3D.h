@@ -6,6 +6,10 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.10  2004/04/07 08:00:18  leserpent
+ * Use the	new constructor of ConstraintSet.
+ * Added some const.
+ *
  * Revision 1.9  2004/04/06 16:49:32  leserpent
  * ConstructRBFPOU::setcallback() can take two more parameters in order
  * to show only one progress dialog during color computing.
@@ -37,12 +41,12 @@ class ImplicitSurface3D {
   ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type = 
 		    ConstructRBFPOU::TRIHARMONIC);
   ~ImplicitSurface3D();
-  void compute(PointSet &ps);
-  void compute(PointSet &ps, unsigned int size);
-  void computeRGB(PointSet &ps, unsigned int size);
-  void computeRGB(PointSet &ps);
-  void computeGeometry(PointSet &ps, unsigned int size);
-  void computeGeometry(PointSet &ps);
+  void compute(const PointSet &ps);
+  void compute(const PointSet &ps, unsigned int size);
+  void computeRGB(const PointSet &ps, unsigned int size);
+  void computeRGB(const PointSet &ps);
+  void computeGeometry(const PointSet &ps, unsigned int size);
+  void computeGeometry(const PointSet &ps);
 
   void load(const std::string &filename);
   void save(const std::string &filename) const;
@@ -52,6 +56,7 @@ class ImplicitSurface3D {
   void evalNormal(const Vec3f &p, Vec3f &v) const {
     return rbf->evalNormal(p, v);
   }
+
   void evalGradian(const Vec3f &p, Vec3f &v) const {
     return rbf->evalGradian(p, v);
   }
@@ -73,6 +78,7 @@ class ImplicitSurface3D {
   void setProjDist(float d) {
     projDist=d;
   }
+
   float getProjDist() {
     return projDist;
   }

@@ -1,5 +1,13 @@
 2004-04-07  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
 
+	* libpou/src/ImplicitSurface3D.cc (computeGeometry/RGB): Use the
+	new constructor of ConstraintSet.
+	Added some const.
+	
+	* libpou/src/ConstraintSet.h (class ConstraintSet): Added a
+	constructor which takes a PointSet.
+	Removed useless copy constructor.
+
 	* libpou/src/PointSet.cc: Changed var ++ to var++.
 	Removed blank lines and some commented code.
 
