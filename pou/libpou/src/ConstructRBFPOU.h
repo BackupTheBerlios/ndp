@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <utility>
 
 #include "AreaSetOctree.h"
 #include "math/vector3.h"
@@ -42,6 +43,11 @@ class ConstructRBFPOU {
     if (s!=0)
       step=s;
     callback=c;
+  }
+
+  void getThresholds(unsigned int &min, unsigned int &max) {
+    min = threMin;
+    max = threMax;
   }
 
  private:

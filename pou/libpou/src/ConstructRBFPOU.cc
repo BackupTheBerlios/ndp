@@ -5,15 +5,10 @@
 #include <fstream>
 #include <iostream>
 
-ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF _type)
+ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF type):
+    type(type), threMin(50), threMax(100), overlap(0.5f), callback(0), step(1)
 {
   cells = new AreaSetOctree();
-  type = _type;
-  threMin = 50;
-  threMax = 100;
-  overlap=0.5f;
-  step=1;
-  callback=0;
   cf=const_cast<ConstraintFilter*>(ConstructRBF::NULL_FILTER);
 }
 
@@ -32,7 +27,6 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
     dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
 
   unsigned int size=cells->size();
-  std::cerr << "octree fini" << std::endl;
   for(unsigned int i=0; i<size; i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
@@ -56,7 +50,6 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 	    break;
 	}
 
-      /*BUG: Ne doit pas filtrer les contraintes geometriques!=0*/
       ConstraintSet filtered(cs, &area);
       std::cerr << filtered.size() << " points "<< std::endl << std::flush;
       
@@ -66,9 +59,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       
 
       if (filtered.size() != 0) 
-	{
 	  result = newrbf -> compute(filtered);
-	}
         
       rbf.push_back(newrbf);
       flag.push_back(OK_FLAG);
@@ -122,7 +113,7 @@ ConstructRBFPOU::eval(const Vec3f &p) const
     sum += s * w;
   }
   if (sumW == 0)
-    std::cerr << "WARNING: in eval sumW = 0" << std::endl;
+      //std::cerr << "WARNING: in eval sumW = 0" << std::endl;
   delete[] tab;
   if (sumW == 0)
     return -1e8;
