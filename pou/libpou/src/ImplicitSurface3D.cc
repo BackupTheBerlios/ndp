@@ -98,7 +98,7 @@ void ImplicitSurface3D::compute(PointSet &ps, unsigned int size) {
 
 void ImplicitSurface3D::load(const std::string &filename) {
   std::ifstream stream(filename.c_str());
-  
+  rbf->load(stream);
 }
 
 void ImplicitSurface3D::save(const std::string &filename) const {
