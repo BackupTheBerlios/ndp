@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.21  2004/04/29 16:43:02  leserpent
+ * Removed std::cerr<<
+ *
  * Revision 1.20  2004/04/29 09:50:17  pumpkins
  * assert
  *
@@ -74,18 +77,14 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
   throw (std::logic_error)
 {
   int result;
-  std::cout << "cs.size() = " << cs.size() << ", threMin = " << threMin << "\n";
+
   applyFilter(cs);
   assert(cs.size() >= threMin);
-
-
 
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
   unsigned int size=cells->size();
 
   rbf.clear();
-
-
   for(unsigned int i=0; i<size; i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
@@ -220,7 +219,6 @@ ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
       v.setValues(sumfdWX/sumW, sumfdWY/sumW, sumfdWZ/sumW);
       
     }
-  
 }
 
 void

@@ -6,6 +6,9 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.19  2004/04/29 16:43:02  leserpent
+ * Removed std::cerr<<
+ *
  * Revision 1.18  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -83,7 +86,6 @@ public:
     projDist=_projDist;
   }
   void filter(ConstraintSet& cs, int parm) {
-    std::cout << "filter nz" << std::endl;
     PointList::const_iterator end=ps->end();
     PointList::const_iterator i;
     int j;
