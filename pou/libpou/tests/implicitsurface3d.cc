@@ -2,8 +2,9 @@
 
 int main(int argc, char *argv) {
 	ImplicitSurface3D is;
-	PointSet ps;
+	PointSet ps, psF;
 	ps.load("dragon-soft.sur");
-	is.compute(ps);
+        psF = PointSet(ps, 3000);
+	is.compute(psF);
 	return 0;
 }
