@@ -4,20 +4,7 @@ SUBDIRS=gl-headers mc
 DEFS="-DDATADIR=\"${pkgdatadir}\""
 INCLUDES=-I../$(top_srcdir)/libpou/src/
 
-bin_PROGRAMS=PoUgui
-PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc \
-	main.cc vertexbuffer.cc context.cc utils.cc\
-	language.h mwindow.h openglview.h utils.h\
-	context.h init.h opengl.h vertexbuffer.h\
-	settings.h settings.cc msettings.cc settings.ui.h
-
-#nodist_PoUgui_SOURCES=settings.h settings.cc msettings.cc
-
-PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@
-PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la mc/mc2.o
-PoUgui_LDADD=@QT_LIBS@ @GL_LIBS@
-
-
+SUFFIXES = .ui
 %.h: %.ui
 	@UIC@ $< -o $@
 
@@ -27,6 +14,19 @@ PoUgui_LDADD=@QT_LIBS@ @GL_LIBS@
 m%.cc: %.h
 	@MOC@ $< -o $@
 
+BUILT_SOURCES = settings.h settings.cc msettings.cc
+bin_PROGRAMS=PoUgui
+PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc \
+	main.cc vertexbuffer.cc context.cc utils.cc\
+	language.h mwindow.h openglview.h utils.h\
+	context.h init.h opengl.h vertexbuffer.h\
+	settings.ui.h settings.ui
+
+nodist_PoUgui_SOURCES=settings.h settings.cc msettings.cc
+
+PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@
+PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la mc/mc2.o
+PoUgui_LDADD=@QT_LIBS@ @GL_LIBS@
 
 clean-local:
 	rm -f settings.h settings.cc msettings.cc
