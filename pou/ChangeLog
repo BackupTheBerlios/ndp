@@ -1,3 +1,7 @@
+2004-04-02  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
+
+	* PoUgui/src/mc/mc2.cc (vnormal): Flipped normal
+
 2004-04-02  Loic Martin  <lomartin@liszt.emi.u-bordeaux.fr>
 
 	* PoUgui/src/openglview.cc (initializeGL): light ok.

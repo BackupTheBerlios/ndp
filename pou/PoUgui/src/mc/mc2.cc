@@ -548,9 +548,9 @@ void Mc::vnormal (POINT* point, PROCESS* p, POINT* v)
   
   is->evalNormal(dest, norm);
   //is.evalNormalAna(dest, norm);
-  v->x = -norm[0];
-  v->y = -norm[1];
-  v->z = -norm[2];
+  v->x = norm[0];
+  v->y = norm[1];
+  v->z = norm[2];
 }
 
 
@@ -595,6 +595,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.4  2004/04/02 08:59:24  leserpent
+* Flipped normal
+*
 * Revision 1.3  2004/04/02 07:25:33  leserpent
 * Added a setInitPoint method.
 *
