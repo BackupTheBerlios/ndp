@@ -1,5 +1,8 @@
 2004-04-27  Thomas
 	* PoUgui/src/*POU,ImplicitSurface: abort ok
+	* PoUgui/src/mc/mc.cc: sizeof(int) replaced by sizeof(INTLISTS *)
+	* libpou/src/ConstructRBFPOU.{c,h}: setThresold, compute
+	exception replaced by assert
 	
 2004-04-26 Damien
 	* PoUgui/src/mwindow.cc: You can abort computing !

@@ -15,7 +15,7 @@ Mc::Mc(bool (*callback)(int, int), int step):
   assert(callback);
   progress_callback = callback;
   initPoint = Vec3f(-0.269614, 0.228464, 0.0772211);
-  memset(cubetable, 0, 256*sizeof(int));
+  memset(cubetable, 0, 256*sizeof(INTLISTS *));
   gvertices.ptr = NULL;
 }
 
@@ -646,6 +646,10 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc.cc,v $
+* Revision 1.11  2004/04/27 13:01:12  pumpkins
+* marching cubes portable
+* constructrbfpou asserts instead of exception
+*
 * Revision 1.10  2004/04/26 07:46:11  leserpent
 * doMc throws std::runtime_error.
 * doMc stop when callback returns false.

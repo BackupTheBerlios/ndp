@@ -6,6 +6,10 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.16  2004/04/27 13:01:12  pumpkins
+ * marching cubes portable
+ * constructrbfpou asserts instead of exception
+ *
  * Revision 1.15  2004/04/27 08:57:18  leserpent
  * abort ok
  *
@@ -40,6 +44,7 @@
 #include "AreaSphere.h"
 #include "AreaSetOctree.h"
 #include <iostream>
+#include <cassert>
 
 ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF type):
     type(type), threMin(50), threMax(100), overlap(0.5f), callback(0), step(1)
@@ -57,8 +62,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
   throw (std::logic_error)
 {
   int result;
-  if (cs.size() < threMin)
-    throw std::runtime_error ("ConstraintSet size is lower than min thresold");
+  assert(cs.size() < threMin);
 
   applyFilter(cs);
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
@@ -87,12 +91,8 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 	}
 
       ConstraintSet filtered(cs, &area);
-//       std::cerr << filtered.size() << " points "<< std::endl << std::flush;
       
       ConstructRBF* newrbf = newRBF(); 
-      /*      newrbf->setProjDist(_projDist);
-	      newrbf->setProjValidate(_projValidateFlag);*/
-      
 
       if (filtered.size() != 0) 
 	  result = newrbf -> compute(filtered);
@@ -106,6 +106,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 void
 ConstructRBFPOU::setThresholds(unsigned int _threMin, unsigned _threMax)
 {
+  assert (_threMin < _threMax);
   threMin = _threMin;
   threMax = _threMax;
 }
@@ -148,8 +149,7 @@ ConstructRBFPOU::eval(const Vec3f &p) const
     sumW += w;
     sum += s * w;
   }
-//  if (sumW == 0)
-      //std::cerr << "WARNING: in eval sumW = 0" << std::endl;
+
   delete[] tab;
   if (sumW == 0)
     return -1e8;
@@ -182,8 +182,6 @@ ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
       
       float f = rbf[tab[i]]->eval(p);
       rbf[tab[i]]->evalGradient(p, localNormal);
-      //float f = (i+1)*p.x()*p.x() + p.y()*p.y() + p.z()*p.z();
-      //localNormal.setValues(2*p.x()*(i+1), 2*p.y(), 2*p.z());
       
       sumW += w;
       sum += f * w;
@@ -199,18 +197,11 @@ ConstructRBFPOU::evalGradient(const Vec3f &p, Vec3f &v) const
       sumfWdX += f * localWd.x;
       sumfWdY += f * localWd.y;
       sumfWdZ += f * localWd.z;
-      
-      //cout << "f " << i << " --> " << f << endl;
-      
-      
     }
 
   delete [] tab;
   if (sumW == 0) 
-    {
       v.setValues(0,0,0);
-      // cerr << "WARNING: in Grad sumW = 0 " << endl;
-    }
   else 
     {
       v.setValues((sumW * (sumfdWX + sumfWdX) - sumWdX * sum) / (sumW * sumW),
