@@ -7,8 +7,8 @@ INCLUDES=-I../$(top_srcdir)/libpou/src/
 bin_PROGRAMS=PoUgui
 PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc \
 	main.cc vertexbuffer.cc context.cc utils.cc\
-	language.h  mwindow.h  openglview.h utils.h\
-	context.h  init.h  libgui.h    opengl.h   vertexbuffer.h\ 
+	language.h mwindow.h openglview.h utils.h\
+	context.h init.h opengl.h vertexbuffer.h\
 	settings.h settings.cc msettings.cc settings.ui.h
 
 #nodist_PoUgui_SOURCES=settings.h settings.cc msettings.cc
