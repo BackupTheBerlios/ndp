@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.17  2004/04/27 13:38:42  pumpkins
+ * missing header
+ *
  * Revision 1.16  2004/04/27 13:01:12  pumpkins
  * marching cubes portable
  * constructrbfpou asserts instead of exception
@@ -62,12 +65,16 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
   throw (std::logic_error)
 {
   int result;
-  assert(cs.size() < threMin);
+  assert(cs.size() >= threMin);
 
   applyFilter(cs);
+
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
-  rbf.clear();
   unsigned int size=cells->size();
+
+  rbf.clear();
+
+
   for(unsigned int i=0; i<size; i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));

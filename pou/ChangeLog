@@ -1,7 +1,9 @@
 2004-04-27    <thomas@pumpkins>
+	* PoUgui/src/utils.h: added missing cmath include
 	* libpou/src/AreaCube.cc: new (Area*)[] changed to new Area*[].
 	c++ compiliant
 	* libpou/src/math/matrix4.h (operator<<): added missing return value
+	fixed missing iostream header ; might cause conflit with qt
 	* PoUgui/src/*POU,ImplicitSurface: abort ok
 	* PoUgui/src/mc/mc.cc: sizeof(int) replaced by sizeof(INTLISTS *)
 	* libpou/src/ConstructRBFPOU.{c,h}: setThresold, compute

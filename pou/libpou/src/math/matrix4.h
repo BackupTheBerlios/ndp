@@ -1,6 +1,7 @@
 #ifndef MATRIX4_H
 #define MATRIX4_H
 
+#include <iostream>
 #include <string>
 #include <cassert>
 
@@ -31,15 +32,14 @@ template<class T> class Matrix4{
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Matrix4<T>& m) {
-    using namespace std;
-    os << "-----------------------" << endl;
+    os << "-----------------------" << std::endl;
     for( int i=0; i<4; i++ ) {
       os << "[ ";
       for( int j=0; j<4; j++ )
         os << m.coeff[i][j] << " ";
-      os << "]" << endl;
+      os << "]" << std::endl;
     }
-    os << "-----------------------" << endl;
+    os << "-----------------------" << std::endl;
     return os;
   }
 
