@@ -1,5 +1,13 @@
 2004-04-25  Ben  <leserpent@berlios.de>
 
+	* ImplicitSurface3D/Mc.h/ConstructRBFPOU.h: Use Callback
+
+	* libpou/src/helpers/callback.h: Typedef for callback function.
+
+	* PoUgui/src/mc/mc.cc (polygonize): doMc throws	std::runtime_error.
+	doMc stop when callback returns false.
+	Compute colors before getPoints(in addtovertices).
+
 	* PoUgui/src/mc/mc.* Makefile.am mwindows: Renamed mc2.cc|h to mc.cc|h
 
 	* PoUgui/src/mc/Makefile.am: Removed mc.h mc.cc
