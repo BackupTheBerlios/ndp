@@ -1,5 +1,13 @@
 2004-03-31  Ben  <leserpent@berlios.de>
 
+	* libpou/src/ImplicitSurface3D.h: Added a setThresholds method
+	ImplicitSurface3D now uses three times bigger area for geometry's
+	constraints in order to avoid useless small area.
+
+	* libpou/src/ConstructRBFPOU.cc (ConstructRBFPOU): Cleaned constructor
+
+	* libpou/src/ConstructRBFPOU.h: Added a getThresholds method
+
 	* PoUgui/src/vertexbuffer.cc (DrawBuffer): glDrawElements works.
 	Changed int *m_indices to unsigned int *
 
