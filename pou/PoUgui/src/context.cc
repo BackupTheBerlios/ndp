@@ -51,7 +51,6 @@ OpenglContext::OpenglContext (OpenglWidget *parent)
   : m_zoomfactor(DEF_ZOOM), m_light(0)
 {
   m_modelview.Identity();
-  m_projection.Identity();
   m_fov = 60.0;  
   m_width = 1024;
   m_height = 768;

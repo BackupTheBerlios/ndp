@@ -1,3 +1,7 @@
+2004-04-28  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/context.cc (OpenglContext): cvs compile!
+
 2004-04-28  Thomas
 
 	* computation now uses octree
