@@ -38,6 +38,8 @@ class OpenglWidget : public QGLWidget
   OpenglContext *m_glcontext;
   bool m_idledraw;
   int m_timerid;
+
+  static bool s_openglready;
 };
 
 class OpenglView : public QMainWindow {

@@ -1,18 +1,17 @@
 #ifndef MWINDOW_H
 #define MWINDOW_H
 
-#include <qapplication.h>
 #include <qmainwindow.h>
-#include <qworkspace.h>
 
-#include "PointSet.h"
-#include "openglview.h"
 #include "math/vector3.h"
 #include "box3d.h"
-#include "settings.h"
-#include "language.h"
+#include "PointSet.h"
 
 class VertexBuffer;
+class SettingsForm;
+class OpenglView;
+class QApplication;
+class QWorkspace;
 
 class MainWindow : public QMainWindow 
 {

@@ -1,9 +1,12 @@
 #ifndef OPENGL_H
 #define OPENGL_H
-#include "init.h"
+#include "gl-headers/mygl.h"
+#include "gl-headers/myglu.h"
+
 #include "context.h"
 #include "vertexbuffer.h"
+#include "utils.h"
 
-#define OPENGL_VERBOSE
+int OpenglInit();
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef STRUCTUREPARSER_H
-#define STRUCTUREPARSER_H
+#ifndef XMLPARSER_H
+#define XMLPARSER_H
 
 #include <qxml.h>
 #include <qstring.h>
@@ -8,12 +8,15 @@
 
 class XMLEntry {
  public:
-  QString tag;
-  QString name;
-  QString value;
-};
+  XMLEntry ();
+  XMLEntry (const QString& tag, const QString& value);
+  QString TagName();
+  QString Value ();
 
-typedef void (*XMLCallback)(const QString& tagname, const QString& value);
+ private:
+  QString m_tagname;
+  QString m_value;
+};
 
 class XMLParser : public QXmlDefaultHandler
 {
@@ -21,21 +24,24 @@ class XMLParser : public QXmlDefaultHandler
   XMLParser (QString filename);
   ~XMLParser ();
   
-  int ParseFile (XMLCallback tagcallback);
+  int ParseFile ();
   int SaveFile (const QString& filename, const QString& data);
-
+  
+  std::vector<XMLEntry>& getValuesVector ();
+  
  protected:
-
+  
   bool startDocument ();
   bool startElement (const QString&, const QString&, const QString& ,
 		     const QXmlAttributes&);
   bool endElement (const QString&, const QString&, const QString&);
   bool characters (const QString&);
-
+  
  private:
   QString m_filename;
   QString m_tagname;
-  XMLCallback m_tagcallback;
+  
+  std::vector<XMLEntry> m_values;
 };
 
 #endif

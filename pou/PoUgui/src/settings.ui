@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>500</width>
-            <height>247</height>
+            <height>249</height>
         </rect>
     </property>
     <property name="caption">
@@ -116,97 +116,6 @@
             <attribute name="title">
                 <string>PoU</string>
             </attribute>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>lineEdit1_2</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>140</x>
-                        <y>90</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>3</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>lineEdit1_2_2</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>350</x>
-                        <y>90</y>
-                        <width>110</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>3</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
-            <widget class="QComboBox">
-                <item>
-                    <property name="text">
-                        <string>Bi</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>Tri</string>
-                    </property>
-                </item>
-                <item>
-                    <property name="text">
-                        <string>Thin</string>
-                    </property>
-                </item>
-                <property name="name">
-                    <cstring>comboBox1</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>350</x>
-                        <y>20</y>
-                        <width>140</width>
-                        <height>30</height>
-                    </rect>
-                </property>
-                <property name="editable">
-                    <bool>false</bool>
-                </property>
-                <property name="currentItem">
-                    <number>0</number>
-                </property>
-            </widget>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>lineEdit1</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>140</x>
-                        <y>20</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>3000</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
             <widget class="QLabel">
                 <property name="name">
                     <cstring>textLabel1_2_2</cstring>
@@ -271,6 +180,97 @@
                     <string>Tmin:</string>
                 </property>
             </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_pou_tmin</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>140</x>
+                        <y>90</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>3</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_pou_tmax</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>350</x>
+                        <y>90</y>
+                        <width>110</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>3</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_pou_pointscount</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>140</x>
+                        <y>20</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>3000</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QComboBox">
+                <item>
+                    <property name="text">
+                        <string>Bi</string>
+                    </property>
+                </item>
+                <item>
+                    <property name="text">
+                        <string>Tri</string>
+                    </property>
+                </item>
+                <item>
+                    <property name="text">
+                        <string>Thin</string>
+                    </property>
+                </item>
+                <property name="name">
+                    <cstring>combo_pou_phi</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>350</x>
+                        <y>20</y>
+                        <width>140</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="editable">
+                    <bool>false</bool>
+                </property>
+                <property name="currentItem">
+                    <number>0</number>
+                </property>
+            </widget>
         </widget>
         <widget class="QWidget">
             <property name="name">
@@ -279,44 +279,6 @@
             <attribute name="title">
                 <string>Marching Cubes</string>
             </attribute>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>entry_mc_maxit</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>150</x>
-                        <y>90</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>10</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>entry_mc_cs</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>150</x>
-                        <y>30</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>0.05</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
             <widget class="QLabel">
                 <property name="name">
                     <cstring>textLabel1_4</cstring>
@@ -365,6 +327,44 @@
                     <string>Enable Tet</string>
                 </property>
             </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_mc_cs</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>150</x>
+                        <y>30</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>0.05</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_mc_maxit</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>150</x>
+                        <y>90</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>10</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
         </widget>
     </widget>
 </widget>
@@ -409,28 +409,36 @@
     <include location="local" impldecl="in implementation">settings.ui.h</include>
 </includes>
 <variables>
-    <variable>bool m_enabletet;</variable>
-    <variable>int m_maxiteration;</variable>
-    <variable>int m_pointscount;</variable>
+    <variable>int m_phi;</variable>
+    <variable>int m_tmax;</variable>
+    <variable>int m_tmin;</variable>
     <variable>float m_cubesize;</variable>
-    <variable>float m_tmin;</variable>
-    <variable>float m_tmax;</variable>
+    <variable>int m_pointscount;</variable>
+    <variable>int m_maxiteration;</variable>
+    <variable>bool m_enabletet;</variable>
 </variables>
 <slots>
     <slot>pushButton3_clicked()</slot>
     <slot>pushButton3_2_clicked()</slot>
     <slot>pushButton1_clicked()</slot>
     <slot>pushButton1_2_clicked()</slot>
-    <slot specifier="static">XMLTagCallback( const QString &amp; tagname, const QString &amp; value )</slot>
 </slots>
 <functions>
     <function returnType="int">getPointsCount()</function>
     <function returnType="int">getMaxIteration()</function>
     <function returnType="float">getCubeSize()</function>
     <function returnType="bool">isTetEnable()</function>
+    <function specifier="non virtual" returnType="int">getTmin()</function>
+    <function specifier="non virtual" returnType="int">getTmax()</function>
+    <function specifier="non virtual" returnType="int">getPhi()</function>
     <function>Init()</function>
     <function access="private" returnType="int">LoadFile( QString filename )</function>
     <function access="private" returnType="int">SaveFile( QString filename )</function>
+    <function access="private">XMLTagParser( void * parser )</function>
+    <function access="private" specifier="non virtual" returnType="bool">CheckIntValue( int minvalue, int maxvalue, int value )</function>
+    <function returnType="bool">CheckFloatValue( float minvalue, float maxvalue, float value )</function>
+    <function access="private" specifier="non virtual" returnType="bool">RetreiveValues()</function>
+    <function access="private" specifier="non virtual">ApplyValues()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

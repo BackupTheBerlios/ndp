@@ -26,7 +26,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <qstring.h>
+#include <iostream>
 #include <qgl.h>
+#include <qmessagebox.h>
 
 QString g_configpath;
 
@@ -62,10 +64,28 @@ CheckOpenGL()
 {
   if( !QGLFormat::hasOpenGL() )
     {
-      printf("[E] Fatal:\n");
-      printf("Le support OpenGL n'est pas présent sur ce système.\n");
-      printf("Veuillez recompiler QT avec le support Opengl\n");
-      printf("Pour plus d'informations voir www.trolltech.com\n\n" );
-      exit( -1 );
+      std::cout<<"[E] Fatal:\n"
+	       <<"Opengl not supported by QT.\n"
+	       <<"Please compile QT again with opengl support\n"
+	       <<"More informations on www.trolltech.com\n\n";
+      exit (-1);
     }
+}
+
+int 
+OpenglInit() 
+{
+  std::cout<<"OpenGL Informations :\n";
+  std::cout<<"   OpenGL Vendor: "<< glGetString (GL_VENDOR) <<"\n";
+  std::cout<<"   OpenGL Version: "<< glGetString (GL_VERSION) <<"\n";
+  std::cout<<"   OpenGL Renderer: "<< glGetString (GL_RENDERER) <<"\n";
+
+  return 0;
+}
+
+void 
+ShowErrorMessage (QWidget *parent, const QString& msg )
+{
+  QMessageBox::warning (parent, "Error", msg, QMessageBox::Ok, 
+			QMessageBox::NoButton);
 }

@@ -19,6 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.33  2004/04/24 13:06:36  ob821
+ * xmlparser.cc completed
+ * settings.* bugfix, code cleanup
+ * mwindow.cc code cleanup
+ * openglview.* variables moved from global to static
+ * init.cc useles
+ *
  * Revision 1.32  2004/04/21 11:40:56  ob821
  * depth  test for points rendering
  *
@@ -50,7 +57,7 @@
 #include "mwindow.h"
 #include "math/vector3.h"
 
-bool isOpenglReady = false;
+bool OpenglWidget::s_openglready = false;
 
 #define FRAME_DELAY 1 //MAX = 1000 fps
 
@@ -94,9 +101,9 @@ void
 OpenglWidget::initializeGL() 
 {
   //Initialise OpenGL si c'est la première utilisation
-  if( !isOpenglReady )
+  if( !s_openglready )
     OpenglInit();
-  isOpenglReady = true;
+  s_openglready = true;
    
   clearGL();
   glDisable (GL_BLEND);

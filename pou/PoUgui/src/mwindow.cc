@@ -19,6 +19,13 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.33  2004/04/24 13:06:36  ob821
+ * xmlparser.cc completed
+ * settings.* bugfix, code cleanup
+ * mwindow.cc code cleanup
+ * openglview.* variables moved from global to static
+ * init.cc useles
+ *
  * Revision 1.32  2004/04/23 17:57:35  ob821
  * new xmlparser
  * bugfix
@@ -39,6 +46,7 @@
  *      - Motion support (Dalla Rosa Damien )
  */
 
+#include <qapplication.h>
 #include <qpopupmenu.h>
 #include <qmenubar.h>
 #include <qaction.h>
@@ -56,9 +64,11 @@
 #include "opengl.h"
 #include "mwindow.h"
 #include "ImplicitSurface3D.h"
-#include "PointSet.h"
 #include "mc/mc2.h"
 #include "icons.h"
+#include "settings.h"
+#include "language.h"
+#include "openglview.h"
 
 QApplication *MainWindow::m_qtgui;
 
@@ -172,7 +182,7 @@ MainWindow::MenuFileOpen()
     getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
 		     "Sur -- Ouvrir Fichier" );
 
-  if( !filename.isEmpty() ){
+  if (!filename.isEmpty()){
     std::vector<Point> vecPoints;
 
     CloseWindows();
@@ -180,6 +190,12 @@ MainWindow::MenuFileOpen()
 
     m_pointset.removeDeleteAll();       // Clean a previous load()
     m_pointset.load( filename );
+    if(0)
+      {
+	ShowErrorMessage (this, QString ("Error Loading ")+filename);
+	return;
+      }
+
     m_boundingbox = m_pointset.getBoundingBox();
     
     PointList::iterator psend = m_pointset.getEnd();
@@ -243,8 +259,14 @@ MainWindow::MenuRenderingRender()
   int mc_maxit = m_settingsform->getMaxIteration();
   float mc_cubesize = m_settingsform->getCubeSize();
   bool enabletet = m_settingsform->isTetEnable();
+  int tmin = m_settingsform->getTmin();
+  int tmax = m_settingsform->getTmax();
+  int phi = m_settingsform->getPhi();
 
-  if( !m_points )
+  ConstructRBFPOU::TypeRBF id2rbftype [3] = {ConstructRBFPOU::BIHARMONIC,
+					     ConstructRBFPOU::TRIHARMONIC,
+					     ConstructRBFPOU::THINPLATE};
+  if (!m_points)
     return;
   
   qpd = new QProgressDialog ("Computing colors...",
@@ -253,9 +275,10 @@ MainWindow::MenuRenderingRender()
 
   /* Start ImplicitSurface reconstruction */
   /* First check if api is OK */
-  ims = new ImplicitSurface3D (ConstructRBFPOU::BIHARMONIC);
+  ims = new ImplicitSurface3D (id2rbftype [phi]);
   if( !ims )
     return ;
+  ims->setThresholds (tmin, tmax);
   ims->setCallBack (callback, 10);
 
   ims->computeRGB (m_pointset, filter_npoints);

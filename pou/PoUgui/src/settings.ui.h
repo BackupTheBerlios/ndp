@@ -8,6 +8,7 @@
 *****************************************************************************/
 
 #include <stdio.h>
+#include <iostream>
 #include <qfiledialog.h>
 #include "xmlparser.h"
 #include "utils.h"
@@ -17,32 +18,15 @@
 void 
 SettingsForm::pushButton3_clicked()
 {	
-    QString spointscount  = lineEdit1->text();
-    QString scubesize = entry_mc_cs->text();
-    QString smaxit = entry_mc_maxit->text();
-    bool res;
-    
-    int pointscount = spointscount.toInt( &res );
-    if( res )
-	m_pointscount = pointscount;
-    
-    float  cubesize = scubesize.toFloat( &res );
-    if( res )
-	m_cubesize = cubesize;
-    
-    int  maxit = smaxit.toInt( &res );
-    if( res )
-	m_maxiteration = maxit;
-    
-    m_enabletet = entry_mc_tet-> isChecked();
-    
-    hide();
+    if (!RetreiveValues())
+	hide();
 }
 
 /* CANCEL */
 void 
 SettingsForm::pushButton3_2_clicked()
 {
+    ApplyValues ();
     hide();
 }
 
@@ -50,18 +34,20 @@ SettingsForm::pushButton3_2_clicked()
 void 
 SettingsForm::pushButton1_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName (getConfigPath(), "Settings Files (*.xml)", this,"file open", 
-						     "Settings  -- Open File");
-    LoadFile (filename);
+    QString filename = QFileDialog::getOpenFileName (getConfigPath(), "Settings Files (*.xml)", this,
+						     "file open",  "Settings  -- Open File");
+    if (!filename.isEmpty())
+	LoadFile (filename);
 }
 
 /*SAVE*/
 void 
 SettingsForm::pushButton1_2_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName (getConfigPath(), "Settings Files (*.xml)", this,"file save", 
-						     "Settings  -- Save File");    
-    SaveFile (filename);
+    QString filename = QFileDialog::getSaveFileName (getConfigPath(), "Settings Files (*.xml)", this,
+						     "file save",  "Settings  -- Save File");    
+    if (!filename.isEmpty())
+	SaveFile (filename);		
 }
 
 int 
@@ -88,6 +74,23 @@ SettingsForm::isTetEnable()
     return m_enabletet;
 }
 
+int SettingsForm::getTmin()
+{
+    return m_tmin;
+}
+
+
+int SettingsForm::getTmax()
+{
+    return m_tmax;
+}
+
+
+int SettingsForm::getPhi()
+{
+    return m_phi;
+}
+
 void 
 SettingsForm::Init()
 {
@@ -95,15 +98,22 @@ SettingsForm::Init()
     m_cubesize = 0.05;
     m_maxiteration = 10;
     m_enabletet = false;
-    m_tmin = 3;
-    m_tmax = 3;
+    m_tmin = 50;
+    m_tmax = 100;
+    m_phi = 0;
+    ApplyValues();
 }
 
 int 
 SettingsForm::LoadFile( QString filename )
 {    
-    XMLParser xmlparser (filename);
-    xmlparser.ParseFile ((XMLCallback)XMLTagCallback);
+    XMLParser xmlparser(filename);
+    if (xmlparser.ParseFile () == -1)
+	ShowErrorMessage (this, QString("Error Loading ")+filename);
+    else {
+	XMLTagParser ((void *)&xmlparser);
+	ApplyValues ();
+    }
     return 0;
 }
 
@@ -126,7 +136,7 @@ SettingsForm::SaveFile (QString filename)
     XMLBuffer +="</tmax>\n";
     
     XMLBuffer += "\t\t<phi>";
-    XMLBuffer +=QString().setNum (m_tmax);
+    XMLBuffer +=QString().setNum (1);
     XMLBuffer +="</phi>\n";
     
     XMLBuffer +="\t</pou>\n\t<mc>\n";
@@ -147,14 +157,185 @@ SettingsForm::SaveFile (QString filename)
     XMLBuffer +="</config>\n";
         
     XMLParser xmlparser (filename);
-    xmlparser.SaveFile (filename, XMLBuffer);
+    if (xmlparser.SaveFile (filename, XMLBuffer)==-1)
+	ShowErrorMessage (this, QString("Error Saving file to ")+filename);
     
  return 0;
 }
 
 
 void 
-SettingsForm::XMLTagCallback (const QString & tagname, const QString & value)
+SettingsForm::XMLTagParser (void *parser)
 {
-    printf("TAG: %s %s\n", (const char *)tagname, (const char *)value);
+    bool noerror;
+    int intvalue;
+    float floatvalue;
+    QString tagname;
+    QString value;
+    XMLEntry xmlentry;
+    XMLParser *xmlparser = (XMLParser *)parser;
+    std::vector<XMLEntry> xmlvalues = xmlparser->getValuesVector ();
+    std::vector<XMLEntry>::const_iterator xmliterator;
+    
+    for (xmliterator=xmlvalues.begin(); xmliterator!=xmlvalues.end(); xmliterator++)
+     {
+	xmlentry = *xmliterator;
+	tagname = xmlentry.TagName();
+	value = xmlentry.Value();
+	
+	if (tagname=="pointscount")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for PointsCount : Valid value: [1..+oo]");		    else 
+	      m_pointscount = intvalue;
+	}
+	
+	if (tagname=="tmin")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for Tmin : Valid value: [1..+oo]");		    else 
+	      m_tmin = intvalue;
+	}
+	
+	if (tagname=="tmax")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for Tmax : Valid value: [1..+oo]");		    else 
+	      m_tmax = intvalue;
+	}
+
+	if (tagname=="phi")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (0,2, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for phi : Valid value: [1..+oo]");
+	    else 
+		m_phi = intvalue;
+	}
+	
+	if (tagname=="cubesize")
+	{
+	    floatvalue = value.toFloat (&noerror);
+	    if (!noerror || CheckFloatValue (0.0,-1.0, floatvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for Cube Size : Valid value: ]0..+oo]");
+	    else 
+		m_cubesize = floatvalue;
+	}
+	
+	if (tagname=="maxiteration")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for Max Iteration : Valid value: [1..+oo]");
+	    else 
+		m_maxiteration = intvalue;
+	}
+	
+	if (tagname=="usetet")
+	{
+	    intvalue = value.toInt (&noerror, 10);
+	    if (!noerror || CheckIntValue (0,1, intvalue) ) 
+		ShowErrorMessage (this, "Error Bad value for phi : Valid value: {0,1}");
+	    else 
+		m_enabletet = intvalue;
+	}
+    }
+}		
+
+bool SettingsForm::CheckIntValue( int minvalue, int maxvalue, int value )
+{
+    if (value < minvalue)
+	return 1;
+    if (minvalue>maxvalue)
+	return 0;
+    return value>maxvalue;
+}
+
+
+bool SettingsForm::CheckFloatValue( float minvalue, float maxvalue, float value )
+{
+    if (value < minvalue)
+	return 1;
+    if (minvalue>maxvalue)
+	return 0;
+    return value>maxvalue;
+}
+
+bool SettingsForm::RetreiveValues()
+{
+    QString spointscount  = entry_pou_pointscount->text();
+    QString stmin = entry_pou_tmin->text();
+    QString stmax = entry_pou_tmax->text();
+    QString scubesize = entry_mc_cs->text();
+    QString smaxit = entry_mc_maxit->text();
+
+     bool res;
+     bool retvalue = false;
+    
+    m_phi = combo_pou_phi->currentItem();
+         
+    int pointscount = spointscount.toInt (&res);
+    if (!res) 
+    {
+	retvalue = true;
+	ShowErrorMessage ( this, "Error Bad value for Points Count: Valid value: [1..+oo]");
+    }
+    else
+	m_pointscount = pointscount;
+    
+    int tmin = stmin.toInt (&res);
+    if (!res) 
+    {
+	retvalue = true;
+	ShowErrorMessage (this, "Error Bad value for tmin: Valid value: [1..+oo]");
+    }
+    else
+	m_tmin = tmin;
+    
+    int tmax = stmax.toInt (&res);
+    if (!res) 
+    {
+	retvalue = true;
+	ShowErrorMessage (this, "Error Bad value for tmax: Valid value: [1..+oo]");
+    }
+    else
+	m_tmax = tmax;
+    
+    float  cubesize = scubesize.toFloat (&res);
+    if (!res)
+    {
+	retvalue = true;
+	ShowErrorMessage (this, "Error Bad value for Cube Size: Valid value: [0..+oo]");
+    }
+    else
+	m_cubesize = cubesize;
+    
+    int  maxit = smaxit.toInt (&res);
+    if (!res)
+    {
+	retvalue = true;
+	ShowErrorMessage (this, "Error Bad value for Max Iteration: Valid value: [1..+oo]");
+    }
+    else
+	m_maxiteration = maxit;
+    
+    m_enabletet = entry_mc_tet-> isChecked();
+ 
+    return retvalue;
+}
+
+void SettingsForm::ApplyValues()
+{
+    entry_pou_pointscount->setText (QString().setNum (m_pointscount, 10));
+    entry_pou_tmin->setText (QString().setNum (m_tmin, 10));
+    entry_pou_tmax->setText (QString().setNum (m_tmax, 10));
+    combo_pou_phi->setCurrentItem (m_phi);
+    
+    entry_mc_cs->setText (QString().setNum (m_cubesize));
+    entry_mc_maxit->setText (QString().setNum (m_maxiteration, 10));	 
+    
+    entry_mc_tet->setEnabled(m_enabletet==1);
 }
