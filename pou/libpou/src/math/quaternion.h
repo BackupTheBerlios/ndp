@@ -7,6 +7,7 @@
 #include <limits>
 
 #include "vector3.h"
+#include "matrix.h"
 
 template<class T>
 class Quaternion {
@@ -34,23 +35,6 @@ public:
     return res;
   }
 
-  Quaternion<T> operator*(T k) const {
-    return Quaternion<T>(v*k, k*w);
-  }
-
-  Quaternion<T> operator/(T k) const {
-    assert(k!=0);
-    return Quaternion<T>(v/k, w/k);
-  }
-
-  Quaternion<T> operator+(const Quaternion<T> &r) const {
-    return Quaternion<T>(v+r.v, w+r.w);
-  }
-
-  Quaternion<T> conjugate() const {
-    return Quaternion<T>(-v, w);
-  }
-
   T norm() const {
     return std::sqrt(norm2());
   }
@@ -63,10 +47,6 @@ public:
     T k = T(1)/norm();
     v.x *= k; v.y *= k; v.z *= k;
     w *= k;
-  }
-
-  Quaternion<T> inverse() const {
-    return conjugate()/norm();
   }
 
   void toIdentity() {
@@ -98,15 +78,15 @@ public:
     v.normalize();
     Vector3<T> w = u.cross(v);
     
-    if(w.length2()<=Vec3f::epsilon)
-      setValues(0, 0, 0, 1);
-    else {
-      T d = u*v;
-      T s = std::sqrt((1+d)*2);
-      setValues(w.x/s, w.y/s, w.z/s, s/T(2));
-    }
+    T d = u*v;
+    T s = std::sqrt((1+d)*2);
+    setValues(w.x/s, w.y/s, w.z/s, s/T(2));
   }
 
+  bool isIdentity() {
+    return v.isNull() && std::abs(w-1) <  std::numeric_limits<T>::epsilon();
+  }
+  
   friend std::ostream& operator<<(std::ostream& os, const Quaternion<T>& q) {
     return os << "(" << q.v << "), " << q.w;
   }
