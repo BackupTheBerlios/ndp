@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.8  2004/04/07 08:03:17  leserpent
+ * Added a	default value to the parameter p of setFilter
+ *
  * Revision 1.7  2004/04/06 16:49:32  leserpent
  * ConstructRBFPOU::setcallback() can take two more parameters in order
  * to show only one progress dialog during color computing.
@@ -58,7 +61,7 @@ class ConstructRBFPOU {
   void load(std::ifstream &stream);
   void save(std::ofstream &stream) const;
   const AreaSet *getOctree();  
-  void setFilter(ConstraintFilter *f, int p);
+  void setFilter(ConstraintFilter *f, int p = 0);
 
   void setCallBack(void (*c)(int, int), int s, int pass = 0, int numPass = 1) {
     step = (s!=0)?s:step;
