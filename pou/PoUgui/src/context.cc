@@ -56,7 +56,7 @@ OpenglContext::helpStruct OpenglContext::helpInfos[16] = {
 OpenglContext::OpenglContext (OpenglWidget *parent) 
   : m_zoomfactor(DEF_ZOOM), m_light(0)
 {
-  m_modelview.Identity();
+  m_modelview.Identity ();
   m_fov = 60.0;  
   m_width = 1024;
   m_height = 768;
@@ -73,13 +73,13 @@ OpenglContext::OpenglContext (OpenglWidget *parent)
   m_polygonmode = false;
   m_colorflag = true;
   /* init font */
-  m_font.setFamily("fixed");
-  m_font.setRawMode(true);
-  m_font.setPixelSize(10);           // Workaround for a bug with renderText()
+  m_font.setFamily ("fixed");
+  m_font.setRawMode (true);
+  m_font.setPixelSize (10);           // Workaround for a bug with renderText()
   m_font.setFixedPitch ( true )  ;   // and nvidia's driver
-  m_font.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
+  m_font.setStyleHint (QFont::AnyStyle, QFont::PreferBitmap);
 
-  m_tball = new Trackball(m_width, m_height);
+  m_tball = new Trackball (m_width, m_height);
 }
 
 OpenglContext::~OpenglContext () 
@@ -90,13 +90,13 @@ OpenglContext::~OpenglContext ()
 void 
 OpenglContext::StartRotationMode (int x, int y)
 {
-  m_tball->startRotation(x, y);
+  m_tball->startRotation (x, y);
 }
 
 void 
 OpenglContext::StopRotationMode ()
 {
-  m_tball->stopRotation();
+  m_tball->stopRotation ();
   m_updatemview = true;
 }
 
@@ -110,7 +110,7 @@ OpenglContext::InitRotationMode ()
 void 
 OpenglContext::RotateView (int x, int y) 
 {
-  m_tball->computeOrientation(x, y);
+  m_tball->computeOrientation (x, y);
   m_updatemview = true;
 }
 
@@ -132,7 +132,7 @@ OpenglContext::SetViewSize (int width, int height)
   m_width = width;
   m_height = height;
   m_updateproj = true;
-  m_tball->setScreenSize(width, height); 
+  m_tball->setScreenSize (width, height); 
 }
 
 void 
@@ -151,15 +151,17 @@ OpenglContext::SetClipDistance (double dnear, double dfar)
 }
 
 void 
-OpenglContext::SetDepthTest (bool state){
+OpenglContext::SetDepthTest (bool state)
+{
   m_depthtest = state;
-  if( !state )
-    glDisable( GL_DEPTH_TEST );
-  else{
-    glDepthFunc( GL_LEQUAL );
-    glClearDepth( 1.0f );   
-    glEnable( GL_DEPTH_TEST );
-  }
+  if (!state)
+    glDisable (GL_DEPTH_TEST);
+  else
+    {
+      glDepthFunc (GL_LEQUAL);
+      glClearDepth (1.0f);   
+      glEnable (GL_DEPTH_TEST);
+    }
 }
 
 void 
@@ -173,9 +175,9 @@ OpenglContext::SetLighting (bool state)
     glPushMatrix ();
      glLoadIdentity ();
      gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
-     m_light.Enable();
-     m_light.ToOpenGL();
-     m_material.ToOpenGL();
+     m_light.Enable ();
+     m_light.ToOpenGL ();
+     m_material.ToOpenGL ();
     glPopMatrix ();
   }
   else
@@ -217,7 +219,7 @@ OpenglContext::MoveLight (int anglex, int angley, double distance) {
    glLoadIdentity ();
    gluLookAt (0, 0, 2, 0, 0, 0, 0, 1, 0);
    m_light.MoveLight (anglex, angley, distance);
-   m_light.ToOpenGL();
+   m_light.ToOpenGL ();
   glPopMatrix ();
 }
 
@@ -268,8 +270,8 @@ void
 OpenglContext::DrawHelp () {
   int cury=0;
 
-  glDisable(GL_DEPTH_TEST);
-  glColor3f( 1.0, 1.0, 1.0 );
+  glDisable (GL_DEPTH_TEST);
+  glColor3f (1.0, 1.0, 1.0);
 
   for (unsigned int i = 0; i < sizeof(helpInfos)/sizeof(helpStruct); i++) 
   {

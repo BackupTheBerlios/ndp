@@ -2,7 +2,6 @@
 #define VERTEXBUFFER_H
 
 #include "PointSet.h"
-#include "math/vector3.h"
 
 class VertexBuffer {
  public:
@@ -13,26 +12,26 @@ class VertexBuffer {
   };
 
  public:
-  VertexBuffer();
-  VertexBuffer( const std::vector<Point> &vertices, PolyType polytype );
-  ~VertexBuffer();
+  VertexBuffer ();
+  VertexBuffer (const std::vector<Point> &vertices, PolyType polytype);
+  ~VertexBuffer ();
 
-  void LockBuffer();
-  void unLockBuffer();
-  void Bind();
-  void unBind();
+  void LockBuffer ();
+  void unLockBuffer ();
+  void Bind ();
+  void unBind ();
 
-  int DrawBuffer();
+  int DrawBuffer ();
 
-  void SetIndices( std::vector<unsigned int> indices ) { m_indices = indices; }
+  void SetIndices (std::vector<unsigned int> indices) { m_indices = indices; }
   
-  std::vector<Point> *getDataPointer();
+  std::vector<Point> *getDataPointer ();
 
-  inline int getSize() { return m_indices.size(); }
-  inline int getPolyType() { return m_polytype; }
+  inline int getSize() {return m_indices.size();}
+  inline int getPolyType() {return m_polytype;}
 
  private:
-  void Init();
+  void Init ();
 
   std::vector<unsigned int> m_indices;
   std::vector<Point> m_vertices;
