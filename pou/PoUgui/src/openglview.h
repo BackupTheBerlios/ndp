@@ -15,6 +15,9 @@ class OpenglWidget : public QGLWidget
  public:
   OpenglWidget( QWidget *parent, const char *name, VertexBuffer *vbuffer );
   ~OpenglWidget();
+  
+  void SetLighting( bool state, int type, float x, float y, float z );
+  
   /* Surcharge des fonctions de base */
   void initializeGL();
   void clearGL();
@@ -38,6 +41,11 @@ class OpenglView : public QMainWindow {
  public:
   OpenglView( QWorkspace *parent, VertexBuffer *vbuffer );
   ~OpenglView();
+
+  inline void SetLighting( bool state, int type, float x, float y, float z ){
+    glwidget -> SetLighting( state, type, x, y, z );
+  }
+  
  protected:
 
  private:

@@ -8,6 +8,7 @@
 *****************************************************************************/
 
 #include <stdio.h>
+#include <qfiledialog.h>
 #include "settings.h"
 
 /* OK */
@@ -28,13 +29,26 @@ void SettingsForm::pushButton3_2_clicked()
 {
     hide();
 }
+/* LOAD */
+void SettingsForm::pushButton1_clicked()
+{
+    QString filename = QFileDialog::getOpenFileName( QString::null, "Settings Files (*.args)", this,"file open", 
+					"Settings  -- Open File" );
+    // TODO: Load file
+}
 
+/*SAVE*/
+void SettingsForm::pushButton1_2_clicked()
+{
+    QString filename = QFileDialog::getSaveFileName( QString::null, "Settings Files (*.args)", this,"file save", 
+					"Settings  -- Save File" );    
+    //TODO:Save file
+}
 
 int SettingsForm::getPointsCount()
 {	
     return m_pointscount;			
 }
-
 
 void SettingsForm::Init()
 {

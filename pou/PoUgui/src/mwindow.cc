@@ -160,8 +160,8 @@ void MWindow::closeEvent( QCloseEvent *event ) {
 void MWindow::menu_file_open() {
   int i;
   QString filename = QFileDialog::
-    getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
-		     "Sur -- Ouvrir Fichier" );
+    getOpenFileName( QString::null, "Files .sur (*.sur)", this,"file open", 
+		     "Sur -- Open File" );
 
   if( !filename.isEmpty() ){
     Vec3f *vPoints;

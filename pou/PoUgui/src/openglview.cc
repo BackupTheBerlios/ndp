@@ -133,6 +133,12 @@ void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
   updateGL();
 }
 
+
+void OpenglWidget::SetLighting( bool state, int type, float x, float y, 
+				float z ){
+
+}
+
 /* -+-+-+-+-+-+-+-+-+ OpenglView +-+-+-+-+-+-+-+-+-+-+-+-*/
 OpenglView::OpenglView( QWorkspace *parent, VertexBuffer *vbuffer ) 
   : QMainWindow( parent, "OpenGL View", 0 )
