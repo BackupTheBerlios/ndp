@@ -1,5 +1,12 @@
 2004-04-06  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mwindow.cc: Now there is only one progress dialog for
+	colors.
+
+	* libpou/src/ConstructRBFPOU.h: Setcallback() can take two more
+	parameters in order to show only one progress dialog during color
+	computing.
+
 	* PoUgui/src/mwindow.cc: Clear PointSet before loading a new file.
 
 	* libpou/src/helpers/deletor.h: Allow to use delete with for_each.
