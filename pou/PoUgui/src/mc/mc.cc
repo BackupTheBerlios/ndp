@@ -38,6 +38,7 @@
 
 using namespace std;
 
+  
 #define TET	0  /* use tetrahedral decomposition */
 #define NOTET	1  /* no tetrahedral decomposition  */
 
@@ -147,15 +148,15 @@ typedef struct process {	   /* parameters, function, storage */
     EDGELIST **edges;		   /* edge and vertex id hash table */
 } PROCESS;
 
-void *calloc();
-char *mycalloc();
+ void *calloc();
+ char *mycalloc();
 
 
 
 int gntris;	     /* global needed by application */
 VERTICES gvertices;  /* global needed by application */
 ofstream s;
-ImplicitSurface3D is;
+ImplicitSurface3D *is;
 
 
 /* triangle: called by polygonize() for each triangle; write to stdout */
@@ -748,7 +749,7 @@ void vnormal (POINT* point, PROCESS* p, POINT* v)
 {
   Vec3f norm, dest(point->x, point->y, point->z);
   
-  is.evalNormal(dest, norm);
+  is->evalNormal(dest, norm);
   //cout << "Epsilon: " << norm << endl;
   //is.evalNormalAna(dest, norm);
   //   cout << "nb " << is.nb(dest);
@@ -833,99 +834,31 @@ void converge (POINT* p1, POINT* p2,
 
 
 
-
 //ImplicitSurface3Drbf is;
 
 
 double fun(double x, double y, double z)
 {
-  return -is.eval(Vec3f(x,y,z));//-243.f/255.f;
+  return -is->eval(Vec3f(x,y,z));//-243.f/255.f;
 }
 
-int
-main(int argc, char** argv)
+void domc(ImplicitSurface3D *imps)
 {
-  opterr = 0;
-
-  bool textureFlag = false;
-
-  int c;
-  while ((c = getopt(argc, argv, "c")) != -1)
-    switch (c)
-      {
-      case 'c':
-        textureFlag = true;
-	break;
-      default:
-	cout << argv[0] << "[-c] file.pou outputfile" << endl;
-	return 1;
-      }
-  
-  string inputFile = argv[optind];
-
-  cout << "Loading " << inputFile.c_str() << " ..." << flush;
-  is.load(inputFile.c_str());
-  cout << "OK" << endl;
-
-
-  if (textureFlag)
-    {
-      cout << "Loading colors... " << flush;
-      
-      string fnR = inputFile + ".r";
-      string fnG = inputFile + ".g";
-      string fnB = inputFile + ".b";
-      
-      /*      isR.loadFile(fnR.c_str());
-      isG.loadFile(fnG.c_str());
-      isB.loadFile(fnB.c_str());*/
-      
-      cout << "OK" << endl;
-    }
-
+  is = imps;
   Vec3f init(3, -2.06667, -2.06667);
-  //Vec3f init(-0.269614, 0.228464, 0.0772211); //bunny
-  //Vec3f init(-0.791586, -0.653777, -0.316659); //dragon
-  //Vec3f init(-0.032141, -0.895791, -0.389677); //happy
-  //Vec3f init(-5, -5, 6.33); //cubeNoise
-  //Vec3f init(-0.666667, -0.68889, 0.344443); //f
-  //Vec3f init(-0.743562, -0.74691, -0.0522035);//santa
-  //Vec3f init(-3, -2.06667, -2.06667);
-  //init = Vec3f(-5.0264, -0.573869, -0.411203);
-  //init = Vec3f(-0.640577, -0.468268, -0.736025); // ant
-  //init = Vec3f(-0.293972, -0.997778, -0.333333); // king
-  //init = Vec3f(-0.563067, -0.46224, -0.0248847);//igea
-  //init = Vec3f(-0.98, -1, -0.97);
-  //init = Vec3f(-0.335, -0.0701747, -0.0663056);
   
 
   int i;
-  char *err; //polygonize();
+  char *err;
   gntris = 0;
 
-  //if (argc == 3)
-  s.open(argv[optind+1]);
-    /*
-  else
-    {
-      string fn(argv[1]);
-      int pos = fn.find(".pou", 0);
-      fn.erase(pos, fn.size()-pos);
-      s.open(fn.c_str());
-      cout << "fn: " << fn.c_str() << endl;
-    }
-    */
-
-  //very hi-quality : if ((err = polygonize(fun, 0.01, 200, 
-
-  //  Time globalTime = getSystemTime();
+  s.open("toto.poly");
   if ((err = polygonize(fun, 
 			0.05, 200, 
 			init[0], init[1], init[2],
 			triangle, NOTET)) != NULL) 
     {
       cout << "Error " << err << endl;
-      return 1;
     }
   
   s << "-1 -1 -1" << endl;
@@ -943,17 +876,7 @@ main(int argc, char** argv)
 	<< v.normal.z << " ";
       
       Vec3f pos(v.position.x, v.position.y, v.position.z);
-            
-      if (textureFlag)
-	{
-	  /*	  float r = isR.eval(pos);
-	  float g = isG.eval(pos);
-	  float b = isB.eval(pos);*/
-	  
-	  //	  s << r << " " << g << " " << b << endl;
-	}
-      else
-	s << "0.5 0.5 0.5" << endl;
+      s << "0.5 0.5 0.5" << endl;
     }
   
   s.close();
@@ -961,10 +884,4 @@ main(int argc, char** argv)
   //  cout << "OK in " << getSystemTime() - globalTime << " sec" << endl;
   cout << gntris << " triangles, " 
        << gvertices.count << "  vertices\n" << endl; 
-  return 0;
 }
-
-
-
-
-
