@@ -1,3 +1,10 @@
+2004-04-05  Ben  <leserpent@berlios.de>
+
+	* libpou/src/PointSet.h (class PointSet): Added a method clear()
+	which really deletes Point * from PointSet. Called in the
+	destructor() and in load().
+	Same problem exists in ConstraintSet.
+
 2004-04-05  Damien
 	* PoUgui/src/mwindow.cc: You can enable "Enable Tet"
 
