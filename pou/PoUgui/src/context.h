@@ -11,49 +11,50 @@ class OpenglWidget;
 
 class OpenglContext {
  public:
-  enum LightType { LIGHT_FLAT=1, LIGHT_SMOOTH, LIGHT_PIXEL };
+  enum LightType { LIGHT_FLAT=1, LIGHT_SMOOTH};
   
  public:
-  OpenglContext( OpenglWidget *parent );
-  ~OpenglContext();
+  OpenglContext (OpenglWidget *parent);
+  ~OpenglContext ();
 
-  void SyncContext();
-  void DrawHelp();
+  void SyncContext ();
   /* Draw the Head-Up-Display */
-  void DrawHud();
-  void ShowFps( bool flag );
-  void ShowStats( bool flag );
-  void ShowLightPosition( bool flag );
-  inline bool getFpsState() { return m_showfps; }
-  inline bool getStatsState() { return m_showstats; }
-  inline bool getLightPositionState() { return m_lightdraw; }
+  void DrawHud ();
+  void ShowFps (bool flag);
+  void ShowStats (bool flag);
+  void ShowLightPosition (bool flag);
+  inline bool getFpsState () { return m_showfps; }
+  inline bool getStatsState () { return m_showstats; }
+  inline bool getLightPositionState () { return m_lightdraw; }
   
   /********************/
   /* NEED SyncContext() */
   /********************/
-  void StartRotationMode( int x, int y );
-  void StopRotationMode();
-  void InitRotationMode();
-  void RotateView( int x, int y );
-  void ZoomView( double factor );
+  void StartRotationMode (int x, int y);
+  void StopRotationMode ();
+  void InitRotationMode ();
+  void RotateView (int x, int y);
+  void ZoomView (double factor);
   
-  void SetViewSize( int width, int height );
-  void SetFov( double fov );
-  void SetClipDistance( double near, double far );
-  void OppositeShowHelp() { m_showhelp = !m_showhelp; }
+  void SetViewSize (int width, int height);
+  void SetFov (double fov);
+  void SetClipDistance (double near, double far);
+  void OppositeShowHelp () { m_showhelp = !m_showhelp; }
 
   /****************************/
   /* DON'T NEED SyncContext() */
   /****************************/
-  void SetDepthTest( bool state );
-  void SetLighting( bool state );
-  void SetLightType( LightType type );
-  void MoveLight( int anglex, int angley, double distance );
+  void SetDepthTest (bool state);
+  void SetLighting (bool state);
+  void SetLightType (LightType type);
+  void MoveLight (int anglex, int angley, double distance);
   void SetMaterial ();
   void OppositeColorFlags ();
   void OppositePolygonMode ();
+
  protected:
-  void mapToSphere(Vec3f &dest);  
+  void mapToSphere (Vec3f &dest);  
+  void DrawHelp ();
 
  private:
   OpenglWidget *m_parent;
