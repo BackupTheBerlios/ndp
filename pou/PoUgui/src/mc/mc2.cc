@@ -25,6 +25,7 @@ Mc::~Mc() {
 
 // Free resulting vertices of a previous call to domc
 void Mc::clear() {
+  indices.clear();
   gntris = 0;
   free((char *) gvertices.ptr);
   gvertices.ptr = NULL;
@@ -635,6 +636,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.8  2004/04/23 16:17:54  leserpent
+* Forgotten to clear indices vector
+*
 * Revision 1.7  2004/04/06 14:31:32  leserpent
 * Removed an useless if in clear()
 *
