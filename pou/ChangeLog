@@ -1,3 +1,16 @@
+2004-04-25  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mwindow.cc and co: Added help screen.
+	Changed keyhandler into a big switch.
+	
+
+	* libpou/src/math/quaternion.h: Removed unusued methods
+
+	* libpou/src/math/matrix4.h: Removed all unusued methods
+
+	* PoUgui/src/mc/mc2.cc: Bounding box doesn't work, use a default
+	bound of 200
+
 2004-04-25    <thomas@pumpkins>
 	* libpou/src/ConstructRBFPOU.cc (compute): stop when callback return
 	false. Manages several calls to compute for the same ConstructRBFPOU
