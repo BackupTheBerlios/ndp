@@ -96,15 +96,13 @@ void VertexBuffer::Bind()
   glEnableClientState( GL_NORMAL_ARRAY );
   if( m_indices ){
     printf("Enable indices\n");
-    //glEnableClientState( GL_INDEX_ARRAY );
+    glEnableClientState( GL_INDEX_ARRAY );
   }
 
   if( type == TYPE_VERTEXBUFFER ){
     glVertexPointer( 3, GL_FLOAT, step*sizeof(Vec3f), ptr );
     glColorPointer( 3, GL_FLOAT, step*sizeof(Vec3f), ptr + 2 );
     glNormalPointer( GL_FLOAT, step*sizeof(Vec3f), ptr + 1 );
-    //if( m_indices )
-    // glIndexPointer( GL_UNSIGNED_INT, 3, m_indices );
   }
 
 }
@@ -114,7 +112,7 @@ void VertexBuffer::unBind()
   glDisableClientState(GL_COLOR_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
-  //glDisableClientState(GL_INDEX_ARRAY);
+  glDisableClientState(GL_INDEX_ARRAY);
 }
 
 void VertexBuffer::LockBuffer() 
@@ -142,16 +140,9 @@ int VertexBuffer::DrawBuffer()
     return -1;
   glColor3f( 1.0,1.0,1.0 );
   if( !m_indices )
-    glDrawArrays( PolyTypes[polytype], 0, n ); 
-  else{
-    
-    for( int z=0; z<m_indices_count;z+=3){
-      glBegin( PolyTypes[polytype] );
-      glArrayElement( m_indices[z] );
-      glArrayElement( m_indices[z+1] );
-      glArrayElement( m_indices[z+2] );
-      glEnd();
-    }
+      glDrawArrays( PolyTypes[polytype], 0, n ); 
+  else {
+   glDrawElements(PolyTypes[polytype], m_indices_count, GL_UNSIGNED_INT, m_indices);
   }
   return 0;
 }
@@ -181,7 +172,7 @@ void VertexBuffer::SetIndices( void *data, int size )
   if( !data )
     return ;
   
-  m_indices = new int [size];
+  m_indices = new unsigned int [size];
   m_indices_count = size;
   memcpy( m_indices, data, size*sizeof( int ) );
 }

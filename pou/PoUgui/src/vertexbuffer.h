@@ -41,7 +41,7 @@ class VertexBuffer{
   void unMapBuffer();
  private:
   /* Indices */
-  int *m_indices;
+  unsigned int *m_indices;
   int m_indices_count;
 
   /* Both (vertexbuffer, vbo) */
