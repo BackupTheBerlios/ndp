@@ -216,6 +216,9 @@ void MWindow::menu_settings_args() {
 }
 
 void MWindow::menu_windows_new() {
+    OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
+    mw -> resize( 200, 200 );
+    mw -> show();
 }
 
 namespace {

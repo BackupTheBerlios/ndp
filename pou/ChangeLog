@@ -4,6 +4,8 @@
 
 2004-04-01  Damien
 	
+	* mwindow.cc: You can create more opengl windows (mdi)
+	
 	* mwindow.cc: GUI use new version of mc (mc/mc2.h). Previous bug FIXED
 	
 	* BUG: Alpha channel ?!?!
