@@ -1,3 +1,16 @@
+2004-04-24 Damien
+	* xmplparser.cc: generic format for entries class XMLEntry
+	* init.cc: Removed because useles.
+	* settings.h: Final version, float->int for tmin and tmax
+	* *: Errors Management ! using ShowErrorMessage (utils.cc)
+	* openglview.cc: global variables -> static variables
+
+2004-04-23 Damien
+	* Saving Settings to xml file works
+	* Loading Settings to xml file works
+	* Icons now in icons.h (xpm format)
+	* Settings form bugfix
+
 2004-04-22  Thomas
 	* libpou/src/ImplicitSurface.h: getOctree()
 
