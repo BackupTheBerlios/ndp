@@ -289,7 +289,7 @@ bool SettingsForm::RetreiveValues()
     m_phi = combo_pou_phi->currentItem();
          
     int pointscount = spointscount.toInt (&res);
-    if (!res) 
+    if (!res || CheckIntValue (1,-1, pointscount)) 
     {
 	retvalue = true;
 	ShowErrorMessage ( this, "Error Bad value for Points Count: Valid value: [1..+oo]");
@@ -312,7 +312,7 @@ bool SettingsForm::RetreiveValues()
     }
     
     float  cubesize = scubesize.toFloat (&res);
-    if (!res)
+    if (!res || CheckFloatValue (0.0,-1.0, cubesize))
     {
 	retvalue = true;
 	ShowErrorMessage (this, "Error Bad value for Cube Size: Valid value: [0..+oo]");
@@ -321,7 +321,7 @@ bool SettingsForm::RetreiveValues()
 	m_cubesize = cubesize;
     
     int  maxit = smaxit.toInt (&res);
-    if (!res)
+    if (!res || CheckIntValue (1,-1, maxit))
     {
 	retvalue = true;
 	ShowErrorMessage (this, "Error Bad value for Max Iteration: Valid value: [1..+oo]");

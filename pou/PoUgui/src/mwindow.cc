@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.52  2004/04/29 09:51:49  ob821
+ * bugfix
+ *
  * Revision 1.51  2004/04/29 09:30:41  ob821
  * bugfix
  *
@@ -263,7 +266,7 @@ MainWindow::MenuFileOpen()
       {
 	m_pointset.load( filename );
       } 
-    catch(std::exception e) 
+    catch(std::exception& e) 
       {
 	ShowErrorMessage (this, QString (e.what ()));
 	return;
@@ -385,9 +388,11 @@ MainWindow::MenuRenderingRender()
     {
       MCubes.doMc (&ims, boundingbox);
     } 
-  catch(std::exception e) 
+  catch(std::exception& e) 
     {
       ShowErrorMessage (this, QString (e.what ()));
+      delete qpd;
+      qpd = NULL;
       return;
     }
 
