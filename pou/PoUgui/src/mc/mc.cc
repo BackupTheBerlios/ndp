@@ -153,13 +153,16 @@ typedef struct process {	   /* parameters, function, storage */
  char *mycalloc();
 
 void (*progress_callback)(int v, int max);
+unsigned int progress_step;
+unsigned int progress_max;
 
 int gntris;	     /* global needed by application */
 VERTICES gvertices;  /* global needed by application */
 ImplicitSurface3D *is;
 
-void setcallback(void (*c)(int, int)) {
+void mc_setcallback(void (*c)(int, int), unsigned int step) {
     progress_callback = c;
+    progress_step = step;
 }
 
 /* triangle: called by polygonize() for each triangle; write to stdout */
@@ -271,7 +274,8 @@ char *polygonize (FUN function,
 		  int mode)
 {
   PROCESS p;
-  int n, noabort, i=0;
+  int n, noabort;
+  unsigned int i=0;
   CORNER *setcorner();
   TEST in, out, find();
   
@@ -338,9 +342,15 @@ char *polygonize (FUN function,
     testface(c.i, c.j+1, c.k, &c, T, LTN, LTF, RTN, RTF, &p);
     testface(c.i, c.j, c.k-1, &c, N, LBN, LTN, RBN, RTN, &p);
     testface(c.i, c.j, c.k+1, &c, F, LBF, LTF, RBF, RTF, &p);
-  printf("%d\n",i);
+
+    if(i%progress_step==0)
+      if(i<progress_max)
+        progress_callback(i,progress_max);
+      else
+        progress_callback(99, 100);
   }
-  printf("%d\n",i);
+  progress_callback(100, 100);
+
   return NULL;
 }
 
@@ -821,10 +831,14 @@ void domc(ImplicitSurface3D *imps, const Box3f &bbox)
   gntris = 0;
 
   
+//BUG: The Pointset bounding box doesn't seem to be a good bounding
+//	box for the surface
   Vec3f size=bbox.getSize();
-  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)<<std::endl;
+  int bounds = (int)(size.maxValue()/(2*0.05))+20;
+//  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
+  progress_max = (int)((size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)/8);
   if ((err = polygonize(fun, 
-			0.05, ((int)(bbox.getSize().maxValue()/0.05))/2+1, 
+			0.05, bounds, 
 			0, 0, 0,
 			triangle, NOTET)) != NULL) 
     {

@@ -250,6 +250,7 @@ void MWindow::menu_rendering_render() {
   ims->compute( *objectPointSet, filter_npoints );
   // Start MC
   printf("[D] Start Marching Cubes\n");
+  mc_setcallback(callback, 10);
   domc(ims, m_bbox);
   getVertNorm( vec_vertices, vec_normals );
   vec_indices = getIndices();
