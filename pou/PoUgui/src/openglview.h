@@ -17,7 +17,7 @@ class OpenglWidget : public QGLWidget
   ~OpenglWidget();
   
   void SetLighting( bool state, int type, float x, float y, float z );
-  
+  void ParseKey( int key );
   /* Surcharge des fonctions de base */
   void initializeGL();
   void clearGL();
@@ -26,7 +26,6 @@ class OpenglWidget : public QGLWidget
   inline OpenglContext *getOpenGLContext(){ return glcontext; }
 
  private:
-  void keyPressEvent( QKeyEvent *e );
   void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
@@ -49,6 +48,7 @@ class OpenglView : public QMainWindow {
   
  protected:
   void closeEvent( QCloseEvent * );
+  void keyPressEvent( QKeyEvent *e );
  private:
   OpenglWidget *glwidget;
   QFrame *glframe;

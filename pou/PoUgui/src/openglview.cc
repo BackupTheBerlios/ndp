@@ -123,10 +123,9 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
   glcontext -> SyncContext();
 }
 
-void OpenglWidget::keyPressEvent( QKeyEvent *e )
+void OpenglWidget::ParseKey( int key )
 {
-  printf("%c %d %d\n", e->ascii(), e->ascii(), e->key() );
-  if( tolower(e->ascii()) == 'f' )
+  if( tolower(key) == 'f' )
     glcontext -> ShowFps( !(glcontext -> getFpsState()) );    
 }
 
@@ -190,7 +189,10 @@ void OpenglView::closeEvent( QCloseEvent *e )
 {
   delete glwidget;
   glwidget = NULL;
-  //e->accept();
-  //close();
   hide();
+}
+
+void OpenglView::keyPressEvent( QKeyEvent *e )
+{
+  glwidget->ParseKey( e->ascii() );
 }
