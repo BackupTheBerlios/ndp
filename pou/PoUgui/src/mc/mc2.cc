@@ -1,8 +1,3 @@
-/*$Log: mc2.cc,v $
-/*Revision 1.1  2004/04/01 20:38:41  leserpent
-/*Moved private methods from mc2.h to mc2.cc
-/*Removed useless typedef.
-/**/
 #include "mc2.h"
 
 Mc::Mc(void (*callback)(int, int), int step):
@@ -585,3 +580,13 @@ const Mc::Corner Mc::corner1[12] = {LBN,LTN,LBN,LBF,RBN,RTN,RBN,RBF,LBN,LBF,LTN,
 const Mc::Corner Mc::corner2[12] = {LBF,LTF,LTN,LTF,RBF,RTF,RTN,RTF,RBN,RBF,RTN,RTF};
 const Mc::Direction Mc::leftface[12] = {B,  L,  L,  F,  R,  T,  N,  R,  N,  B,  T,  F};
 const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F,  N,  T};
+
+/* History:
+* $Log: mc2.cc,v $
+* Revision 1.2  2004/04/01 20:57:45  leserpent
+* Trivial: Moved Log keyword at the end of the file
+*
+* Revision 1.1  2004/04/01 20:38:41  leserpent
+* Moved private methods from mc2.h to mc2.cc
+* Removed useless typedef.
+*/

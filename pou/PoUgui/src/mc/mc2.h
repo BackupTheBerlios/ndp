@@ -1,8 +1,3 @@
-/*$Log: mc2.h,v $
-/*Revision 1.2  2004/04/01 20:38:41  leserpent
-/*Moved private methods from mc2.h to mc2.cc
-/*Removed useless typedef.
-/**/
 #ifndef MC_H
 #define MC_H
 
@@ -167,6 +162,14 @@ private:
   void converge (POINT* p1, POINT* p2, double v,   POINT* p);
   double fun(double x, double y, double z);
 };
-
-
 #endif
+
+/* History:
+* $Log: mc2.h,v $
+* Revision 1.3  2004/04/01 20:57:45  leserpent
+* Trivial: Moved Log keyword at the end of the file
+*
+* Revision 1.2  2004/04/01 20:38:41  leserpent
+* Moved private methods from mc2.h to mc2.cc
+* Removed useless typedef.
+*/
