@@ -18,6 +18,11 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ *$Log: openglview.cc,v $
+ *Revision 1.28  2004/04/06 14:26:09  leserpent
+ *Changed two glClear into one
+ *Changed a paintGL to updateGL
+ *
  *  Tuesday 30 March 2004:
  *      - Use VertexBuffer::DrawBuffer() for rendering
  *
@@ -94,12 +99,11 @@ void OpenglWidget::resizeGL( int w, int h )
   glcontext -> SetViewSize( w, h );
   glcontext -> SyncContext();
   if( !m_idledraw )
-    paintGL();
+    updateGL();
 }
 
 void OpenglWidget::paintGL() {
-  glClear( GL_COLOR_BUFFER_BIT );
-  glClear( GL_DEPTH_BUFFER_BIT );
+  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
   
   glcontext -> SyncContext();
 
