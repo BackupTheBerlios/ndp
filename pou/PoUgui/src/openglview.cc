@@ -80,22 +80,17 @@ void OpenglWidget::paintGL() {
   swapBuffers();
 }
 
-//Trouve le point (mousex',mousey',Z)
+//Trouve le point (mousex,mousey,Z)
 //qui se trouve sur la sphere de rayon 1
 //Reference: Terence J. Grant nehe.gamedev.net
 void OpenglWidget::mapToSphere(Vec3f &v) {
+  float len2;
   Vec3f tmp;
       
   tmp.x = (2*v.x)/float(size().width()-1)-1;
-  tmp.y = -((2*v.y)/float(size().height()-1)-1);
+  tmp.y = 1-(2*v.y)/float(size().height()-1);
   tmp.z = 0;
-  float len2 = tmp.length2();
-  if(len2>1) {
-    // Hors de la sphere, on prend le point le plus proche
-    float len = 1.0f/std::sqrt(len2);
-    tmp*=len;
-  }
-  else
+  if((len2 = tmp.length2())<1)
     tmp.z = std::sqrt(1.0-len2); // Dans la sphere, on augmente Z
   v = tmp;
 }
