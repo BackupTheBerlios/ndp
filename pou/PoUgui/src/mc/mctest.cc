@@ -27,7 +27,7 @@ int main(int argc, char *argv) {
   Mc mc(callback, 10);
   mc.enableTet(true);
   mc.setCubeSize(0.03);
-  mc.domc(&is, bbox);
+  mc.doMc(&is, bbox);
       
   return 0;
 }

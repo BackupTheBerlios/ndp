@@ -33,7 +33,8 @@ void Mc::clear() {
   gvertices.count = 0;
 }
 
-void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
+void Mc::doMc(ImplicitSurface3D *imps, const Box3f &bbox)
+  throw (std::runtime_error)
 {
   is = imps;
 
@@ -47,9 +48,7 @@ void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
   if ((err = polygonize(cubeSize, 200, 
                         initPoint.x, initPoint.y, initPoint.z,
                         tetActive)) != NULL) 
-  {
-    std::cerr << "Error " << err << std::endl;
-  }
+    throw std::runtime_error(err);
 }
 
 const std::vector<unsigned int>& Mc::getIndices() {
@@ -64,7 +63,7 @@ void Mc::getPoints(std::vector<Point> &points) {
 
     pos.setValues(v.position.x, v.position.y, v.position.z);
     normal.setValues(v.normal.x, v.normal.y, v.normal.z);
-    is->evalColorRGB(pos, color);
+    color.setValues(v.color.x, v.color.y, v.color.z);
     points.push_back(Point(pos, normal, color));
   }
 }
@@ -180,7 +179,7 @@ char *Mc::polygonize (double size,
   srand(1);
   in = find(1, &p, x, y, z);
   out = find(0, &p, x, y, z);
-  if (!in.ok || !out.ok) return "can't find starting point";
+  if (!in.ok || !out.ok) return "Can't find a starting point.";
   converge(&in.p, &out.p, in.value, &p.start);
   
   /* push initial cube on stack: */
@@ -214,7 +213,7 @@ char *Mc::polygonize (double size,
               :
               /* or polygonize the cube directly: */
               docube(&c, &p);
-    if (! noabort) return "aborted";
+    if (! noabort) return "Unable to reconstruct the surface\n";
     
     /* pop current cube from stack */
     p.cubes = p.cubes->next;
@@ -227,11 +226,23 @@ char *Mc::polygonize (double size,
     testface(c.i, c.j, c.k-1, &c, N, LBN, LTN, RBN, RTN, &p);
     testface(c.i, c.j, c.k+1, &c, F, LBF, LTF, RBF, RTF, &p);
 
+    bool nostop = true;
     if(i%progress_step==0)
       if(i<progress_max)
-        progress_callback(i,progress_max);
+        nostop = progress_callback(i,progress_max);
       else
-        progress_callback(99, 100);
+        nostop = progress_callback(99, 100);
+
+    // Check if user wants to abort
+    if(!nostop) {
+      while (p.cubes != NULL) { // Free remaining cubes before quitting
+        temp = p.cubes;
+        p.cubes = p.cubes->next;
+        free((char *) temp);
+      }
+      return NULL;
+    }
+    
   }
   progress_callback(100, 100);
 
@@ -575,14 +586,19 @@ void Mc::addtovertices (VERTICES *vertices,VERTEX v)
     if (vertices->ptr != NULL) free((char *) vertices->ptr);
     vertices->ptr = _new;
   }
+  Vec3f color, pos(v.position.x, v.position.y, v.position.z);
+  is->evalColorRGB(pos, color);
+  v.color.x = color.x;
+  v.color.y = color.y;
+  v.color.z = color.z;
   vertices->ptr[vertices->count++] = v;
 }
 
 void Mc::vnormal (POINT* point, PROCESS* p, POINT* v)
 {
-  Vec3f norm, dest(point->x, point->y, point->z);
+  Vec3f norm, pos(point->x, point->y, point->z);
   
-  is->evalNormal(dest, norm);
+  is->evalNormal(pos, norm);
   v->x = norm[0];
   v->y = norm[1];
   v->z = norm[2];
@@ -630,6 +646,11 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc.cc,v $
+* Revision 1.10  2004/04/26 07:46:11  leserpent
+* doMc throws std::runtime_error.
+* doMc stop when callback returns false.
+* Compute colors before getPoints(in addtovertices).
+*
 * Revision 1.9  2004/04/25 15:51:51  leserpent
 * Renamed mc2.h|cc to mc.cc|h
 *

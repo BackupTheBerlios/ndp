@@ -1,8 +1,11 @@
 #ifndef MC_H
 #define MC_H
 
+#include <stdexcept>
+#include <exception>
 #include <vector>
 #include "PointSet.h"
+#include "helpers/callback.h"
 
 class ImplicitSurface3D;
 
@@ -14,14 +17,14 @@ public:
   Mc(bool (*callback)(int, int), int step);
   Mc::~Mc();
   
-  void setcallback(bool (*c)(int, int), unsigned int step) {
+  void setCallback(Callback c, unsigned int step) {
     progress_callback = c;
     progress_step = step;
   }
 
   const std::vector<unsigned int>& getIndices();
   void getPoints(std::vector<Point> &points);
-  void domc(ImplicitSurface3D *imps, const Box3f &bbox);
+  void doMc(ImplicitSurface3D *imps, const Box3f &bbox) throw (std::runtime_error);
   
   void setInitPoint(const Vec3f& init) { initPoint = init; }
   void setCubeSize(float size) { cubeSize = size; }
@@ -37,7 +40,7 @@ private:
   int maxIt;
   bool tetActive;
 
-  bool (*progress_callback)(int v, int max);
+  Callback progress_callback;
   unsigned int progress_step, progress_max;
 
   void clear();
@@ -64,7 +67,7 @@ private:
   };
 
   struct VERTEX {		   /* surface vertex */
-    POINT position, normal;	   /* position and surface normal */
+    POINT position, normal, color; /* position and surface normal */
   };
 
   struct VERTICES {	   /* list of vertices in polygonization */
@@ -170,6 +173,11 @@ private:
 
 /* History:
 * $Log: mc.h,v $
+* Revision 1.8  2004/04/26 07:46:11  leserpent
+* doMc throws std::runtime_error.
+* doMc stop when callback returns false.
+* Compute colors before getPoints(in addtovertices).
+*
 * Revision 1.7  2004/04/25 15:51:51  leserpent
 * Renamed mc2.h|cc to mc.cc|h
 *

@@ -19,6 +19,11 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.38  2004/04/26 07:46:11  leserpent
+ * doMc throws std::runtime_error.
+ * doMc stop when callback returns false.
+ * Compute colors before getPoints(in addtovertices).
+ *
  * Revision 1.37  2004/04/25 15:53:12  leserpent
  * Renamed mc2.cc|h to mc.cc|h
  *
@@ -304,7 +309,7 @@ MainWindow::MenuRenderingRender()
   MCubes.setMaxIteration (mc_maxit);
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
-  MCubes.domc (ims, boundingbox);
+  MCubes.doMc (ims, boundingbox);
   MCubes.getPoints (vecPoints);
 
   m_polys = new VertexBuffer (vecPoints, POLY_TRIANGLES);
