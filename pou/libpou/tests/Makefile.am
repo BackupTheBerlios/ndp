@@ -1,6 +1,6 @@
 TESTS=constructrbf implicitsurface3d quaterniontest osg-compatible
 XFAIL_TESTS= # tests devant echouer
-noinst_PROGRAMS=$(TESTS)
+#noinst_PROGRAMS=$(TESTS)
 
 
 INCLUDES=-I../modules
