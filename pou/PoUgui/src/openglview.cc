@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.37  2004/04/27 14:32:37  ob821
+ * bugfix
+ *
  * Revision 1.36  2004/04/27 08:14:29  ob821
  * bugfix
  *
@@ -71,46 +74,46 @@ bool OpenglWidget::s_openglready = false;
 #define FRAME_DELAY 1 //MAX = 1000 fps
 
 /* -+-+-+-+-+-+-+-+-+ OpenglWidget +-+-+-+-+-+-+-+-+-+-+-+-*/
-OpenglWidget::OpenglWidget( QWidget *parent, const char *name, 
-			    VertexBuffer *vbuffer ) 
-  :QGLWidget( parent, name ), m_timerid(-1)
+OpenglWidget::OpenglWidget (QWidget *parent, const char *name, 
+			    VertexBuffer *vbuffer) 
+  :QGLWidget (parent, name), m_timerid(-1)
 {
   m_vbuffer = vbuffer;
-  m_glcontext = new OpenglContext( this );
+  m_glcontext = new OpenglContext (this);
   m_idledraw = false;
 
-  m_glcontext->ShowFps( false );
-  m_glcontext->ShowStats( false );
-  m_glcontext->ShowLightPosition( false );
+  m_glcontext->ShowFps (false);
+  m_glcontext->ShowStats (false);
+  m_glcontext->ShowLightPosition (false);
 }
 
 OpenglWidget::~OpenglWidget() 
 {
-  if(m_timerid != -1)
-    killTimer(m_timerid);
+  if (m_timerid != -1)
+    killTimer (m_timerid);
   delete m_glcontext;
 }
 
 void 
-OpenglWidget::SetIdleDraw( bool state )
+OpenglWidget::SetIdleDraw (bool state)
 {
-  if( state == m_idledraw )
+  if (state == m_idledraw)
     return;
 
   m_idledraw = state;
 
-  if( m_idledraw )
-    m_timerid = startTimer( FRAME_DELAY );
+  if (m_idledraw)
+    m_timerid = startTimer (FRAME_DELAY);
   else
-    if(m_timerid != -1)
-      killTimer(m_timerid);
+    if (m_timerid != -1)
+      killTimer (m_timerid);
 }
 
 void 
-OpenglWidget::initializeGL() 
+OpenglWidget::initializeGL () 
 {
   //Initialise OpenGL si c'est la première utilisation
-  if( !s_openglready )
+  if (!s_openglready)
     OpenglInit();
   s_openglready = true;
    
@@ -119,7 +122,7 @@ OpenglWidget::initializeGL()
   m_glcontext->SetDepthTest (false);
   m_vbuffer->Bind();
   /* Activate some flags for poly rendering */
-  if( m_vbuffer->getPolyType () == VertexBuffer::POLY_TRIANGLES ){
+  if (m_vbuffer->getPolyType () == VertexBuffer::POLY_TRIANGLES){
     /* Don't cull points only polys */
     glEnable (GL_CULL_FACE);
     glCullFace (GL_FRONT);
@@ -135,13 +138,13 @@ OpenglWidget::initializeGL()
 }
 
 void 
-OpenglWidget::clearGL() 
+OpenglWidget::clearGL () 
 {
   qglClearColor (black);
 }
 
 void 
-OpenglWidget::resizeGL( int w, int h ) 
+OpenglWidget::resizeGL (int w, int h) 
 {
   glViewport (0, 0, (GLint)w, (GLint)h);
 
@@ -149,46 +152,46 @@ OpenglWidget::resizeGL( int w, int h )
   m_glcontext->SetFov (60.0);
   m_glcontext->SetViewSize (w, h);
   m_glcontext->SyncContext();
-  if( !m_idledraw )
+  if (!m_idledraw)
     updateGL();
 }
 
 void 
-OpenglWidget::paintGL() 
+OpenglWidget::paintGL () 
 {
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+  glClear (GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   
-  m_glcontext -> SyncContext();
+  m_glcontext->SyncContext ();
   
-  if( m_vbuffer )
-    m_vbuffer -> DrawBuffer();
+  if (m_vbuffer)
+    m_vbuffer->DrawBuffer ();
 
-  m_glcontext -> DrawHud();
+  m_glcontext->DrawHud ();
 
-  swapBuffers();
+  swapBuffers ();
 }
 
 void 
-OpenglWidget::mousePressEvent( QMouseEvent *e ) {
-  switch(e->button()) {
+OpenglWidget::mousePressEvent (QMouseEvent *e) {
+  switch (e->button ()) {
   case QMouseEvent::LeftButton:
-    m_glcontext -> StartRotationMode( e->x(), e->y() );
+    m_glcontext->StartRotationMode (e->x(),e->y());
     break;
   case QMouseEvent::RightButton: // Reset transformation
-    m_glcontext -> InitRotationMode();
-    if( !m_idledraw )
-      updateGL();
+    m_glcontext->InitRotationMode();
+    if (!m_idledraw)
+      updateGL ();
     break;
   default:
     break;
   }    
-  m_glcontext -> SyncContext();
+  m_glcontext->SyncContext ();
 }
 
 void 
-OpenglWidget::ParseKey( int key, int key_ascii )
+OpenglWidget::ParseKey (int key, int key_ascii)
 {
-  switch( key ) {
+  switch (key) {
   case Qt::Key_F: {
     bool flag = !m_glcontext->getFpsState ();
     SetIdleDraw (flag);
@@ -213,7 +216,7 @@ OpenglWidget::ParseKey( int key, int key_ascii )
     break;
 
   case Qt::Key_H:
-    m_glcontext->OppositeShowHelp();
+    m_glcontext->OppositeShowHelp ();
     break;
   
   case Qt::Key_Left:
@@ -250,18 +253,18 @@ OpenglWidget::ParseKey( int key, int key_ascii )
     
   }
 
-  if( !m_idledraw )
+  if (!m_idledraw)
     updateGL();
 }
 
 void 
-OpenglWidget::mouseReleaseEvent( QMouseEvent * e) 
+OpenglWidget::mouseReleaseEvent (QMouseEvent * e) 
 {
   switch(e->button()) {
   case QMouseEvent::LeftButton:
-    m_glcontext->StopRotationMode();
-    m_glcontext->SyncContext();
-    if( !m_idledraw )
+    m_glcontext->StopRotationMode ();
+    m_glcontext->SyncContext ();
+    if (!m_idledraw)
       updateGL();
     break;
   default:
@@ -275,7 +278,7 @@ OpenglWidget::mouseMoveEvent( QMouseEvent *e )
   if(e->state()&QMouseEvent::LeftButton) {
     m_glcontext->RotateView (e->x(), e->y());
     m_glcontext->SyncContext();
-    if( !m_idledraw )
+    if (!m_idledraw)
       updateGL();
   }
 }
@@ -283,31 +286,31 @@ OpenglWidget::mouseMoveEvent( QMouseEvent *e )
 void 
 OpenglWidget::wheelEvent ( QWheelEvent * e ) 
 {
-  e->accept();
+  e->accept ();
   m_glcontext->ZoomView (e->delta());
-  m_glcontext->SyncContext();
-  if( !m_idledraw )
+  m_glcontext->SyncContext ();
+  if (!m_idledraw)
     updateGL();
 }
 
 
-void OpenglWidget::SetLighting( bool state,  OpenglContext::LightType type )
+void OpenglWidget::SetLighting (bool state,  OpenglContext::LightType type)
 {
   m_glcontext->SetLightType (type);
-  m_glcontext->SetLighting ( state );
-  m_glcontext->OppositeColorFlags();
-  m_glcontext->OppositePolygonMode();
+  m_glcontext->SetLighting (state);
+  m_glcontext->OppositeColorFlags ();
+  m_glcontext->OppositePolygonMode ();
   m_glcontext->MoveLight (0, 0, 1.5);
 }
 
-void OpenglWidget::timerEvent( QTimerEvent *e) 
+void OpenglWidget::timerEvent (QTimerEvent *e) 
 {
-  updateGL();
+  updateGL ();
 }
 
 /* -+-+-+-+-+-+-+-+-+ OpenglView +-+-+-+-+-+-+-+-+-+-+-+-*/
-OpenglView::OpenglView( QWorkspace *parent, VertexBuffer *vbuffer ) 
-  : QMainWindow( parent, "OpenGL View", 0 )
+OpenglView::OpenglView (QWorkspace *parent, VertexBuffer *vbuffer) 
+  : QMainWindow (parent, "OpenGL View", 0)
 {
   m_glwidget = new OpenglWidget (this, "Rendering Widget", vbuffer);
   setCaption ("OPENGL View");
@@ -315,21 +318,22 @@ OpenglView::OpenglView( QWorkspace *parent, VertexBuffer *vbuffer )
   setCentralWidget (m_glwidget);
 }
 
-OpenglView::~OpenglView() 
+OpenglView::~OpenglView () 
 {
   delete m_glwidget;
 }
 
 void 
-OpenglView::closeEvent( QCloseEvent *e )
+OpenglView::closeEvent (QCloseEvent *e)
 {
   delete m_glwidget;
   m_glwidget = NULL;
-  hide();
+  e->accept ();
+  hide ();
 }
 
 void 
-OpenglView::keyPressEvent( QKeyEvent *e )
+OpenglView::keyPressEvent (QKeyEvent *e)
 {
-  m_glwidget->ParseKey( e->key(), e->ascii() );
+  m_glwidget->ParseKey (e->key(), e->ascii());
 }

@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.42  2004/04/27 14:32:37  ob821
+ * bugfix
+ *
  * Revision 1.41  2004/04/27 14:05:48  pumpkins
  * if (!qpd) replaced by assert
  *
@@ -188,11 +191,11 @@ MainWindow::CreateWorkspace()
 void 
 MainWindow::CloseWindows() 
 {
-  QWidgetList windows = m_workspace->windowList();
-  if ( windows.count() ) 
-    for ( int i = 0; i < int(windows.count()); ++i ) {
-      QWidget *window = windows.at( i );
-      window->close();
+  QWidgetList windows = m_workspace->windowList (QWorkspace::CreationOrder);
+  if (windows.count()) 
+    for (int i = 0; i < int(windows.count()); ++i) {
+      QWidget *window = windows.at (i);
+      window->close ();
     }
 }
 
@@ -200,6 +203,7 @@ void
 MainWindow::closeEvent( QCloseEvent *event ) 
 {
   CloseWindows();
+  CleanMemory();
   QMainWindow::closeEvent( event );
 }
 
@@ -285,26 +289,30 @@ namespace
 void 
 MainWindow::MenuRenderingRender() 
 {
+  QWidgetList windows = m_workspace->windowList (QWorkspace::CreationOrder);
   ImplicitSurface3D *ims;
   std::vector<Point> vecPoints;
-  int filter_npoints = m_settingsform->getPointsCount();
-  int mc_maxit = m_settingsform->getMaxIteration();
-  float mc_cubesize = m_settingsform->getCubeSize();
-  bool enabletet = m_settingsform->isTetEnable();
-  int tmin = m_settingsform->getTmin();
-  int tmax = m_settingsform->getTmax();
-  int phi = m_settingsform->getPhi();
+  int filter_npoints = m_settingsform->getPointsCount ();
+  int mc_maxit = m_settingsform->getMaxIteration ();
+  float mc_cubesize = m_settingsform->getCubeSize ();
+  bool enabletet = m_settingsform->isTetEnable ();
+  int tmin = m_settingsform->getTmin ();
+  int tmax = m_settingsform->getTmax ();
+  int phi = m_settingsform->getPhi ();
   BoxVolume boundingbox;
 
   ConstructRBFPOU::TypeRBF id2rbftype [3] = {ConstructRBFPOU::BIHARMONIC,
 					     ConstructRBFPOU::TRIHARMONIC,
 					     ConstructRBFPOU::THINPLATE};
+
+  printf ("COUNT %d\n", windows.isEmpty ());
+  
   if (!m_points)
     return;
-  
+
   qpd = new QProgressDialog ("Computing colors...",
                              "Abort Rendering", 100, this, "progress", TRUE);
-  m_qtgui->processEvents();
+  m_qtgui->processEvents ();
 
   /* Start ImplicitSurface reconstruction */
   /* First check if api is OK */
@@ -359,19 +367,19 @@ MainWindow::CleanMemory()
 /*****************************************************************************/
 
 int 
-CreateMainWindow( int argc, char **argv ) 
+CreateMainWindow (int argc, char **argv) 
 {
   QMainWindow *mainwindow;
 
   /* Create the QT Application */
-  MainWindow::m_qtgui = new QApplication( argc, argv );
+  MainWindow::m_qtgui = new QApplication (argc, argv);
 
   /* Create Main Window */
-  mainwindow = new MainWindow(" PoU GUI ");
+  mainwindow = new MainWindow (" PoU GUI ");
   mainwindow->resize (640, 480);
   mainwindow->setCaption ("PoU GUI");
   MainWindow::m_qtgui->setMainWidget (mainwindow);
-  mainwindow->show();
+  mainwindow->show ();
 
-  return MainWindow::m_qtgui->exec();
+  return MainWindow::m_qtgui->exec ();
 }
