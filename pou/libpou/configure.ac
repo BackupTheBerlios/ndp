@@ -28,7 +28,7 @@ dnl Enable libtool without static lib build
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AM_PATH_GSL(1.4, :, AC_MSG_ERROR([*** libgsl not found ***]))
+AM_PATH_GSL(1.3, :, AC_MSG_ERROR([*** libgsl not found ***]))
 
 dnl Modify CFLAGS after all tests
 dnl Add args to configure
