@@ -2,13 +2,14 @@ lib_LTLIBRARIES=libpou.la
 libpou_la_SOURCES=AreaCube.cc AreaSet.cc \
 	AreaSetOctree.cc AreaSphere.cc PointSet.cc Solver.cc \
 	ConstructRBF.cc ConstructRBFTriHarmonic.cc ConstructRBFBiHarmonic.cc \
-	ConstructRBFPOU.cc ImplicitSurface3D.cc ConstraintSet.cc
+	ConstructRBFPOU.cc ImplicitSurface3D.cc ConstraintSet.cc \
+	helpers/md5.c
 
 pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h \
 	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h \
 	ConstraintFilter.h Solver.h ConstructRBF.h W.h \
-	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h
+	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h Md5.h
 pkgincludemathdir=@includedir@/@PACKAGE_NAME@
 pkgincludemath_HEADERS=math/vector3.h math/quaternion.h math/matrix4.h \
 	math/matrix3.h math/matrix.h
