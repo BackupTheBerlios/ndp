@@ -10,7 +10,7 @@ using namespace std;
 //v must be (1,0,0), (0,1,0) or (0,0,1)
 void testUnitToMatrix(const Vec3f &v) {
   Matrix4f m;
-  Quaternionf q, r;
+  Quaternionf q, q2, r;
   float s, c;
   
   cout << endl << "Input quaternion: rotation of 2PI around (" << v << ")"
@@ -48,22 +48,13 @@ void testUnitToMatrix(const Vec3f &v) {
 
 int main() {
   Matrix4f m;
-  Quaternionf q, r, s(1,2,3,1), t;
+  Quaternionf q, q2, s(4,4,4,4);
  
   cout << setprecision(1) << fixed;
-  cout << s << " + " << s << " = " << q+s << endl;
   cout << "norm(" << q << ")" << " = " << q.norm() << endl;
   cout << "norm(" << s << ")" << " = " << s.norm() << endl;
 
-  r = s;
-  r.normalize();
-  t = r.conjugate();
-  cout << "conjugate(normalize(" << s << ")*normalize(" << s << ") = " << t*r << endl;
-
   q.setValues(1,1,1,1);
-  cout << q << " * " << 4 << " = " << q*4 << endl;
-  cout << q << " + " << q << " = " << q+q << endl;
-  cout << q << " / " << 2 << " = " << q/2 << endl;
 
   cout << endl << "---------------------" << endl;
   cout << "Testing Quaternionf::unitToMatrix44(Matrix4f &m)..." << endl;
@@ -84,20 +75,24 @@ int main() {
   cout << endl << "---------------------" << endl;
   cout << "Testing Quaternionf::operator*(Quaternion &q)..." << endl;
   cout << "---------------------" << endl;
-  cout << "Input quaternions: rotation of PI and -PI around axis (1,0,0)" << endl;
-  q.setValues(1*sin(M_PI/2),0,0,cos(M_PI/2));
-  Quaternionf q2;
-  q2.setValues(1*sin(-M_PI/2),0,0,cos(-M_PI/2));
-  r = q*q2;
-  cout << fixed << q << " * " << q2 << " = " << fixed << r << endl;
+  cout << "Input quaternions: rotation of angle aplha and -alpha around an arbitrary axis" << endl;
+  float u = sin(1.8);
+  float v = cos(1.8);
+  Vec3f axis(1.3, 3.5, 9.1);
+  axis.normalize();
+  q.setValues(axis.x*u, axis.y*u, axis.z*u, v);
+  u = sin(-1.8);
+  v = cos(-1.8);
+  q2.setValues(axis.x*u, axis.y*u, axis.z*u, v);
+  s = q*q2;
+  cout << fixed << q << " * " << q2 << " = " << fixed << s << endl;
   cout << "Result: ";
-  if( r.isIdentity() )
+  if( s.isIdentity() )
     cout << "Identity" <<  " OK!" << endl;
   else {
-    cout << "*** Error:" << endl << r << endl;
+    cout << "*** Error:" << endl << s << endl;
     cout << "Expected: Identity" << endl;
   }    
-
   
   return 0;
 }
