@@ -6,6 +6,10 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.12  2004/04/28 21:14:02  leserpent
+ * Added a randomFilter(ps, n) method which fill the pointset with n points from ps.
+ * Added Base to osg-config
+ *
  * Revision 1.11  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -65,9 +69,16 @@ PointSet::PointSet(const PointSet& ps, const Area* a): points()
 
 PointSet::PointSet(const PointSet& ps, int number): points()
 {
+  randomFilter(ps, number);
+}
+
+void
+PointSet::randomFilter(const PointSet& ps, int number)
+{
   unsigned int thre1 = number;
   unsigned int thre2 = ps.size();
-  
+
+  points.clear();
   for(PointList::const_iterator i=ps.points.begin(); i!=ps.points.end(); i++)
     {
       float thre = (float)rand() / RAND_MAX;

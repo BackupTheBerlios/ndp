@@ -4,6 +4,10 @@
  * @date   Mon Apr  5 20:40:07 2004
  * 
  * $Log: PointSet.h,v $
+ * Revision 1.9  2004/04/28 21:14:02  leserpent
+ * Added a randomFilter(ps, n) method which fill the pointset with n points from ps.
+ * Added Base to osg-config
+ *
  * Revision 1.8  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -216,6 +220,7 @@ public:
 		   PointSet& ps1,
 		   PointSet& ps2) const;
   
+  void randomFilter(const PointSet& ps, int number);
   
   const BoxVolume& getBoundingBox(void) const 
   {
