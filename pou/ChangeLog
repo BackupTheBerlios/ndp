@@ -1,5 +1,23 @@
 2004-04-06  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mwindow.cc: Clear PointSet before loading a new file.
+
+	* libpou/src/helpers/deletor.h: Allow to use delete with for_each.
+
+	* libpou/src/Constraint|PointSet.h: Added a removeDeleteAll()
+	method.
+	Points are no longer deleted into PointSet's destructor. It's
+	better to call explicitly removeDeleteAll for that.
+
+	* libpou/src/ImplicitSurface3D.cc (class ImplicitSurface3D):
+	Splitted compute() into computeRGB() and computeGeometry().
+	The Constraints Set is now a local variable in computeRGB/Geometry
+	since it's not used anywhere else.
+	Constraints are now deleted after compute.
+
+	* libpou/src/ConstructRBFPOU.h: Changed getThresholds to
+	getThreMin/getThreMax.
+
 	* PoUgui/src/mc/mc2.cc (clear): Removed an useless if
 
 	* PoUgui/src/openglview.cc: Changed two glClear into one.
