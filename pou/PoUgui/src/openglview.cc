@@ -10,7 +10,7 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
   :QGLWidget( parent, name )
 {
   vb = vbuffer;
-  glcontext = new OpenGLContext();
+  glcontext = new OpenglContext();
 }
 
 OpenglWidget::~OpenglWidget() {

@@ -8,7 +8,7 @@
 #include <qevent.h>
 
 class VertexBuffer;
-class OpenGLContext;
+class OpenglContext;
 
 class OpenglWidget : public QGLWidget 
 {
@@ -20,7 +20,7 @@ class OpenglWidget : public QGLWidget
   void clearGL();
   void resizeGL( int w, int h );
   void paintGL();
-  inline OpenGLContext *getOpenGLContext(){ return glcontext; }
+  inline OpenglContext *getOpenGLContext(){ return glcontext; }
 
  private:
   void mousePressEvent( QMouseEvent *e );
@@ -28,7 +28,7 @@ class OpenglWidget : public QGLWidget
     
  private:
   VertexBuffer *vb;
-  OpenGLContext *glcontext;
+  OpenglContext *glcontext;
 };
 
 class OpenglView : public QMainWindow {

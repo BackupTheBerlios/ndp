@@ -5,8 +5,8 @@ DEFS="-DDATADIR=\"${pkgdatadir}\""
 
 bin_PROGRAMS=PoUgui
 PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc main.cc \
-	vertexbuffer.cc \
-	ims.h   language.h  mwindow.h  openglview.h \
+	vertexbuffer.cc matrix.cc context.cc\
+	ims.h   language.h  mwindow.h  openglview.h matrix3.h matrix4.h matrix.h\
 	context.h  init.h  libgui.h    opengl.h   vertexbuffer.h
 	
 PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@ -I../../libpou/src
