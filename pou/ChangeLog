@@ -1,5 +1,7 @@
 2004-04-25  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mc/mc.* Makefile.am mwindows: Renamed mc2.cc|h to mc.cc|h
+
 	* PoUgui/src/mc/Makefile.am: Removed mc.h mc.cc
 
 	* PoUgui/src/context.cc (DrawHud): Draw fps and stat under help screen
