@@ -1,5 +1,8 @@
 2004-03-28  Ben  <leserpent@berlios.de>
 
+	* libpou/src/AreaSetOctree.h (class AreaSetOctree): Use
+	std::hash_set with gcc 3.0 and __gnu_cxx::hash_set for gcc >3.0
+
 	* libpou/src/math/matrix*.h: Replaced Dump() by operator<<()
 
 	* libpou/src/math/: Moved matrix* from PoUgui/src to libpou/src/math/
