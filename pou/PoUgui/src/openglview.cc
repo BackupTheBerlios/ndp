@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.41  2004/04/27 19:40:48  ob821
+ * Disable keys for points
+ *
  * Revision 1.40  2004/04/27 18:42:38  ob821
  * BUG ADDED
  *
@@ -201,6 +204,10 @@ OpenglWidget::mousePressEvent (QMouseEvent *e) {
 void 
 OpenglWidget::ParseKey (int key, int key_ascii)
 {
+  /* Disable keys, useless for points  */
+  if (m_vbuffer->getPolyType () == VertexBuffer::POLY_POINTS)
+    return;
+
   switch (key) {
   case Qt::Key_F: {
     bool flag = !m_glcontext->getFpsState ();

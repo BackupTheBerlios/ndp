@@ -1,10 +1,13 @@
+2004-04-27  Damien
+	* PoUgui/src/openglview.cc (ParseKey): Disable keys, useless for points
+
 2004-04-27  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/context.cc (SyncContext): Added a gluLookAt
 	(SyncContext): glEnable(GL_NORMALIZE) needed for renormalizing
 	normal after a scale(fix specular problem).
 
-2004-04-27 Damien
+2004-04-27  Damien
 	
 	* PoUgui/src/context.cc: Matrix removed, replaced by a gluPerspective ;-(
 	
@@ -59,7 +62,7 @@
 	
 2004-04-26 Damien
 	* PoUgui/src/mwindow.cc: You can abort computing !
-	* PoUgui/src/vertexbuffer.h: Removed useles functions
+	* PoUgui/src/vertexbuffer.h: Removed useless functions
 	* PoUgui/src/openglview.h: Moved function to private
 	* PoUgui/src/*.{cc,h}: Code clean up
 
@@ -116,7 +119,7 @@
 2004-04-24 Damien
 	* mwindow.cc: Mc now use Octree BoundingBox
 	* xmplparser.cc: generic format for entries class XMLEntry
-	* init.cc: Removed because useles.
+	* init.cc: Removed because useless.
 	* settings.h: Final version, float->int for tmin and tmax
 	* *: Errors Management ! using ShowErrorMessage (utils.cc)
 	* openglview.cc: global variables -> static variables
