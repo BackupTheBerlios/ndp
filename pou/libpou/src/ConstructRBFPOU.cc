@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.20  2004/04/29 09:50:17  pumpkins
+ * assert
+ *
  * Revision 1.19  2004/04/29 09:28:12  leserpent
  * Removed usuless test
  *
@@ -71,9 +74,11 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
   throw (std::logic_error)
 {
   int result;
+  std::cout << "cs.size() = " << cs.size() << ", threMin = " << threMin << "\n";
+  applyFilter(cs);
   assert(cs.size() >= threMin);
 
-  applyFilter(cs);
+
 
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
   unsigned int size=cells->size();

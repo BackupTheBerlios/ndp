@@ -1,3 +1,7 @@
+2004-04-29  Thomas Arcila  <arcila@liszt.emi.u-bordeaux.fr>
+
+	* Corrected assertion in ConstructRBFPOU
+
 2004-04-29 Damien
 
 	* PoUgui/src/mwindow.cc: exceptions
