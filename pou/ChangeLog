@@ -1,3 +1,7 @@
+2004-03-25  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mc/: Temporary mc wrapper
+
 2004-03-22  Thomas <thomas@pumpkins.snapshotlinux.org>
 	* tests/constructrbf.cc: use BIHARMONIC instead of TRI (because 
 	TRI does not work)
