@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.37  2004/04/25 15:53:12  leserpent
+ * Renamed mc2.cc|h to mc.cc|h
+ *
  * Revision 1.36  2004/04/25 15:27:46  leserpent
  * Alloc Mc on the stack
  *
@@ -75,7 +78,7 @@
 #include "opengl.h"
 #include "mwindow.h"
 #include "ImplicitSurface3D.h"
-#include "mc/mc2.h"
+#include "mc/mc.h"
 #include "icons.h"
 #include "settings.h"
 #include "language.h"

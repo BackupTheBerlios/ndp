@@ -2,8 +2,8 @@
 
 #include "math/vector3.h"
 #include "ImplicitSurface3D.h"
-#include "mc2.h"
-//#include "mc.h"
+#include "mc.h"
+
 using namespace std;
 
 bool callback (int v, int max) {
