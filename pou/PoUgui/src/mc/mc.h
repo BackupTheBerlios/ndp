@@ -5,6 +5,8 @@
 
 #include "math/vector3.h"
 
+void makecubetable (void);
+
 void mc_setcallback(void (*c)(int, int), unsigned int step);
 void domc(ImplicitSurface3D *imps, const Box3f &bbox);
 void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals);
