@@ -39,7 +39,7 @@
 #include "opengl.h"
 #include "ImplicitSurface3D.h"
 #include "PointSet.h"
-#include "settings.ui.h"
+#include "settings.h"
 #include "mc/mc.h"
 
 /*****************************************************************************/
