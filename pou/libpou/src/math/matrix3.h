@@ -116,10 +116,19 @@ template<class T> class Matrix3{
     return *this;
   }
 
-  void Dump(); /* Dump to console */
+  friend std::ostream& operator<<(std::ostream& os, const Matrix3<T>& m) {
+    using namespace std;
+    os << "-----------------------" << endl;
+    for( int i=0; i<3; i++ ) {
+      os << "[ ";
+      for( int j=0; j<3; j++ )
+        os << m.data[i][j] << " ";
+      os << "]" << endl;
+    }
+    os << "-----------------------" << endl;
+  }
 
  private:
-
   T data[3][3];
 };
 

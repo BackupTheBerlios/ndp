@@ -131,10 +131,19 @@ template<class T> class Matrix4{
     return *this;
   }
 
-  void Dump(); /* Dump to console */
-  /*TODO: Add a methode and remove public */
- public:
+  friend std::ostream& operator<<(std::ostream& os, const Matrix4<T>& m) {
+    using namespace std;
+    os << "-----------------------" << endl;
+    for( int i=0; i<4; i++ ) {
+      os << "[ ";
+      for( int j=0; j<4; j++ )
+        os << m.data[i][j] << " ";
+      os << "]" << endl;
+    }
+    os << "-----------------------" << endl;
+  }
 
+ public:
   T data[4][4];
 };
 

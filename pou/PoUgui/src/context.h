@@ -1,7 +1,7 @@
 #ifndef OPENGL_CONTEXT_H
 #define OPENGL_CONTEXT_H
 
-#include "matrix.h"
+#include "math/matrix.h"
 #include "math/vector3.h"
 #include "math/quaternion.h"
 
