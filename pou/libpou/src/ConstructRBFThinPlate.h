@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using thinplate
  *
  * $Log: ConstructRBFThinPlate.h,v $
+ * Revision 1.4  2004/04/27 14:19:12  pumpkins
+ * normals in the right direction
+ *
  * Revision 1.3  2004/04/20 11:16:39  pumpkins
  * gzstream
  * authors
@@ -28,7 +31,7 @@ class ConstructRBFThinPlate : public ConstructRBFBiHarmonic {
   virtual inline double phi(const double r) const
     {
       if (r)
-	return r*r*log(r);
+	return -r*r*log(r);
       return 0;
     }
 
