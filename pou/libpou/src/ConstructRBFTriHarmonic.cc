@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using triharmonics
  * 
  * $Log: ConstructRBFTriHarmonic.cc,v $
+ * Revision 1.9  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.8  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -134,32 +137,6 @@ ConstructRBFTriHarmonic::eval(const Vec3f& p) const
     + c[9];
 }
 
-float
-ConstructRBFTriHarmonic::getL(const BoxVolume& box) const {
-  if (size == 0)
-    {
-      std::cerr << "ImplicitSurface3DrbfTriharmonic::L - No Points in Region " << std::endl;
-      return 0;
-    }
-  float d, tmp;
-  float sum = 0;
-  Vec3f min, max;
-  box.getBounds(min, max);
-
-  for (unsigned int i = 0; i < size; i++)
-    {
-      Vec3f farestPoint(
-			fabs(min.x - center[i].x) > fabs(max.x - center[i].x) ? min.x : max.x,
-			fabs(min.y - center[i].y) > fabs(max.y - center[i].y) ? min.x : max.y,
-			fabs(min.z - center[i].z) > fabs(max.z - center[i].z) ? min.x : max.z);
-      d = (dist(farestPoint, center[i]));
-      tmp = fabs(d*d * w[i] * 3);
-      sum += tmp;
-    }
-  
-  return sum;
-  
-}
 
 void
 ConstructRBFTriHarmonic::evalGradient(const Vec3f &p, Vec3f &v) const
@@ -167,7 +144,8 @@ ConstructRBFTriHarmonic::evalGradient(const Vec3f &p, Vec3f &v) const
   if (size == 0)
     {
       v[0] = v[1] = v[2] = 0;
-      std::cerr << "ImplicitSurface3DrbfTriharmonic::Grad - No Points in Region " << std::endl;
+      std::cerr << "ImplicitSurface3DrbfTriharmonic::Grad"
+		<< " - No Points in Region " << std::endl;
       return;
     }
   float d, tmp;
@@ -192,47 +170,6 @@ ConstructRBFTriHarmonic::evalGradient(const Vec3f &p, Vec3f &v) const
   v[0] =- v[0];
   v[1] =- v[1];
   v[2] =- v[2];
-}
-
-void
-ConstructRBFTriHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const
-{
-  if (size == 0)
-    {
-      lx.setValues(0.0, 0.0, 0.0);
-      ly = lz = lx;
-      std::cerr << "ImplicitSurface3DrbfTriharmonic::Jacobi - No Points in Region " << std::endl;
-      return;
-    }
-  
-  lx.setValues(0.0, 0.0, 0.0);
-  ly = lz =lx;
-  
-  for (unsigned int i = 0; i<size; i++)
-    {
-      double wi_dist      = w[i] * dist(p, center[i]);
-      double wi_dist_div  = (double) w[i] * (1.0 / dist(p, center[i]));
-		
-      Vec3f diff = p - center[i];         
-      // dfxx
-      lx[0] = 3*(wi_dist_div * diff.x * diff.x + wi_dist) + 2 * c[0];
-      // dfxy
-      lx[1] = 3*(wi_dist_div * diff.y * diff.x) + c[3];
-      // dfxz
-      lx[2] = 3*(wi_dist_div * diff.z * diff.x) + c[5];
-      // dfyx
-      ly[0] = lx[1];
-      // dfyy
-      ly[1] = 3*(wi_dist_div * diff.y * diff.y + wi_dist) + 2 * c[1];
-      // dfyz
-      ly[2] = 3*(wi_dist_div * diff.z * diff.y) + c[4];
-      // dfzx
-      lz[0] = lx[2];
-      // dfzy
-      lz[1] = ly[2];
-      // dfzz
-      lz[2] = 3*(wi_dist_div * diff.z * diff.z + wi_dist) + 2 * c[2];
-    }
 }
 
 void ConstructRBFTriHarmonic::load(std::istream &stream) {

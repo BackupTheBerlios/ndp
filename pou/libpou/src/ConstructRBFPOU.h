@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.14  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.13  2004/04/27 08:57:18  leserpent
  * abort ok
  *
@@ -83,8 +86,14 @@ class ConstructRBFPOU {
 
   void load(std::istream &stream);
   void save(std::ostream &stream) const;
-  const AreaSet *getOctree();  
-  void setFilter(ConstraintFilter *f, int p = 0);
+  const AreaSet *getOctree() {
+      return cells;
+  }
+
+  void setFilter(ConstraintFilter *f, int p = 0) {
+    cf=f;
+    filterParm=p;
+  }
 
   void setCallBack(Callback c, int s, int pass = 0, int numPass = 1) {
     step = (s!=0)?s:step;
@@ -93,8 +102,12 @@ class ConstructRBFPOU {
     callback=c;
   }
 
-  unsigned int getThreMin() { return threMin; }
-  unsigned int getThreMax() { return threMax; }
+  unsigned int getThreMin() {
+    return threMin;
+}
+  unsigned int getThreMax() {
+    return threMax;
+  }
 
  private:
   AreaSet* cells;
@@ -108,28 +121,11 @@ class ConstructRBFPOU {
 
   ConstructRBF *newRBF(void);
   
-  void applyFilter(ConstraintSet &cs);
+  void applyFilter(ConstraintSet &cs) {
+    cf->filter(cs, filterParm);
+  }
   Callback callback;
   int step, pass, numPass;
 };
-
-inline const AreaSet *
-ConstructRBFPOU::getOctree()
-{
-  return cells;
-}
-
-inline void
-ConstructRBFPOU::setFilter(ConstraintFilter *f, int p)
-{
-  cf=f;
-  filterParm=p;
-}
-
-inline void 
-ConstructRBFPOU::applyFilter(ConstraintSet &cs)
-{
-  cf->filter(cs, filterParm);
-}
 
 #endif /* CONSTRUCTRBFPOU_H */

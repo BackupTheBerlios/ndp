@@ -6,6 +6,9 @@
  * @brief  Support for bounding boxes
  * 
  * $Log: box3d.h,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/25 15:25:30  leserpent
  * Cleaned code
  * Removed matrix3
@@ -32,8 +35,10 @@ private:
 
 public:
   Box3D():min(huge, huge, huge), max(-huge, -huge, -huge) {}
-  Box3D(const Vector3<T>& inMin, const Vector3<T>& inMax):min(inMin), max(inMax) {}
-  Box3D(T x0, T y0, T z0, T x1, T y1, T z1):min(x0, y0, z0), max(x1, y1, z1) {}
+  Box3D(const Vector3<T>& inMin, const Vector3<T>& inMax):
+    min(inMin), max(inMax) {}
+  Box3D(T x0, T y0, T z0, T x1, T y1, T z1):
+    min(x0, y0, z0), max(x1, y1, z1) {}
   
   Vector3<T> getMin() const { return min; }
   

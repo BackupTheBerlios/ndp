@@ -3,16 +3,14 @@
 	* PoUgui/src/context.cc (OpenglContext): cvs compiles!
 
 2004-04-28  Thomas
-
+        * code clean up
+	* ConstraintSet, PointSet iterators: getBegin->begin, getEnd->end
+	* libpou/src: remove unneed functions
 	* computation now uses octree
-	
 	* libpou/src/AreaSetOctree.cc (getAreas): getOctreeAreas converted to
 	getAreas interface
-
 	* libpou/src/AreaSet.h: getAreas made virtual
-	
 	* libpou/src/helpers/gzstream.h(gzstreambase): added is_open method
-
 	* libpou/src/{ImplicitSurface.cc,PointSet.cc}(load,save):
 	use is_open
 

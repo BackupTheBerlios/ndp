@@ -6,6 +6,9 @@
  * @brief  Area management using spheres
  *
  * $Log: AreaSphere.cc,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -40,7 +43,8 @@ AreaSphere::intersectRay (const Vec3f & origin, const Vec3f & direction,
   if ((OCSquared >= radius2) && (tClosestApproach < SPHERE_INTERSECT_EPSILON))
     return false;
   
-  tHalfChordSquared = radius2 - OCSquared + (tClosestApproach * tClosestApproach);
+  tHalfChordSquared = radius2 - OCSquared +
+    (tClosestApproach * tClosestApproach);
 
   if (tHalfChordSquared > SPHERE_INTERSECT_EPSILON)
   {
@@ -92,49 +96,10 @@ AreaSphere::getCenter(void)
   return center;
 }
 
-
-void 
-AreaSphere::display(void)
-{
-#if 0
-    //cout << center << " ---- " << radius << endl;
-
-//  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glBegin(GL_TRIANGLES);
-  
-  for(int i=0; i<triNum; i++)
-    {
-      int v0 = triVec[i][0];
-      int v1 = triVec[i][1];
-      int v2 = triVec[i][2];
-
-      Vec3f vv0(vertexVec[v0][0],vertexVec[v0][1],vertexVec[v0][2]);
-      Vec3f vv1(vertexVec[v1][0],vertexVec[v1][1],vertexVec[v1][2]);
-      Vec3f vv2(vertexVec[v2][0],vertexVec[v2][1],vertexVec[v2][2]);
-      
-      vv0 *= radius; vv0 += center;
-      vv1 *= radius; vv1 += center;
-      vv2 *= radius; vv2 += center;
-  
-      //glColor3f(1,0,0);
-    
-      glVertex3f(vv0[0],vv0[1],vv0[2]);
-      glVertex3f(vv1[0],vv1[1],vv1[2]);
-      glVertex3f(vv2[0],vv2[1],vv2[2]);
-    }
-
-  glEnd();
-//  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-#endif
-}
-
-
 void 
 AreaSphere::save(std::ostream& stream)
 {
-  stream << center[0] << " "
-	 << center[1] << " "
-	 << center[2] << " "
+  stream << center[0] << " " << center[1] << " " << center[2] << " "
 	 << radius << std::endl;
 }
 

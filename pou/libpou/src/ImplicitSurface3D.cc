@@ -6,6 +6,9 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.18  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.17  2004/04/28 16:02:05  pumpkins
  * fix io exception
  *
@@ -57,12 +60,13 @@ public:
   ConstraintFilterRGB(const PointSet *_ps) {
     ps=_ps;
   }
+
   void filter(ConstraintSet& cs, int parm) {
-    PointList::const_iterator end=ps->getEnd();
+    PointList::const_iterator end=ps->end();
     PointList::const_iterator i;
     int j;
     
-    for( i=ps->getBegin(), j=0; i!=end; i++, j++) {
+    for( i=ps->begin(), j=0; i!=end; i++, j++) {
       Point *p=*i;
       cs[j]->setConstraint(p->getRGB()[parm]);
     }
@@ -80,11 +84,11 @@ public:
   }
   void filter(ConstraintSet& cs, int parm) {
     std::cout << "filter nz" << std::endl;
-    PointList::const_iterator end=ps->getEnd();
+    PointList::const_iterator end=ps->end();
     PointList::const_iterator i;
     int j;
     
-    for( i=ps->getBegin(), j=0; i!=end; i++, j++) {
+    for( i=ps->begin(), j=0; i!=end; i++, j++) {
       Point *p=*i;
       Vec3f center;
       Vec3f c=p->getNorm();
@@ -99,7 +103,8 @@ public:
   };
 };
 
-ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
+ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type)
+{
   rbf = new ConstructRBFPOU(_type);
   r = new ConstructRBFPOU(_type);
   g = new ConstructRBFPOU(_type);
@@ -108,14 +113,17 @@ ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
   rbf->setThresholds(rbf->getThreMin()*3, rbf->getThreMax()*3);
 }
 
-ImplicitSurface3D::~ImplicitSurface3D() {
+ImplicitSurface3D::~ImplicitSurface3D()
+{
   delete r;
   delete g;
   delete b;
   delete rbf;
 }
 
-void ImplicitSurface3D::computeRGB(const PointSet &ps) {
+void
+ImplicitSurface3D::computeRGB(const PointSet &ps)
+{
   const AreaSet *o;
   ConstraintSet cs(ps);
   ConstraintFilterRGB rgb(&ps);
@@ -134,7 +142,9 @@ void ImplicitSurface3D::computeRGB(const PointSet &ps) {
   cs.removeDeleteAll(); // We no longer need our constraints
 }
 
-void ImplicitSurface3D::computeGeometry(const PointSet &ps) {
+void
+ImplicitSurface3D::computeGeometry(const PointSet &ps)
+{
   ConstraintSet cs(ps);
   ConstraintFilterNonZero nz(&ps, projDist);
 
@@ -143,28 +153,36 @@ void ImplicitSurface3D::computeGeometry(const PointSet &ps) {
 
   cs.removeDeleteAll();
 }
-
-void ImplicitSurface3D::compute(const PointSet &ps) {
+void
+ImplicitSurface3D::compute(const PointSet &ps) {
   computeRGB(ps);
   computeGeometry(ps);
 }
 
-void ImplicitSurface3D::compute(const PointSet &ps, unsigned int size) {
+
+void
+ImplicitSurface3D::compute(const PointSet &ps, unsigned int size)
+{
   PointSet psFiltered(ps, size);
   compute(psFiltered);
 }
 
-void ImplicitSurface3D::computeRGB(const PointSet &ps, unsigned int size) {
+void
+ImplicitSurface3D::computeRGB(const PointSet &ps, unsigned int size)
+{
   PointSet psFiltered(ps, size);
   computeRGB(psFiltered);
 }
 
-void ImplicitSurface3D::computeGeometry(const PointSet &ps, unsigned int size) {
+void
+ImplicitSurface3D::computeGeometry(const PointSet &ps, unsigned int size)
+{
   PointSet psFiltered(ps, size);
   computeGeometry(psFiltered);
 }
 
-void ImplicitSurface3D::load(const std::string &filename) 
+void
+ImplicitSurface3D::load(const std::string &filename) 
   throw (std::runtime_error)
 {
   igzstream stream(filename.c_str());
@@ -173,8 +191,10 @@ void ImplicitSurface3D::load(const std::string &filename)
   rbf->load(stream);
 }
 
-void ImplicitSurface3D::save(const std::string &filename) const 
-throw (std::runtime_error) {
+void
+ImplicitSurface3D::save(const std::string &filename) const 
+  throw (std::runtime_error) 
+{
   ogzstream stream(filename.c_str());
   if (!stream.is_open())
     throw std::runtime_error("File cannot be opened for writing");

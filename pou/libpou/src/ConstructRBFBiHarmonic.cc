@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using biharmonics
  *
  * $Log: ConstructRBFBiHarmonic.cc,v $
+ * Revision 1.9  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.8  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -55,7 +58,8 @@ ConstructRBFBiHarmonic::evalGradient(const Vec3f& p, Vec3f& v) const
   if (size == 0)
     {
       v[0] = v[1] = v[2] = 0;
-      std::cerr << "ImplicitSurface3DrbfBiharmonic::Grad - No Points in Region " << std::endl;
+      std::cerr << "ImplicitSurface3DrbfBiharmonic::Grad"
+		<< " - No Points in Region " << std::endl;
       return;
     }
   
@@ -86,59 +90,6 @@ ConstructRBFBiHarmonic::evalGradient(const Vec3f& p, Vec3f& v) const
   
 
 }
-
-// Based upon the compute on xmaple with:
-// 
-//  F:=(x,y,z)->wi*sqrt((x-r)\262+(y-t)\262+(z-u)\262)+ax+by+cz+d;
-// 
-// Note: \262 is use for square by xmaple
-// then use derivating fonction of xmaple: D[n,n]
-// ex: for df/dxdx => D[1,1](F);
-//     for df/dydz => D[2,3](F);
-//     
-
-void
-ConstructRBFBiHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const
-{
-  if (size == 0)
-    {
-      lx.setValues(0.0, 0.0, 0.0);
-      ly = lz = lx;
-      std::cerr << "ImplicitSurface3DrbfBiharmonic::Jacobi - No Points in Region " << std::endl;
-      return;
-    }
-  
-  lx.setValues(0.0, 0.0, 0.0);
-  ly = lz =lx;
-
-  for (unsigned int i = 0; i < size; i++)
-    {
-      Vec3f diff = p - center[i];
-      float _dist = dist(p, center[i]);
-      float wiInvDist   = (float) w[i] / _dist;
-      float invDistCube = (float) 1.0 /  pow(double(_dist), 3.0);
-			
-      float saveLx1, saveLx2, saveLy2;
-      // dfxx
-      lx[0] += wiInvDist - (w[i] * diff.x * diff.x) * invDistCube;
-      // dfxy
-      lx[1] += saveLx1 = - (w[i] * diff.y * diff.x) * invDistCube;
-      // dfxz
-      lx[2] += saveLx2 = - (w[i] * diff.z * diff.x) * invDistCube;
-      // dfyx
-      ly[0] += saveLx1;
-      // dfyy
-      ly[1] += wiInvDist - (w[i] * diff.y * diff.y) * invDistCube;
-      // dfyz
-      ly[2] += saveLy2 = - (w[i] * diff.z * diff.y) * invDistCube;
-      // dfzx
-      lz[0] += saveLx2;
-      // dfzy
-      lz[1] += saveLy2;
-      // dfzz
-      lz[2] += wiInvDist - (w[i] * diff.z * diff.z) * invDistCube;
-    }
-}			
 
 int 
 ConstructRBFBiHarmonic::computeRBF(const ConstraintSet &cs) 
@@ -190,20 +141,11 @@ ConstructRBFBiHarmonic::computeRBF(const ConstraintSet &cs)
        s.getX(size+2),
        s.getX(size+3));
 
-  /*
-    for(unsigned int i=0; i<size; i++)
-    {
-    cout << "Center " << getCenter(i) 
-    << " --> " << eval(getCenter(i)) << endl;
-    }
-  */
   return result;  
 }
 
 void
-ConstructRBFBiHarmonic::setC(const float cx,
-			     const float cy,
-			     const float cz,
+ConstructRBFBiHarmonic::setC(const float cx, const float cy, const float cz,
 			     const float cg)
 {
   c[0] = cx;
@@ -213,10 +155,7 @@ ConstructRBFBiHarmonic::setC(const float cx,
 }
 
 void
-ConstructRBFBiHarmonic::getC(float& cx,
-			     float& cy,
-			     float& cz,
-			     float& cg)
+ConstructRBFBiHarmonic::getC(float& cx, float& cy, float& cz, float& cg)
 {
   cx = c[0];
   cy = c[1];

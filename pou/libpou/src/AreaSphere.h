@@ -6,6 +6,9 @@
  * @brief  Area management using a sphere
  * 
  * $Log: AreaSphere.h,v $
+ * Revision 1.4  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.3  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -28,9 +31,7 @@ private:
   float radius2;
 
 public:
-  AreaSphere(void):
-    center(0,0,0), radius(1)
-  {
+  AreaSphere(void): center(0,0,0), radius(1) {
     radius2 = 1;
   }
 
@@ -57,17 +58,15 @@ public:
     radius2 = radius * radius;
   }
 
-  virtual ~AreaSphere()
-  {}
+  virtual ~AreaSphere() {}
 
   virtual bool intersect(const Vec3f& p) const;
-  virtual bool intersectRay (const Vec3f & origin, const Vec3f & direction, float & depth1, float & depth2) const;
+  virtual bool intersectRay (const Vec3f & origin, const Vec3f & direction,
+			     float & depth1, float & depth2) const;
   virtual float w(const Vec3f& p) const;
   virtual void wd(const Vec3f& p, Vec3f &v);
 
   virtual Vec3f& getCenter(void);
-
-  virtual void display(void);
 
   virtual void save(std::ostream& stream);
 

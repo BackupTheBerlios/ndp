@@ -4,6 +4,9 @@
  * @date   Mon Apr  5 20:40:07 2004
  * 
  * $Log: PointSet.h,v $
+ * Revision 1.8  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.7  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -31,7 +34,11 @@
 #include "helpers/deletor.h"
 #include "box3d.h"
 
-static const float colors[][3]={
+
+// equivalent to static keywords
+// c++ way to do this
+namespace {
+const float colors[][3]={
   {0, 0, 0},
   {0.2, 0.2, 0.2},
   {0.4, 0.4, 0.4},
@@ -44,6 +51,7 @@ static const float colors[][3]={
   {0, 1, 1},
   {1, 0, 1}
 };
+}
 
 class PointSet;
 
@@ -69,7 +77,6 @@ public:
     norm.normalize();
   }
 
-
   Point(const Point& p)
   {
     pos = p.pos;
@@ -80,9 +87,6 @@ public:
   ~Point()
   {
   }
-
-  
-  // ---.oOo.---
 
   void setPoint(float x0, float y0, float z0)
   {
@@ -149,35 +153,25 @@ public:
   //choose _number_ points from _ps_
   PointSet(const PointSet& ps, int number);
 
-  // ---.oOo.---
-  
-  void getIndicesInArea(const Area* a, 
-			std::vector<unsigned int>& index,
-			unsigned int nb);
-
-  // ---.oOo.---
-
-  PointList::const_iterator getBegin(void) const
+  PointList::const_iterator begin(void) const
   {
     return points.begin();
   }
 
-  PointList::const_iterator getEnd(void) const
+  PointList::const_iterator end(void) const
   {
     return points.end();
   }
 
-  PointList::iterator getBegin(void)
+  PointList::iterator begin(void)
   {
     return points.begin();
   }
 
-  PointList::iterator getEnd(void)
+  PointList::iterator end(void)
   {
     return points.end();
   }
-
-  // ---.oOo.---
 
   void add(Point* p)
   {

@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.47  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.46  2004/04/27 20:10:34  ob821
  * indent
  *
@@ -240,9 +243,9 @@ MainWindow::MenuFileOpen()
 	return;
       }
 
-    PointList::iterator psend = m_pointset.getEnd();
+    PointList::iterator psend = m_pointset.end();
     
-    for( PointList::iterator i=m_pointset.getBegin(); i != psend; ++i)
+    for( PointList::iterator i=m_pointset.begin(); i != psend; ++i)
       vecPoints.push_back(**i);
 
     m_points = new VertexBuffer(vecPoints, VertexBuffer::POLY_POINTS);

@@ -6,6 +6,9 @@
  * @brief  Radial Basis Functions
  * 
  * $Log: ConstructRBF.h,v $
+ * Revision 1.9  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.8  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -58,14 +61,35 @@ class ConstructRBF {
   virtual void save(std::ostream &stream) const = 0;
 
 
-  unsigned int getSize();
-  float getW(unsigned int index) const;
+  unsigned int getSize() {
+    return size;
+  }
 
-  Vec3f& getCenter(const unsigned int index) const;
+  float getW(unsigned int index) const {
+    return w[index];
+  }
 
-  void setSize(const unsigned int _size);
-  void setW(const unsigned int index, const float val);
-  void setCenter(const unsigned int index, const Vec3f& _center);
+  Vec3f& getCenter(const unsigned int index) const {
+    return center[index];
+  }
+
+  void setSize(const unsigned int _size) {
+    size = _size;
+    
+    delete[] w;
+    delete[] center;
+    
+    w = new float[size];
+    center = new Vec3f[size];
+  }
+
+  void setW(const unsigned int index, const float val) {
+    w[index] = val;
+  }
+
+  void setCenter(const unsigned int index, const Vec3f& _center) {
+    center[index] = _center;
+  }
 
   void setFilter(ConstraintFilter *f, int parm) {
     cf=f;
@@ -80,7 +104,9 @@ class ConstructRBF {
   Vec3f *center;
   float *c;
 
-  void applyFilter(ConstraintSet &cs);
+  void applyFilter(ConstraintSet &cs) {
+      cf->filter(cs, filterParm);
+  }
   virtual int computeRBF(const ConstraintSet &cs) = 0;
 
   virtual double phi(const double r) const = 0;
@@ -93,53 +119,5 @@ class ConstructRBF {
   ConstraintFilter *cf;
   int filterParm;
 };
-
-inline void
-ConstructRBF::applyFilter(ConstraintSet &cs)
-{
-  cf->filter(cs, filterParm);
-}
-
-inline unsigned int
-ConstructRBF::getSize()
-{
-  return size;
-}
-
-inline float
-ConstructRBF::getW(unsigned int index) const
-{
-  return w[index];
-}
-
-inline Vec3f&
-ConstructRBF::getCenter(const unsigned int index) const
-{
-  return center[index];
-}
-
-inline void
-ConstructRBF::setSize(const unsigned int _size)
-{
-  size = _size;
-
-  delete[] w;
-  delete[] center;
-  
-  w = new float[size];
-  center = new Vec3f[size];
-}
-
-inline void
-ConstructRBF::setW(const unsigned int index, const float val)
-{
-  w[index] = val;
-}
-
-inline void
-ConstructRBF::setCenter(const unsigned int index, const Vec3f& _center)
-{
-  center[index] = _center;
-}
 
 #endif /* CONSTRUCTRBF_H */

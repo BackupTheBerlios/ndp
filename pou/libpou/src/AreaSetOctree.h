@@ -6,6 +6,9 @@
  * @brief  Area set construction, octree based
  * 
  * $Log: AreaSetOctree.h,v $
+ * Revision 1.8  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.7  2004/04/28 17:12:33  pumpkins
  * Octree
  *
@@ -83,11 +86,7 @@ public:
     };
   
   typedef std::vector<Intersection> IntersectionVector;
-#if (__GNUC__==3) && (__GNUC_MINOR__==0)
-  typedef std::hash_set<unsigned int> AreaIndexVector;
-#else  
   typedef std::vector<unsigned int> AreaIndexVector;
-#endif
   
  public:
   void create(const ConstraintSet& cs,

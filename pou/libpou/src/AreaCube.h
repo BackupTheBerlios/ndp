@@ -6,6 +6,9 @@
  * @brief  Area management using cubes
  * 
  * $Log: AreaCube.h,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -29,29 +32,19 @@ private:
   Vec3f center;
 
 public:
-  AreaCube(void):
-    box()
-  { }
+  AreaCube(void): box() {}
 
-  AreaCube(const Vec3f& p1, const Vec3f& p2):
-    box(p1, p2)
-  {
+  AreaCube(const Vec3f& p1, const Vec3f& p2): box(p1, p2) {
     box.getCenter(center);
   }
   
-  AreaCube(const float x0, 
-	   const float y0, 
-	   const float z0, 
-	   const float x1, 
-	   const float y1, 
-	   const float z1):
-    box(x0, y0, z0, x1, y1, z1)
-  {
+  AreaCube(const float x0, const float y0, const float z0, 
+	   const float x1, const float y1, const float z1): 
+    box(x0, y0, z0, x1, y1, z1) {
     box.getCenter(center);
   }
 
-  virtual ~AreaCube()
-  {}
+  virtual ~AreaCube() {}
 
   virtual bool intersect(const Vec3f& p) const;
   virtual bool intersectRay (const Vec3f & origin, const Vec3f & direction,
@@ -64,11 +57,8 @@ public:
   
   virtual Area** subdivide(void);
   virtual void grow(const float val);
-  virtual void reduce(const float val)
-  {
-  }
+  virtual void reduce(const float val) {}
 
-  virtual void display(void);
   virtual void save(std::ostream& stream);
 
 };

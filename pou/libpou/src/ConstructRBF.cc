@@ -6,6 +6,9 @@
  * @brief  Radial Basis Functions
  *
  * $Log: ConstructRBF.cc,v $
+ * Revision 1.8  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.7  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -21,11 +24,13 @@
  */
 #include "ConstructRBF.h"
 
-ConstructRBF::ConstructRBF(): size(0), w(0), center(0), c(0) {
+ConstructRBF::ConstructRBF(): size(0), w(0), center(0), c(0)
+{
   cf=const_cast<ConstraintFilter*>(NULL_FILTER);
 }
 
-ConstructRBF::~ConstructRBF() {
+ConstructRBF::~ConstructRBF()
+{
   delete[] w;
   delete[] center;
 }

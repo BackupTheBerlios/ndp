@@ -6,6 +6,9 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.11  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.10  2004/04/28 16:02:05  pumpkins
  * fix io exception
  *
@@ -45,15 +48,9 @@
 #include "box3d.h"
 
 using namespace std;
-
-PointSet::PointSet(const PointSet& ps):
-  points(ps.points), box(ps.box)
-{
-}
-
-
-PointSet::PointSet(const PointSet& ps, const Area* a):
-  points()
+PointSet::PointSet(const PointSet& ps): 
+  points(ps.points), box(ps.box) {};
+PointSet::PointSet(const PointSet& ps, const Area* a): points()
 {
   PointList::const_iterator i;
   for(i=ps.points.begin(); i!=ps.points.end(); i++)
@@ -66,12 +63,11 @@ PointSet::PointSet(const PointSet& ps, const Area* a):
     }
 }
 
-PointSet::PointSet(const PointSet& ps, int number):
-  points()
+PointSet::PointSet(const PointSet& ps, int number): points()
 {
   unsigned int thre1 = number;
   unsigned int thre2 = ps.size();
-
+  
   for(PointList::const_iterator i=ps.points.begin(); i!=ps.points.end(); i++)
     {
       float thre = (float)rand() / RAND_MAX;
@@ -86,36 +82,6 @@ PointSet::PointSet(const PointSet& ps, int number):
 	  thre2--;
 	}
     }
-}
-
-void 
-PointSet::getIndicesInArea(const Area* a, 
-			   vector<unsigned int>& index,
-			   unsigned int nb)
-{
-  /*
-  unsigned int size = points.size();
-  unsigned int thre1 = nb;
-  unsigned int thre2 = size;
-
-  for(unsigned int i = 0; i<size; i++)
-    {
-      if (!a->intersect(points[i].getPos()))
-	continue;
-      
-      float thre = (float)rand() / RAND_MAX;
-      if (thre*thre2 < thre1)
-	{
-	  index.push_back(i);
-	  thre1--;
-	  thre2--;
-	}
-      else
-	{
-	  thre2--;
-	}
-    }
-  */
 }
 
 void 
@@ -159,7 +125,7 @@ PointSet::load(const char* filename) throw (std::runtime_error)
   igzstream fs(filename);
   if (!fs.is_open())
     throw std::runtime_error("File Cannot be opened for reading\n");
-
+  
   int counter = 0;
 
   cout << "Reading... " << endl;
@@ -216,21 +182,6 @@ PointSet::save(const char* filename) throw (std::runtime_error)
     }
 }
 
-int 
-PointSet::find(float x, float y)
-{
-  for(PointList::iterator i=points.begin(); i!=points.end(); i++)
-    {
-      /*
-      if (points[i].pos[0] == x && points[i].pos[1] == y)
-	return i;
-      */
-    }
-  return -1; 
-}
-
-
-
 int
 PointSet::getNearest(const Vec3f& v)
 {
@@ -250,23 +201,6 @@ PointSet::getNearest(const Vec3f& v)
     }
     
   return 1;
-}
-
-
-void 
-PointSet::display(void)
-{
-#if 0
-  glBegin(GL_POINTS);  
-  for(PointList::iterator i=points.begin(); i!=points.end(); i++)
-    {
-      Point* p = *i;
-      glColor3f(p->rgb[0], p->rgb[1], p->rgb[2]);
-      glNormal3f(p->norm[0], p->norm[1], p->norm[2]);
-      glVertex3f(p->pos[0], p->pos[1], p->pos[2]);
-    }
-  glEnd();
-#endif
 }
 
 Point * 

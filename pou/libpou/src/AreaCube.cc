@@ -6,6 +6,9 @@
  * @brief  Area management using cubes
  *
  * $Log: AreaCube.cc,v $
+ * Revision 1.6  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.5  2004/04/27 13:13:09  pumpkins
  * bugfix
  *
@@ -124,46 +127,6 @@ AreaCube::grow(const float val)
 
     box.setBoundsByCenterAndSize(center, sizeGrow);
 }
-
-void 
-AreaCube::display(void)
-{
-#if 0
-    Vec3f b0 = box.getMin();
-    Vec3f b1 = box.getMax();
-
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glBegin(GL_QUADS);
-    //bottom face
-    glVertex3f(b0[0], b0[1], b0[2]);
-    glVertex3f(b1[0], b0[1], b0[2]);
-    glVertex3f(b1[0], b0[1], b1[2]);
-    glVertex3f(b0[0], b0[1], b1[2]);
-    //top face
-    glVertex3f(b0[0], b1[1], b0[2]);
-    glVertex3f(b1[0], b1[1], b0[2]);
-    glVertex3f(b1[0], b1[1], b1[2]);
-    glVertex3f(b0[0], b1[1], b1[2]);
-    glEnd();
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  
-
-    glBegin(GL_LINES);
-    glVertex3f(b0[0], b0[1], b0[2]);
-    glVertex3f(b0[0], b1[1], b0[2]);
-
-    glVertex3f(b1[0], b0[1], b0[2]);
-    glVertex3f(b1[0], b1[1], b0[2]);
-
-    glVertex3f(b1[0], b0[1], b1[2]);
-    glVertex3f(b1[0], b1[1], b1[2]);
-
-    glVertex3f(b0[0], b0[1], b1[2]);
-    glVertex3f(b0[0], b1[1], b1[2]);
-    glEnd();
-#endif
-}
-
 
 void 
 AreaCube::save(std::ostream& stream)

@@ -6,6 +6,9 @@
  * @brief  Area set
  * 
  * $Log: AreaSet.cc,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -62,22 +65,4 @@ AreaSet::copy(AreaSet& destination,
 	    destination.addArea(cells[i]);
 	}
     }
-}
-
-
-void 
-AreaSet::display(void)
-{
-  int size = cells.size();
-  for(int i = 0; i<size; i++)
-    {
-      cells[i]->display();
-    }
-}
-
-
-void 
-AreaSet::display(int index)
-{
-  cells[index]->display();
 }

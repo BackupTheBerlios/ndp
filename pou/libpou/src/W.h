@@ -4,6 +4,9 @@
  * @date   Mon Apr  5 20:38:23 2004
  *
  * $Log: W.h,v $
+ * Revision 1.3  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.2  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -16,25 +19,29 @@
 #include <iostream>
 
 //C0
-inline float w0(float r)
+inline float
+w0(float r)
 {
   return 1-r;
 }
 
-inline float w0d(float r)
+inline float
+w0d(float r)
 {
   return -1;
 }
 
 //C1
-inline float w1(float r)
+inline float
+w1(float r)
 {
   
   return r*r*(2*r-3) + 1; 
 }
 
 
-inline float w1d(float r)
+inline float
+w1d(float r)
 {
   //w1=2r^3-3r^2+1
   if (r>1)
@@ -46,7 +53,8 @@ inline float w1d(float r)
 }
 
 //C2
-inline float w2(float r)
+inline float
+w2(float r)
 {
   float r2 = r*r;
   float r3 = r2*r;
@@ -57,7 +65,8 @@ inline float w2(float r)
 }
 
 //C2
-inline float w2d(float r)
+inline float
+w2d(float r)
 {
   float r2 = r*r;
   float r3 = r2*r;
@@ -66,19 +75,22 @@ inline float w2d(float r)
   return -30*r4 + 60*r3 - 30*r2; 
 }
 //C2
-inline float wtest(float r)
+inline float
+wtest(float r)
 {
   return (1-r)*(1-r);
 }
 
 //C2
-inline float wtestd(float r)
+inline float
+wtestd(float r)
 {
   return 2*r-2;  
 }
 
 //Christophe/Carole IS'95
-inline float wChristophe(float r)
+inline float
+wChristophe(float r)
 {
   const float p = 1;
   float r2 = r*r;

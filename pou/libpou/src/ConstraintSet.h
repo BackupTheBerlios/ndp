@@ -6,6 +6,9 @@
  * @brief  Constraint set support
  * 
  * $Log: ConstraintSet.h,v $
+ * Revision 1.8  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.7  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -51,92 +54,54 @@ class ConstraintSet
   ConstraintSet::ConstraintSet (const PointSet &ps);
   ConstraintSet (const ConstraintSet & cs, const Area * a);
   void load (const char *filename) throw (std::runtime_error);
-;
+
   void save (const char *filename) throw (std::runtime_error);
-;
 
-  Constraint *operator[] (int i) const;
-  std::vector<Constraint *>::const_iterator getBegin () const;
-  std::vector<Constraint *>::const_iterator getEnd () const;
+  Constraint *operator[] (int i) const {
+    return constraints[i];
+  }
 
-  std::vector<Constraint *>::iterator getBegin ();
-  std::vector<Constraint *>::iterator getEnd ();
+  std::vector<Constraint *>::const_iterator begin () const {
+      return constraints.begin ();
+  }
 
-  void add (Constraint * p);
-  unsigned int size () const;
+  std::vector<Constraint *>::const_iterator end () const {
+    return constraints.end ();
+  }
+
+  std::vector<Constraint *>::iterator begin () {
+    return constraints.begin ();
+  }
+
+  std::vector<Constraint *>::iterator end () {
+    return constraints.end ();
+  }
+
+  void add (Constraint * p) {
+    constraints.push_back (p);
+    box.extendBy (p->getVector ());
+  }
+
+  unsigned int size () const {
+    return constraints.size ();
+  }
 
 
-  void removeAll ();
-  void removeDeleteAll();
-  void remove (std::vector<Constraint *>::iterator i);
-  const BoxVolume & getBoundingBox () const;
+  void removeAll () {
+    constraints.clear ();
+  }
+
+  void removeDeleteAll() {
+    for_each(constraints.begin(), constraints.end(), DeleteObject());
+      constraints.clear();
+  }
+  void remove (std::vector<Constraint *>::iterator i) {
+      constraints.erase (i);
+  }
+
+  const BoxVolume & getBoundingBox () const {
+      return box;
+  }
 };
-
-inline Constraint *
-ConstraintSet::operator[] (int i) const
-{
-  return constraints[i];
-}
-
-inline const BoxVolume &
-ConstraintSet::getBoundingBox () const
-{
-  return box;
-}
-inline void
-ConstraintSet::remove (std::vector < Constraint * >::iterator i)
-{
-  constraints.erase (i);
-}
-
-inline void
-ConstraintSet::removeAll ()
-{
-  constraints.clear ();
-}
-
-inline void
-ConstraintSet::removeDeleteAll()
-{
-  for_each(constraints.begin(), constraints.end(), DeleteObject());
-  constraints.clear();
-}
-
-inline unsigned int
-ConstraintSet::size (void) const
-{
-  return constraints.size ();
-}
-
-inline std::vector<Constraint *>::const_iterator
-ConstraintSet::getBegin () const
-{
-  return constraints.begin ();
-}
-
-inline std::vector<Constraint *>::const_iterator
-ConstraintSet::getEnd () const
-{
-  return constraints.end ();
-}
-
-inline std::vector<Constraint *>::iterator
-ConstraintSet::getBegin ()
-{
-  return constraints.begin ();
-}
-
-inline std::vector<Constraint *>::iterator
-ConstraintSet::getEnd ()
-{
-  return constraints.end ();
-}
-
-inline void
-ConstraintSet::add (Constraint * p)
-{
-  constraints.push_back (p);
-  box.extendBy (p->getVector ());
-}
 
 #endif

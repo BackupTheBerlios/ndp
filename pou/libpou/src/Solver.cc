@@ -6,6 +6,9 @@
  * @brief  Solver 
  * 
  * $Log: Solver.cc,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -28,6 +31,3 @@ Solver::solve(void)
   int result = gsl_linalg_HH_solve(A,b,x);
   return result;
 }
-
-
-

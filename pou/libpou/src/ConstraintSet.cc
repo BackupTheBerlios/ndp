@@ -6,6 +6,9 @@
  * @brief  ConstraintSet management
  * 
  * $Log: ConstraintSet.cc,v $
+ * Revision 1.8  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.7  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -35,12 +38,11 @@
 #include "math/vector3.h"
 #include "box3d.h"
 
-ConstraintSet::ConstraintSet (const PointSet &ps):
-  constraints (), box ()
+ConstraintSet::ConstraintSet (const PointSet &ps): constraints (), box ()
 {
-  PointList::const_iterator end=ps.getEnd();
+  PointList::const_iterator end=ps.end();
   
-  for(PointList::const_iterator i=ps.getBegin(); i!=end; ++i)
+  for(PointList::const_iterator i=ps.begin(); i!=end; ++i)
     add(new Constraint((*i)->getPos()));
 }
 
@@ -60,8 +62,7 @@ ConstraintSet::ConstraintSet (const ConstraintSet &cs, const Area *a):
 
 
 void
-ConstraintSet::load (const char *filename)
- throw (std::runtime_error)
+ConstraintSet::load (const char *filename) throw (std::runtime_error)
 {
   igzstream fs (filename);
   if (!fs)
@@ -87,8 +88,7 @@ ConstraintSet::load (const char *filename)
 
 
 void
-ConstraintSet::save (const char *filename)
-  throw (std::runtime_error)
+ConstraintSet::save (const char *filename) throw (std::runtime_error)
 {
   ogzstream fs (filename);
   if (!fs)

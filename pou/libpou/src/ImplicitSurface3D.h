@@ -6,6 +6,9 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.16  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.15  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -65,15 +68,17 @@ class ImplicitSurface3D {
   ~ImplicitSurface3D();
   void compute(const PointSet &ps);
   void compute(const PointSet &ps, unsigned int size);
-  void computeRGB(const PointSet &ps, unsigned int size);
   void computeRGB(const PointSet &ps);
-  void computeGeometry(const PointSet &ps, unsigned int size);
+  void computeRGB(const PointSet &ps, unsigned int size);
   void computeGeometry(const PointSet &ps);
+  void computeGeometry(const PointSet &ps, unsigned int size);
 
   void load(const std::string &filename) throw (std::runtime_error);
   void save(const std::string &filename) const throw (std::runtime_error);
 
-  float eval(const Vec3f &p) const { return rbf->eval(p); }
+  float eval(const Vec3f &p) const { 
+    return rbf->eval(p); 
+  }
 
   void evalNormal(const Vec3f &p, Vec3f &v) const {
     return rbf->evalNormal(p, v);
@@ -95,7 +100,9 @@ class ImplicitSurface3D {
     b->setCallBack(c, s, 2, 3);
   }
 
-  const ConstructRBFPOU *getRBFPOU() const;
+  const ConstructRBFPOU *getRBFPOU() const {
+    return rbf;
+  }
 
   void setProjDist(float d) {
     projDist=d;
@@ -122,9 +129,5 @@ class ImplicitSurface3D {
   ConstructRBFPOU *r,*g,*b;
   float projDist;
 };
-
-inline const ConstructRBFPOU *ImplicitSurface3D::getRBFPOU() const {
-  return rbf;
-}
 
 #endif /* IMPLICITESURFACE3D_H */

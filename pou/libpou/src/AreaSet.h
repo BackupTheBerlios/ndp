@@ -6,6 +6,9 @@
  * @brief  Area set
  *
  * $Log: AreaSet.h,v $
+ * Revision 1.6  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.5  2004/04/28 17:12:33  pumpkins
  * Octree
  *
@@ -36,53 +39,37 @@ protected:
 public:
   int numero;
 
-  AreaSet(void):
-    cells()
-  {
-  }
+  AreaSet(void): cells() {}
   
-  AreaSet(const AreaSet& as):
-    cells(as.cells)
-  {
-  }
+  AreaSet(const AreaSet& as): cells(as.cells) {}
 
 
-  virtual ~AreaSet()
-  {
-  }
+  virtual ~AreaSet() {}
 
-  unsigned int size(void) const
-  {
+  unsigned int size(void) const {
     return cells.size();
   }
   
-  int addArea(Area* a)
-  {
+  int addArea(Area* a) {
     cells.push_back(a);
     return cells.size()-1;
   }
 
-  void remove(unsigned int index)
-  {
+  void remove(unsigned int index) {
     cells.erase(cells.begin() + index);
   }
 
-  void clearAll(void)
-  {
+  void clearAll(void) {
     cells.erase(cells.begin(), cells.end());
   }
   
   //---------------
-
-  //---------------
   
-  Area*& operator[](const int index)
-  {
+  Area*& operator[](const int index) {
     return cells[index];
   }
 
-  Area* operator[](const int index) const
-  {
+  Area* operator[](const int index) const {
     return cells[index];
   }
 
@@ -99,7 +86,6 @@ public:
   void copy(AreaSet& destination, 
 	    const std::vector<unsigned int>& index,
 	    const bool flag);
-
 };
 
 #endif

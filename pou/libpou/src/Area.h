@@ -6,6 +6,9 @@
  * @brief  One Area
  *
  * $Log: Area.h,v $
+ * Revision 1.5  2004/04/28 19:20:12  pumpkins
+ * code cleanup
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -40,7 +43,6 @@ class Area
     virtual void grow(const float val) = 0;
     virtual void reduce(const float val) = 0;
 
-    virtual void display(void) = 0;
     virtual void save(std::ostream& stream) = 0;
 };
 
