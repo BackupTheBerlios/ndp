@@ -1,3 +1,10 @@
+2004-04-05  Damien
+
+	* PoUgui/src/context.cc: DepthTest support
+	Font init. moved in constructor
+	glPushattrib removed ( don't work with some hardware )
+	DrawHud only in idle mode
+
 2004-04-04  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/context.cc (DrawHud): Fixed renderText() bug

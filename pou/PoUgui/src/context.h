@@ -36,6 +36,7 @@ class OpenglContext {
   /****************************/
   /* DON'T NEED SyncContext() */
   /****************************/
+  void SetDepthTest( bool state );
   void SetLighting( bool state );
   void SetLightType( int type );
   void SetLightPosition( float x, float y, float z );
@@ -46,6 +47,7 @@ class OpenglContext {
 
  private:
   OpenglWidget *m_parent;
+
   /* View */
   Matrix4f m_modelview;
   Matrix4d m_projection;
@@ -56,6 +58,8 @@ class OpenglContext {
   double m_near;
   bool m_updateproj;
   bool m_updatemview;
+  bool m_depthtest;
+
   /* Camera Motion */
   double m_zoomfactor;
   Vec3f m_startVector;
@@ -73,12 +77,14 @@ class OpenglContext {
   bool m_lightdraw;
   float m_lightx, m_lighty, m_lightz;
   int m_lighttype;
+
   /* Stats */
   bool m_showstats;
   bool m_showfps;
   float m_fps;
   int m_frames;
   int m_lasttime;
+  QFont m_font;
 };
 
 

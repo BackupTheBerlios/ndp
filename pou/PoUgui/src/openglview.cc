@@ -43,12 +43,13 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
   vb = vbuffer;
   glcontext = new OpenglContext( this );
   m_idledraw = false;
+
+  glcontext -> ShowFps( false );
+  glcontext -> ShowStats( false );
+  
   /* Polygon window => show fps */
-  if( vb -> getPolyType() == POLY_TRIANGLES ){
+  if( vb -> getPolyType() == POLY_TRIANGLES )
     m_idledraw = true;
-    glcontext -> ShowFps( false );
-    glcontext -> ShowStats( false );
-  }
   
   //setFocusProxy( this );
 }
@@ -66,19 +67,17 @@ void OpenglWidget::initializeGL()
   isOpenglReady = true;
    
   clearGL();
-  //glMatrixMode( GL_MODELVIEW );
-  //glLoadIdentity();
-  //gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
-  glEnable( GL_CULL_FACE );
-  glEnable( GL_DEPTH_TEST );
-  glDepthFunc( GL_LEQUAL );
-  glCullFace( GL_FRONT );
   glDisable( GL_BLEND );
-  glClearDepth( 1.0f );
+  glcontext->SetDepthTest( false );
   vb -> Bind();
+
   if( m_idledraw ){
     startTimer( FRAME_DELAY );
     SetLighting (true,GL_DIFFUSE,1.0,1.0,1.0);
+    glcontext->SetDepthTest( true );
+    /* Don't cull points only polys */
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_FRONT );
   }
 }
 
@@ -108,7 +107,8 @@ void OpenglWidget::paintGL() {
   if( vb )
     vb -> DrawBuffer();
 
-  glcontext -> DrawHud();
+  if( m_idledraw )
+    glcontext -> DrawHud();
   
   swapBuffers();
 }

@@ -51,6 +51,13 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_lasttime = -1;
   m_showfps = false;
   m_parent = parent;
+  /* init font */
+  m_font.setStyleStrategy( QFont::OpenGLCompatible );
+  m_font.setFamily("fixed");
+  m_font.setRawMode(true);
+  m_font.setPixelSize(10);           // Workaround for a bug with renderText()
+  m_font.setFixedPitch ( true )  ;   // and nvidia's driver
+  m_font.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
 }
 
 OpenglContext::~OpenglContext() 
@@ -161,6 +168,17 @@ void OpenglContext::SetClipDistance( double near, double far )
   m_updateproj = true;
 }
 
+void OpenglContext::SetDepthTest( bool state ){
+  m_depthtest = state;
+  if( !state )
+    glDisable( GL_DEPTH_TEST );
+  else{
+    glDepthFunc( GL_LEQUAL );
+    glClearDepth( 1.0f );   
+    glEnable( GL_DEPTH_TEST );
+  }
+}
+
 void OpenglContext::SetLighting( bool state )
 {
   m_lightstate = state;
@@ -194,23 +212,16 @@ void OpenglContext::DrawLightPosition( bool flag )
 
 void OpenglContext::DrawHud()
 {
-  QFont f;
-  f.setStyleStrategy( QFont::OpenGLCompatible );
-  f.setFamily("fixed");
-  f.setRawMode(true);
-  f.setPixelSize(10);           // Workaround for a bug with renderText()
-  f.setFixedPitch ( true )  ;   // and nvidia's driver
-  f.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
 
-  glPushAttrib(GL_ENABLE_BIT);
   glDisable (GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
+
   if( m_showstats ){
     QString spolys("Triangles ");
     VertexBuffer *vb = m_parent ->getVertexBuffer();
     spolys += QString::number(vb->getSize());
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 40, spolys, f );
+    m_parent -> renderText( 10, 40, spolys, m_font );
   }
 
   if( m_showfps ){
@@ -224,7 +235,6 @@ void OpenglContext::DrawHud()
       m_lasttime = curtime;
       m_frames = 0;
       m_fps = 0.0f;
-      return ;
     }
     
     if( (curtime - m_lasttime) > 500 ){
@@ -235,9 +245,14 @@ void OpenglContext::DrawHud()
     
     sfps += QString::number(m_fps);
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 20, sfps, f );
-   }
-  glPopAttrib();  
+    m_parent -> renderText( 10, 20, sfps, m_font );
+  }
+
+  if( m_lightstate )
+    glEnable (GL_LIGHTING);
+  if( m_depthtest )
+    glEnable (GL_DEPTH_TEST);
+  
 }
 
 void OpenglContext::ShowFps( bool flag )
