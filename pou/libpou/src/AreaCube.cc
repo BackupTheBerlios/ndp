@@ -6,6 +6,9 @@
  * @brief  Area management using cubes
  *
  * $Log: AreaCube.cc,v $
+ * Revision 1.5  2004/04/27 13:13:09  pumpkins
+ * bugfix
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -83,7 +86,7 @@ AreaCube::subdivide(void)
 
     Vec3f corr = (b1-b0)*0.5*0.05    ;
 
-    Area** newArea = new (Area*)[8];
+    Area** newArea = new Area*[8];
    
     newArea[0] = new AreaCube(b0[0]-corr[0], b0[1]-corr[1], b0[2]-corr[2], 
 			      bc[0]+corr[0], bc[1]+corr[1], bc[2]+corr[2]);

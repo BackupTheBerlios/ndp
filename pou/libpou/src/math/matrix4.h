@@ -40,6 +40,7 @@ template<class T> class Matrix4{
       os << "]" << endl;
     }
     os << "-----------------------" << endl;
+    return os;
   }
 
 private:

@@ -1,4 +1,7 @@
-2004-04-27  Thomas
+2004-04-27    <thomas@pumpkins>
+	* libpou/src/AreaCube.cc: new (Area*)[] changed to new Area*[].
+	c++ compiliant
+	* libpou/src/math/matrix4.h (operator<<): added missing return value
 	* PoUgui/src/*POU,ImplicitSurface: abort ok
 	* PoUgui/src/mc/mc.cc: sizeof(int) replaced by sizeof(INTLISTS *)
 	* libpou/src/ConstructRBFPOU.{c,h}: setThresold, compute
