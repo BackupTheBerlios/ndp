@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.45  2004/04/27 18:43:37  leserpent
+ * ok
+ *
  * Revision 1.44  2004/04/27 18:37:10  leserpent
  * Changed authors
  *
@@ -349,7 +352,7 @@ MainWindow::MenuRenderingRender()
     } 
   catch(std::exception e) 
     {
-      printf("ben est null %s \n",e.what());
+      printf("ben est null %s mais pas autant que damien qui aime christophe d'un amour charnel.\n",e.what());
     }
 
   if (!qpd)
