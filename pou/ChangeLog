@@ -1,3 +1,7 @@
+2004-04-27  Ben  <leserpent@berlios.de>
+
+	* libpou/src/math/matrix4.h: Trivial: removed useless comment
+
 2004-04-27 loic martin  <lemartinpecheur@berlios.de>
 	* PoUgui/src/context.cc:added diffuse, specular and shininess control
 	* PoUgui/src/context.h:added diffuse, specular and shininess

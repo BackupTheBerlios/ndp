@@ -5,9 +5,8 @@
 #include <string>
 #include <cassert>
 
-/* C++ implementation of Matrix4 */
-
-template<class T> class Matrix4{
+template<class T>
+class Matrix4{
  public:
   Matrix4(){}
   Matrix4( T x ){ 
