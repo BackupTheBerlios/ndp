@@ -61,7 +61,7 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_width = 1024;
   m_height = 768;
   m_viewaspect = 1024.0/768.0;
-  m_near = 0.1;
+  m_near = 0.001;
   m_far = 1000.0;
   m_updatemview = true;  
   m_updateproj = true;
@@ -463,9 +463,9 @@ void OpenglContext::SyncContext()
     m_updateproj = false;
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity ();
+    gluPerspective (m_fov, m_viewaspect, m_near, m_far);
     glMatrixMode (GL_MODELVIEW);
     /* Build the Projection Matrix */
-    gluPerspective (m_fov, m_viewaspect, m_near, m_far);
   }
   
   if (m_updatemview){
@@ -474,7 +474,9 @@ void OpenglContext::SyncContext()
     /* Build the Matrix */
     m_orientation.unitToMatrix44 (m_modelview);
     /* Send the Matrix */
-    glLoadMatrixf ((float *)m_modelview[0]);
+    glLoadIdentity();
+    gluLookAt(0, 0, 2, 0, 0, 0, 0, 1, 0);
+    glMultMatrixf ((float *)m_modelview[0]);
     /* Apply Zoom */
     glScalef (m_zoomfactor, m_zoomfactor, m_zoomfactor);
   }
