@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include <cassert>
-#include <limits>
+#include <limits.h>
 
 template<class T>
 class Vector3
