@@ -234,6 +234,7 @@ void MWindow::menu_rendering_render() {
 
   /* First check if api is OK */
   ims = new ImplicitSurface3D(ConstructRBFPOU::BIHARMONIC);
+  //ims = new ImplicitSurface3D(ConstructRBFPOU::TRIHARMONIC);
   if( !ims )
     return ;
   ims->setCallBack (callback, 10);

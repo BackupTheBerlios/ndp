@@ -212,7 +212,8 @@ void OpenglContext::DrawLightPosition( bool flag )
 
 void OpenglContext::DrawHud()
 {
-
+  
+  glPushAttrib( GL_ENABLE_BIT );
   glDisable (GL_LIGHTING);
   glDisable(GL_DEPTH_TEST);
 
@@ -247,11 +248,7 @@ void OpenglContext::DrawHud()
     glColor3f( 1.0, 1.0, 1.0 );
     m_parent -> renderText( 10, 20, sfps, m_font );
   }
-
-  if( m_lightstate )
-    glEnable (GL_LIGHTING);
-  if( m_depthtest )
-    glEnable (GL_DEPTH_TEST);
+  glPopAttrib();
   
 }
 
