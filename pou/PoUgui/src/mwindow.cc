@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.40  2004/04/26 16:28:38  ob821
+ * code cleanup
+ *
  * Revision 1.39  2004/04/26 08:56:16  leserpent
  * Removed unusued method and define in vertexbuffer
  *
@@ -265,6 +268,13 @@ namespace
 {
   QProgressDialog *qpd;
   bool callback (int v, int max) {
+    if (!qpd)
+      printf ("DIALOG DESTROYED BUT LIBPOU CONTINUE\n");
+    if (qpd->wasCancelled()){
+      delete qpd;
+      qpd = NULL;
+      return false;
+    }
     qpd->setProgress ( 100*v/max);
     return true;
   }
@@ -303,8 +313,13 @@ MainWindow::MenuRenderingRender()
   ims->setCallBack (callback, 10);
 
   ims->computeRGB (m_pointset, filter_npoints);
+  if (!qpd)
+    return;
   qpd->setLabelText ("Computing geometry...");
   ims->computeGeometry (m_pointset, filter_npoints);
+
+  if (!qpd)
+    return;
 
   qpd->setLabelText ("Polygonizing surface...");
   boundingbox = ((AreaSetOctree *)ims->getOctree())->getBBox();
@@ -313,6 +328,10 @@ MainWindow::MenuRenderingRender()
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
   MCubes.doMc (ims, boundingbox);
+
+  if (!qpd)
+    return;
+
   MCubes.getPoints (vecPoints);
 
   m_polys = new VertexBuffer (vecPoints, VertexBuffer::POLY_TRIANGLES);

@@ -17,9 +17,6 @@ class VertexBuffer {
   VertexBuffer( const std::vector<Point> &vertices, PolyType polytype );
   ~VertexBuffer();
 
-  int CreateVertexBuffer( const std::vector<Point> &vertices, PolyType polytype );
-  void init();
-
   void LockBuffer();
   void unLockBuffer();
   void Bind();
@@ -29,11 +26,14 @@ class VertexBuffer {
 
   void SetIndices( std::vector<unsigned int> indices ) { m_indices = indices; }
   
-  std::vector<Point> &VertexBuffer::getDataPointer();
+  std::vector<Point> &getDataPointer();
+
   inline int getSize() { return m_indices.size(); }
   inline int getPolyType() { return m_polytype; }
 
  private:
+  void Init();
+
   std::vector<unsigned int> m_indices;
   std::vector<Point> m_vertices;
 

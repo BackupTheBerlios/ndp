@@ -1,3 +1,9 @@
+2004-04-26 Damien
+	* PoUgui/src/mwindow.cc: You can abort computing !
+	* PoUgui/src/vertexbuffer.h: Removed useles functions
+	* PoUgui/src/openglview.h: Moved function to private
+	* PoUgui/src/*.{cc,h}: Code clean up
+
 2004-04-26  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/vertexbuffer.h: Removed unusued method and define.

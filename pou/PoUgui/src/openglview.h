@@ -16,18 +16,20 @@ class OpenglWidget : public QGLWidget
  public:
   OpenglWidget( QWidget *parent, const char *name, VertexBuffer *vbuffer );
   ~OpenglWidget();
-  
-  void SetLighting( bool state,  OpenglContext::LightType type );
+
+  inline VertexBuffer *getVertexBuffer() { return m_vbuffer; }
+
   void ParseKey( int key, int key_ascii );
+
+ private:
+  void SetLighting( bool state,  OpenglContext::LightType type );
+
   /* Surcharge des fonctions de base */
   void initializeGL();
   void clearGL();
   void resizeGL( int w, int h );
   void paintGL();
-  inline OpenglContext *getOpenGLContext(){ return m_glcontext; }
-  inline VertexBuffer *getVertexBuffer() { return m_vbuffer; }
-
- private:
+  
   void SetIdleDraw( bool state );
   void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
@@ -47,8 +49,6 @@ class OpenglView : public QMainWindow {
  public:
   OpenglView( QWorkspace *parent, VertexBuffer *vbuffer );
   ~OpenglView();
-
-  void SetLighting( bool state, int type, float x, float y, float z );
 
  protected:
   void closeEvent( QCloseEvent * );

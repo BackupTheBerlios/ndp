@@ -31,14 +31,14 @@ int PolyTypes[3] = { GL_POINTS, GL_TRIANGLES, GL_QUADS };
 
 VertexBuffer::VertexBuffer() 
 {
-  init();
+  Init();
 }
 
 VertexBuffer::VertexBuffer(const std::vector<Point> &vertices,
                            VertexBuffer::PolyType polytype ):
   m_vertices(vertices), m_polytype(polytype)
 {
-  init();
+  Init();
 }
 
 VertexBuffer::~VertexBuffer() 
@@ -48,7 +48,7 @@ VertexBuffer::~VertexBuffer()
 }
 
 void 
-VertexBuffer::init() 
+VertexBuffer::Init() 
 {
   m_islocked = false;
 }

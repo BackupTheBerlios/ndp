@@ -17,8 +17,8 @@ class MainWindow : public QMainWindow
 {
   Q_OBJECT
     public:
-  MainWindow( QString title );
-  ~MainWindow();
+  MainWindow (QString title);
+  ~MainWindow ();
   
  private:
   void CreateMenu();
@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow
   void CloseWindows();
  
  protected:
-  void closeEvent( QCloseEvent * );
+  void closeEvent (QCloseEvent *);
  signals:
   
   private slots:
@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow
   static QApplication *m_qtgui;
 };
 
-int CreateMainWindow( int argc, char **argv );
+int CreateMainWindow (int argc, char **argv);
 
 
 #endif
