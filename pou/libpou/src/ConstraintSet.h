@@ -6,6 +6,9 @@
  * @brief  Constraint set support
  * 
  * $Log: ConstraintSet.h,v $
+ * Revision 1.4  2004/04/06 16:14:26  leserpent
+ * Added a removeDeleteAll() method.
+ *
  * Revision 1.3  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -17,6 +20,7 @@
 #include <vector>
 #include "Area.h"
 #include "math/vector3.h"
+#include "helpers/deletor.h"
 #include "box3d.h"
 #include "Constraint.h"
 
@@ -46,6 +50,7 @@ class ConstraintSet
 
 
   void removeAll ();
+  void removeDeleteAll();
   void remove (std::vector<Constraint *>::iterator i);
   const BoxVolume & getBoundingBox () const;
 };
@@ -71,6 +76,13 @@ inline void
 ConstraintSet::removeAll ()
 {
   constraints.clear ();
+}
+
+inline void
+ConstraintSet::removeDeleteAll()
+{
+  for_each(constraints.begin(), constraints.end(), DeleteObject());
+  constraints.clear();
 }
 
 inline unsigned int

@@ -6,6 +6,9 @@
  * @brief  ConstraintSet management
  * 
  * $Log: ConstraintSet.cc,v $
+ * Revision 1.4  2004/04/06 16:14:26  leserpent
+ * Added a removeDeleteAll() method.
+ *
  * Revision 1.3  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -36,6 +39,7 @@ ConstraintSet::ConstraintSet (const ConstraintSet &cs, const Area *a):
     }
   }
 }
+
 
 void
 ConstraintSet::load (const char *filename)
