@@ -6,6 +6,10 @@
  * @brief  Constraint set support
  * 
  * $Log: ConstraintSet.h,v $
+ * Revision 1.5  2004/04/07 08:01:14  leserpent
+ * Added a	constructor which takes a PointSet.
+ * Removed an useless copy constructor.
+ *
  * Revision 1.4  2004/04/06 16:14:26  leserpent
  * Added a removeDeleteAll() method.
  *
@@ -24,6 +28,8 @@
 #include "box3d.h"
 #include "Constraint.h"
 
+class PointSet;
+
 class ConstraintSet
 {
  private:
@@ -31,8 +37,8 @@ class ConstraintSet
   BoxVolume box;
     
  public:
-  ConstraintSet (): constraints (), box () {}
-  ConstraintSet (const ConstraintSet & cs);
+  ConstraintSet::ConstraintSet () {}
+  ConstraintSet::ConstraintSet (const PointSet &ps);
   ConstraintSet (const ConstraintSet & cs, const Area * a);
 
   void load (const char *filename);

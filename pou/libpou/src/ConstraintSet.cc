@@ -6,6 +6,10 @@
  * @brief  ConstraintSet management
  * 
  * $Log: ConstraintSet.cc,v $
+ * Revision 1.5  2004/04/07 08:01:14  leserpent
+ * Added a	constructor which takes a PointSet.
+ * Removed an useless copy constructor.
+ *
  * Revision 1.4  2004/04/06 16:14:26  leserpent
  * Added a removeDeleteAll() method.
  *
@@ -16,14 +20,19 @@
  */
 #include <fstream>
 #include <iostream>
+
+#include "PointSet.h"
 #include "ConstraintSet.h"
 #include "math/vector3.h"
 #include "box3d.h"
 
-ConstraintSet::ConstraintSet (const ConstraintSet &cs):
-  constraints (cs.constraints),
-  box (cs.box)
+ConstraintSet::ConstraintSet (const PointSet &ps):
+  constraints (), box ()
 {
+  PointList::const_iterator end=ps.getEnd();
+  
+  for(PointList::const_iterator i=ps.getBegin(); i!=end; ++i)
+    add(new Constraint((*i)->getPos()));
 }
 
 
