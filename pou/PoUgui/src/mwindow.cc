@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.39  2004/04/26 08:56:16  leserpent
+ * Removed unusued method and define in vertexbuffer
+ *
  * Revision 1.38  2004/04/26 07:46:11  leserpent
  * doMc throws std::runtime_error.
  * doMc stop when callback returns false.
@@ -220,7 +223,7 @@ MainWindow::MenuFileOpen()
     for( PointList::iterator i=m_pointset.getBegin(); i != psend; ++i)
       vecPoints.push_back(**i);
 
-    m_points = new VertexBuffer(vecPoints, POLY_POINTS);
+    m_points = new VertexBuffer(vecPoints, VertexBuffer::POLY_POINTS);
 
     OpenglView *mw = new OpenglView( m_workspace, m_points );
     mw->resize( 200, 200 );
@@ -312,7 +315,7 @@ MainWindow::MenuRenderingRender()
   MCubes.doMc (ims, boundingbox);
   MCubes.getPoints (vecPoints);
 
-  m_polys = new VertexBuffer (vecPoints, POLY_TRIANGLES);
+  m_polys = new VertexBuffer (vecPoints, VertexBuffer::POLY_TRIANGLES);
   m_polys->SetIndices (MCubes.getIndices());
 
   m_polywin = new OpenglView (NULL, m_polys);

@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.35  2004/04/26 08:56:16  leserpent
+ * Removed unusued method and define in vertexbuffer
+ *
  * Revision 1.34  2004/04/25 15:22:10  leserpent
  * Added help string
  *
@@ -113,7 +116,7 @@ OpenglWidget::initializeGL()
   m_glcontext->SetDepthTest (false);
   m_vbuffer->Bind();
   /* Activate some flags for poly rendering */
-  if( m_vbuffer->getPolyType () == POLY_TRIANGLES ){
+  if( m_vbuffer->getPolyType () == VertexBuffer::POLY_TRIANGLES ){
     /* Don't cull points only polys */
     glEnable (GL_CULL_FACE);
     glCullFace (GL_FRONT);

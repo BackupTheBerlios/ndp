@@ -34,10 +34,11 @@ VertexBuffer::VertexBuffer()
   init();
 }
 
-VertexBuffer::VertexBuffer(const std::vector<Point> &vertices, int polytype ) 
+VertexBuffer::VertexBuffer(const std::vector<Point> &vertices,
+                           VertexBuffer::PolyType polytype ):
+  m_vertices(vertices), m_polytype(polytype)
 {
   init();
-  CreateVertexBuffer(vertices, polytype);
 }
 
 VertexBuffer::~VertexBuffer() 
@@ -50,16 +51,6 @@ void
 VertexBuffer::init() 
 {
   m_islocked = false;
-}
-
-int 
-VertexBuffer::CreateVertexBuffer( const std::vector<Point> &vertices,
-				  int polytype ) 
-{
-  m_polytype = polytype;
-  m_vertices = vertices;
-  
-  return 0;
 }
 
 std::vector<Point> &
