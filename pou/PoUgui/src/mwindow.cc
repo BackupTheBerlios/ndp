@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.49  2004/04/29 08:49:42  ob821
+ * exception
+ *
  * Revision 1.48  2004/04/28 21:14:37  leserpent
  * Started to add show only selected points.
  * Call settingsform->exec() instead of show()(must wait).
@@ -250,17 +253,20 @@ MainWindow::MenuFileOpen()
     CleanMemory();
 
     m_pointset.removeDeleteAll();       // Clean a previous load()
-    m_pointset.load( filename );
-    if(0)
+    try
+      {
+	m_pointset.load( filename );
+      } 
+    catch(std::exception e) 
       {
 	ShowErrorMessage (this, QString ("Error Loading ")+filename);
 	return;
       }
+    m_pointset_filtered.randomFilter (m_pointset, 
+				      m_settingsform->getPointsCount ());
+    FillVector (m_pointset_filtered, vecPoints);
 
-    m_pointset_filtered.randomFilter(m_pointset, m_settingsform->getPointsCount ());
-    FillVector( m_pointset_filtered, vecPoints );
-
-    m_points = new VertexBuffer(vecPoints, VertexBuffer::POLY_POINTS);
+    m_points = new VertexBuffer (vecPoints, VertexBuffer::POLY_POINTS);
 
     OpenglView *mw = new OpenglView( m_workspace, m_points );
     mw->resize( 200, 200 );
