@@ -35,7 +35,7 @@ AC_PROG_LIBTOOL
 
 AC_CHECK_HEADER([ext/hash_set], :, AC_MSG_ERROR([*** cannot find hash_set header ***]))
 
-AM_PATH_GSL(1.3, :, AC_MSG_ERROR([*** libgsl not found ***]))
+AM_PATH_GSL(1.1, :, AC_MSG_ERROR([*** libgsl not found ***]))
 
 dnl Modify CFLAGS after all tests
 dnl Add args to configure
