@@ -299,6 +299,8 @@ void OpenglContext::DrawHud()
 {
   glPushAttrib( GL_ENABLE_BIT );
   glDisable (GL_LIGHTING);
+
+  int starty = m_font.pixelSize()*sizeof(helpInfos)/sizeof(helpStruct);
   
   /* Draw the light position using 2 quads */
   if( m_lightdraw ){
@@ -319,19 +321,18 @@ void OpenglContext::DrawHud()
     glVertex3f( m_lightpos.x - 0.1, m_lightpos.y, m_lightpos.z+0.1);
 
     glEnd();
-    glColor3f( 1.0, 1.0, 1.0 );
     glPopMatrix();
   }
 
   /* Disable zbuffer for text rendering */
   glDisable(GL_DEPTH_TEST);
   
+  glColor3f( 1.0, 1.0, 1.0 );
   if( m_showstats ){
     QString spolys("Triangles ");
     VertexBuffer *vb = m_parent ->getVertexBuffer();
     spolys += QString::number(vb->getSize());
-    glColor3f( 1.0, 1.0, 1.0 );
-    m_parent->renderText( 10, 40, spolys, m_font );
+    m_parent->renderText( 10, starty+40, spolys, m_font );
   }
 
   if( m_showfps ){
@@ -354,8 +355,7 @@ void OpenglContext::DrawHud()
     }
     
     sfps += QString::number(m_fps);
-    glColor3f( 1.0, 1.0, 1.0 );
-    m_parent->renderText( 10, 20, sfps, m_font );
+    m_parent->renderText( 10,  starty+30, sfps, m_font );
   }
 
   if(m_showhelp)
