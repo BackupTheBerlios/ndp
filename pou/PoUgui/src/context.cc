@@ -37,6 +37,7 @@
 const float OpenglContext::DEF_ZOOM;
 const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
 
+//gcc 3.0 wants to have the size of the array
 OpenglContext::helpStruct OpenglContext::helpInfos[10] = {
   'h', "Hide/Unhide this help screen",
   'p', "Hide/Unhide light",
