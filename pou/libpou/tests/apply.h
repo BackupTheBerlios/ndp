@@ -24,8 +24,10 @@ void checkBinaryError(ContainSource &source, ContainSourceOSG &sourceOSG,
   else {
     cout << "***Error***" << endl;
     int i = distance(res.begin(), p.first);
-    cout <<"MATH: (" << source[i] << ") (" << source2[i] << ") = " << fixed << *p.first << resetiosflags(ios::floatfield)  << endl;
-    cout << "OSG: (" << sourceOSG[i] << ") (" << source2OSG[i] << ") = " << fixed << *p.second << resetiosflags(ios::floatfield) << endl;
+    cout <<"MATH: (" << source[i] << ") (" << source2[i] << ") = " << fixed
+         << *p.first << resetiosflags(ios::floatfield)  << endl;
+    cout << "OSG: (" << sourceOSG[i] << ") (" << source2OSG[i] << ") = "
+         << fixed << *p.second << resetiosflags(ios::floatfield) << endl;
   }
 }
 
@@ -42,8 +44,10 @@ void checkUnaryError(ContainSource &source, ContainSourceOSG &sourceOSG,
   else {
     cout << "***Error" << endl;
     int i = distance(res.begin(), p.first);
-    cout <<"(" << source[i] << ") = " << fixed << *p.first << resetiosflags(ios::floatfield)  << endl;
-    cout <<"(" << sourceOSG[i] << ") = " << fixed << *p.second << resetiosflags(ios::floatfield)  << endl;
+    cout <<"(" << source[i] << ") = " << fixed << *p.first
+         << resetiosflags(ios::floatfield)  << endl;
+    cout <<"(" << sourceOSG[i] << ") = " << fixed << *p.second
+         << resetiosflags(ios::floatfield)  << endl;
   }
 }
 
