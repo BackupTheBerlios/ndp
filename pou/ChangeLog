@@ -1,3 +1,10 @@
+2004-04-28  Thomas
+	
+	* libpou/src/helpers/gzstream.h(gzstreambase): added is_open method
+
+	* libpou/src/{ImplicitSurface.cc,PointSet.cc}(load,save):
+	use is_open
+
 2004-04-28  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/context.cc: Use class trackball

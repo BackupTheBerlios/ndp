@@ -6,6 +6,9 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.17  2004/04/28 16:02:05  pumpkins
+ * fix io exception
+ *
  * Revision 1.16  2004/04/27 08:57:18  leserpent
  * abort ok
  *
@@ -165,7 +168,7 @@ void ImplicitSurface3D::load(const std::string &filename)
   throw (std::runtime_error)
 {
   igzstream stream(filename.c_str());
-  if (!stream)
+  if (!stream.is_open())
     throw std::runtime_error("File cannot be opened for reading");
   rbf->load(stream);
 }
@@ -173,7 +176,7 @@ void ImplicitSurface3D::load(const std::string &filename)
 void ImplicitSurface3D::save(const std::string &filename) const 
 throw (std::runtime_error) {
   ogzstream stream(filename.c_str());
-  if (!stream)
+  if (!stream.is_open())
     throw std::runtime_error("File cannot be opened for writing");
   rbf->save(stream);
 }

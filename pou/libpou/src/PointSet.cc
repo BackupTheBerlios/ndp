@@ -6,6 +6,9 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.10  2004/04/28 16:02:05  pumpkins
+ * fix io exception
+ *
  * Revision 1.9  2004/04/25 15:19:48  pumpkins
  * callback fixes
  * exception fixes
@@ -154,7 +157,7 @@ void
 PointSet::load(const char* filename) throw (std::runtime_error)
 {
   igzstream fs(filename);
-  if (!fs)
+  if (!fs.is_open())
     throw std::runtime_error("File Cannot be opened for reading\n");
 
   int counter = 0;
@@ -191,7 +194,7 @@ void
 PointSet::save(const char* filename) throw (std::runtime_error)
 {
   ogzstream fs(filename);
-  if (!fs)
+  if (!fs.is_open())
     throw std::runtime_error("File Cannot be opened for writing\n");
   
   cout << "Save " << filename << endl;

@@ -18,8 +18,8 @@
 // ============================================================================
 //
 // File          : gzstream.h
-// Revision      : $Revision: 1.1 $
-// Revision_date : $Date: 2004/04/20 11:16:39 $
+// Revision      : $Revision: 1.2 $
+// Revision_date : $Date: 2004/04/28 16:02:05 $
 // Author(s)     : Deepak Bandyopadhyay, Lutz Kettner
 // 
 // Standard streambuf implementation following Nicolai Josuttis, "The 
@@ -81,6 +81,9 @@ public:
     void open( const char* name, int open_mode);
     void close();
     gzstreambuf* rdbuf() { return &buf; }
+    bool is_open() {
+      return buf.is_open();
+    }
 };
 
 // ----------------------------------------------------------------------------
