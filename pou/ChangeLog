@@ -1,3 +1,11 @@
+2004-04-13  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/Makefile.am: Fixed .ui non automatic compilation
+	bug(rules must be put before any SOURCES). See
+	www.amath.washington.edu/~lf/tutorials/autoconf/toolsmanual.html
+	for details(section Embedded text and built sources).
+	Maybe nodist_PoUgui_SOURCES is not necessary with BUILT_SOURCES?
+
 2004-04-07 Damien
 	* mwindow.cc: New class name (from MWindow to MainWindow )
 	No more global var.
