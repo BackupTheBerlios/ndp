@@ -25,9 +25,11 @@
 	* PoUgui/src/context.cc (mapToSphere): Added continuity to mapToSphere
 
 2004-03-30 Damien
+	* Retreive data from Settings dialog: Points count can be changed
 	
 	* Bugs Fix in mwindow.cc
-	* Marching Cubes results in a separate window
+	
+	* Marching Cubes results in a separate window: Polygons View
 	
 2004-03-28  Ben  <leserpent@berlios.de>
 
