@@ -40,22 +40,16 @@ void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
   char *err;
 
   clear();
-  
-//BUG: The Pointset bounding box doesn't seem to be a good bounding
-//	box for the surface
-  Vec3f size=bbox.getSize();
-  int bounds = (int)(size.maxValue()/(2*0.05))+20;
 
+  // Estimate the number of cube which intersects the surface
+  Vec3f size=bbox.getSize();
   progress_max = (int)((size.x/cubeSize)*(size.y/cubeSize)*(size.z/cubeSize)/8);
-  if ((err = polygonize(cubeSize, 200/*bounds*/, 
+  if ((err = polygonize(cubeSize, 200, 
                         initPoint.x, initPoint.y, initPoint.z,
                         tetActive)) != NULL) 
   {
     std::cerr << "Error " << err << std::endl;
   }
-
-  std::cerr << gntris << " triangles, " 
-            << gvertices.count << "  vertices\n" << std::endl; 
 }
 
 const std::vector<unsigned int>& Mc::getIndices() {
@@ -636,6 +630,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.10  2004/04/25 15:23:11  leserpent
+* Bounding box doesn't work, use a default bound of 200
+*
 * Revision 1.9  2004/04/25 15:19:48  pumpkins
 * callback fixes
 * exception fixes
@@ -651,7 +648,7 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 * Added original mc's licence
 *
 * Revision 1.5  2004/04/03 11:16:00  leserpent
-* Added methods: set{InitPoint, CubeSize,	MaxIteration} and enableTet to class Mc
+* Added methods: set{InitPoint, CubeSize,MaxIteration} and enableTet to class Mc
 * Added a destructor which free previously allocated vertices.
 * Added a getPoints method
 *
