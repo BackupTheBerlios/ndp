@@ -7,6 +7,7 @@
 using namespace std;
 
 bool callback (int v, int max) {
+  return true;
 }
 
 
