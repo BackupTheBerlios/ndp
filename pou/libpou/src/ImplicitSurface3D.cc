@@ -6,6 +6,9 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.16  2004/04/27 08:57:18  leserpent
+ * abort ok
+ *
  * Revision 1.15  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -115,12 +118,15 @@ void ImplicitSurface3D::computeRGB(const PointSet &ps) {
   ConstraintFilterRGB rgb(&ps);
   
   r->setFilter(&rgb, 0);
-  r->compute(cs);
+  if (!r->compute(cs))
+    return;
   o=r->getOctree();
   g->setFilter(&rgb, 1);
-  g->compute(cs, o);
+  if (!g->compute(cs, o))
+    return;
   b->setFilter(&rgb, 2);
-  b->compute(cs, o);
+  if (!b->compute(cs, o))
+    return;
   
   cs.removeDeleteAll(); // We no longer need our constraints
 }

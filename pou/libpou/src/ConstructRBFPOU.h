@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.13  2004/04/27 08:57:18  leserpent
+ * abort ok
+ *
  * Revision 1.12  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -71,7 +74,7 @@ class ConstructRBFPOU {
 
   ConstructRBFPOU(TypeRBF _type = TRIHARMONIC);
   ~ConstructRBFPOU();
-  void compute(ConstraintSet& cs, const AreaSet *octree = 0) 
+  bool compute(ConstraintSet& cs, const AreaSet *octree = 0) 
     throw (std::logic_error);
   void setThresholds(unsigned int tMin, unsigned tMax);
   float eval(const Vec3f &p) const;

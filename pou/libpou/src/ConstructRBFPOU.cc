@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.15  2004/04/27 08:57:18  leserpent
+ * abort ok
+ *
  * Revision 1.14  2004/04/26 08:05:22  pumpkins
  * gradian->gradient
  *
@@ -49,7 +52,7 @@ ConstructRBFPOU::~ConstructRBFPOU() {
   delete cells;
 }
 
-void
+bool
 ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
   throw (std::logic_error)
 {
@@ -67,10 +70,10 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 
       if (i % step == 0 && callback)
 	if (!callback(i+pass*size, size*numPass))
-	  return ;
+	  return 0;
 
       
-      while(1)
+      while (1)
 	{
 	  ConstraintSet filtered(cs, &area);
 	  float size = filtered.size();
@@ -94,9 +97,10 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       if (filtered.size() != 0) 
 	  result = newrbf -> compute(filtered);
         
-      rbf.push_back(newrbf);
-      flag.push_back(OK_FLAG);
+      rbf.push_back (newrbf);
+      flag.push_back (OK_FLAG);
     }
+  return 1;
 }
 
 void
