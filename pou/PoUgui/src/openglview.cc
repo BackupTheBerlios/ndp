@@ -18,10 +18,13 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *$Log: openglview.cc,v $
- *Revision 1.28  2004/04/06 14:26:09  leserpent
- *Changed two glClear into one
- *Changed a paintGL to updateGL
+ * $Log: openglview.cc,v $
+ * Revision 1.29  2004/04/06 16:18:45  leserpent
+ * Added log keyword
+ *
+ * Revision 1.28  2004/04/06 14:26:09  leserpent
+ * Changed two glClear into one
+ * Changed a paintGL to updateGL
  *
  *  Tuesday 30 March 2004:
  *      - Use VertexBuffer::DrawBuffer() for rendering
