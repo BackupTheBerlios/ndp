@@ -1,3 +1,8 @@
+2004-04-06  Damien Dallarosa  <dallaros@liszt.emi.u-bordeaux.fr>
+
+	* PoUgui/src/context.cc (DrawHud): Light no longer moves with the
+	object.
+
 2004-04-05  loic martin  <lemartinpecheur@berlios.de>
 
 	* PoUgui/src/context.cc: Light
@@ -29,8 +34,6 @@
 
 	* PoUgui/src/context.cc: DepthTest support
 	Font init. moved in constructor
-	glPushattrib removed ( don't work with some hardware )
-	!!!!! FIXED: Sorry ben i was wrong, it was a return pb.  
 	DrawHud only in idle mode
 
 2004-04-04  Ben  <leserpent@berlios.de>

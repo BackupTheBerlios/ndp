@@ -6,6 +6,9 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.10  2004/04/06 09:47:15  ob821
+ * Changelog
+ *
  * Revision 1.9  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -63,8 +66,8 @@ public:
 	continue;
       center= p->getPos() - (c*projDist);
       cs.add(new Constraint(center, 1));
-      center= p->getPos() + (c*projDist);
-      cs.add(new Constraint(center, -1));
+      //center= p->getPos() + (c*projDist);
+      //cs.add(new Constraint(center, -1));
     }
   };
 };
