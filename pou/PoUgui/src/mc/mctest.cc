@@ -3,12 +3,15 @@
 #include "math/vector3.h"
 #include "ImplicitSurface3D.h"
 #include "mc2.h"
-#include "mc.h"
+//#include "mc.h"
 using namespace std;
+
+void callback (int v, int max) {
+}
 
 
 int main(int argc, char *argv) {
-//  Mc mc;
+  Box3f    bbox;
   vector<Vec3f> vertices, normals;
   vector<unsigned int> indices;
   
@@ -17,14 +20,13 @@ int main(int argc, char *argv) {
 //  ps.load("dragon-soft.sur");
 //  is.compute(ps, 3000);
 //  is.save("test.pou");
+
   ImplicitSurface3D is;
   is.load("test.pou");
-//  makecubetable();
-//  mc.makecubetable();
-//  mc.domc(&is);
-//   domc(&is, );
-//   getVertNorm(vertices, normals);
-//   indices = getIndices();
+  Mc mc(callback, 10);
+  mc.enableTet(true);
+  mc.setCubeSize(0.03);
+  mc.domc(&is, bbox);
       
   return 0;
 }
