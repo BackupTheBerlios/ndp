@@ -1,6 +1,6 @@
 INCLUDES=-I../$(top_srcdir)/libpou/src/ -I../$(top_srcdir)/libpou/src/math
 bin_PROGRAMS=mctest
-mctest_SOURCES=mctest.cc mc2.h mc2.cc mc.cc
+mctest_SOURCES=mctest.cc mc2.h mc2.cc
 
 mctest_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la
 
