@@ -1,3 +1,14 @@
+2004-04-27  Ben  <leserpent@berlios.de>
+
+	* libpou/tests/quaterniontest.cc: Test for quaternion(not finished).
+
+	* libpou/src/math/matrix4.h: Changed << for test
+
+	* libpou/tests/apply.h: Cleaned
+
+	* libpou/src/math/quaternion.h: Include matrix.h
+	Removed unusued methods
+
 2004-04-27    <thomas@pumpkins>
 	* libpou/src/ConstructRBFThinPlate.h (phi): return -phi (looks better)
 	* PoUgui/src/mwindow.cc (callback): Change qpd test in assert
