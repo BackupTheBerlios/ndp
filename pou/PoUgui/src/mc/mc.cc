@@ -30,6 +30,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "ImplicitSurface3D.h"
 
@@ -37,7 +38,7 @@
 #include "box3d.h"
 
 using namespace std;
-
+vector<int> indices;
   
 #define TET	0  /* use tetrahedral decomposition */
 #define NOTET	1  /* no tetrahedral decomposition  */
@@ -155,7 +156,6 @@ typedef struct process {	   /* parameters, function, storage */
 
 int gntris;	     /* global needed by application */
 VERTICES gvertices;  /* global needed by application */
-ofstream s;
 ImplicitSurface3D *is;
 
 
@@ -165,9 +165,10 @@ int triangle (int i1, int i2, int i3, VERTICES vertices)
 {
     gvertices = vertices;
     gntris++;
-    s << i1 << " "
-      << i2 << " "
-      << i3 << endl;
+
+    indices.push_back(i1);
+    indices.push_back(i2);
+    indices.push_back(i3);
     
     //fprintf(stdout, "%d %d %d\n", i1, i2, i3);
     return 1;
@@ -848,11 +849,9 @@ void domc(ImplicitSurface3D *imps)
   Vec3f init(3, -2.06667, -2.06667);
   
 
-  int i;
   char *err;
   gntris = 0;
 
-  s.open("toto.poly");
   if ((err = polygonize(fun, 
 			0.05, 200, 
 			init[0], init[1], init[2],
@@ -860,28 +859,27 @@ void domc(ImplicitSurface3D *imps)
     {
       cout << "Error " << err << endl;
     }
-  
-  s << "-1 -1 -1" << endl;
-
-  for (i = 0; i < gvertices.count; i++) 
-    {
-      VERTEX v;
-      v = gvertices.ptr[i];
-      
-      s << v.position.x << " "
-	<< v.position.y << " "
-	<< v.position.z << " "
-	<< v.normal.x << " "
-	<< v.normal.y << " " 
-	<< v.normal.z << " ";
-      
-      Vec3f pos(v.position.x, v.position.y, v.position.z);
-      s << "0.5 0.5 0.5" << endl;
-    }
-  
-  s.close();
 
   //  cout << "OK in " << getSystemTime() - globalTime << " sec" << endl;
   cout << gntris << " triangles, " 
        << gvertices.count << "  vertices\n" << endl; 
+}
+
+void getVertNorm(vector<double> &vertices, vector<double> &normals) {
+  for (int i = 0; i < gvertices.count; i++) {
+    VERTEX v;
+    v = gvertices.ptr[i];
+    
+    vertices.push_back(v.position.x);
+    vertices.push_back(v.position.y);
+    vertices.push_back(v.position.z);
+
+    normals.push_back(v.normal.x);
+    normals.push_back(v.normal.y);
+    normals.push_back(v.normal.z);
+  }
+}
+
+const vector<int>& getIndices() {
+  return indices;
 }

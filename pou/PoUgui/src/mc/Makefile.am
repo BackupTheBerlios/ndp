@@ -1,8 +1,8 @@
 INCLUDES=-I../$(top_srcdir)/libpou/src/
-bin_PROGRAMS=mc
-mc_SOURCES=mc.cc
-	
-mc_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la
+bin_PROGRAMS=mctest
+mctest_SOURCES=mctest.cc mc.cc mc.h
+
+mctest_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la
 
 mostlyclean-local:
 	@-rm -f *~
