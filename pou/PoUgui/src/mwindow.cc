@@ -169,7 +169,8 @@ void MWindow::menu_file_open() {
     CleanMemory();
     
     objectPointSet = new PointSet();    
-    objectPointSet -> load( filename ); 
+    objectPointSet -> load( filename );
+    m_bbox = objectPointSet -> getBoundingBox();
 
     PointList::iterator psiterator = objectPointSet->getBegin();
     nPoints = objectPointSet->size(); 
@@ -216,8 +217,8 @@ namespace {
 }
 
 void MWindow::menu_rendering_render() {
-  std::vector<double> vec_vertices, vec_normals;
-  std::vector<int> vec_indices;
+  std::vector<Vec3f> vec_vertices, vec_normals;
+  std::vector<unsigned int> vec_indices;
   int *indices;
   Vec3f *vertices;
   int nindices;
@@ -249,28 +250,22 @@ void MWindow::menu_rendering_render() {
   ims->compute( *objectPointSet, 3000 );
   // Start MC
   printf("[D] Start Marching Cubes\n");
-  domc(ims);
+  domc(ims, m_bbox);
   getVertNorm( vec_vertices, vec_normals );
   vec_indices = getIndices();
   // Copy data
   nindices = vec_indices.size();
-  nvertices = vec_vertices.size()/3;
+  nvertices = vec_vertices.size();
   // nvertices * 3 = (coords) + (normals) + (color)
-  vertices = new Vec3f[ nvertices * 3 ];
+  vertices = new Vec3f[ nvertices*3 ];
   indices = new int[ nindices ];
-  for( i=0; i<nvertices*3; i+=3 ){
+  for( i=0; i<nvertices; i++ ){
     /* coords */
-    vertices[i].x = vec_vertices[i];
-    vertices[i].y = vec_vertices[i+1];
-    vertices[i].z = vec_vertices[i+2];
+    vertices[i*3] = vec_vertices[i];
     /* normal coords*/
-    vertices[i+1].x = vec_normals[i];
-    vertices[i+1].y = vec_normals[i+1];
-    vertices[i+1].z = vec_normals[i+2];
+    vertices[i*3+1] = vec_normals[i];
     /* color */
-    vertices[i+2].x = 1.0;
-    vertices[i+2].y = 1.0;
-    vertices[i+2].z = 1.0;
+    vertices[i*3+2] = Vec3f(1.0, 1.0, 1.0);
   }
 
   for( i=0; i< nindices; i++ )

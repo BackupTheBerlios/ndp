@@ -2,6 +2,7 @@
 #define MWINDOW_H
 
 #include <qmainwindow.h>
+#include "box3d.h"
 #include "language.h"
 
 class MWindow : public QMainWindow 
@@ -31,6 +32,8 @@ class MWindow : public QMainWindow
   void menu_rendering_render();
  private:
   void CleanMemory();
+
+  BoxVolume m_bbox;
 };
 
 int CreateMainWindow( int argc, char **argv );
