@@ -67,8 +67,11 @@ public:
     };
   
   typedef std::vector<Intersection> IntersectionVector;
-  //  typedef std::vector<unsigned int> AreaIndexVector;
+#if (__GNUC__==3) && (__GNUC_MINOR__==0)
+  typedef std::hash_set<unsigned int> AreaIndexVector;
+#else  
   typedef __gnu_cxx::hash_set<unsigned int> AreaIndexVector;
+#endif
   
  public:
   void create(const ConstraintSet& cs,
