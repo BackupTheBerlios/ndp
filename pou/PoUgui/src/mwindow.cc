@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.34  2004/04/24 13:46:12  ob821
+ * mc now use octree BoundingBox
+ *
  * Revision 1.33  2004/04/24 13:06:36  ob821
  * xmlparser.cc completed
  * settings.* bugfix, code cleanup
@@ -262,6 +265,7 @@ MainWindow::MenuRenderingRender()
   int tmin = m_settingsform->getTmin();
   int tmax = m_settingsform->getTmax();
   int phi = m_settingsform->getPhi();
+  BoxVolume boundingbox;
 
   ConstructRBFPOU::TypeRBF id2rbftype [3] = {ConstructRBFPOU::BIHARMONIC,
 					     ConstructRBFPOU::TRIHARMONIC,
@@ -286,11 +290,12 @@ MainWindow::MenuRenderingRender()
   ims->computeGeometry (m_pointset, filter_npoints);
 
   qpd->setLabelText ("Polygonizing surface...");
+  boundingbox = ((AreaSetOctree *)ims->getOctree())->getBBox();
   MCubes = new Mc (callback, 10);
   MCubes->setMaxIteration (mc_maxit);
   MCubes->setCubeSize (mc_cubesize);
   MCubes->enableTet (enabletet);
-  MCubes->domc (ims, m_boundingbox);
+  MCubes->domc (ims, boundingbox);
   MCubes->getPoints (vecPoints);
 
   m_polys = new VertexBuffer (vecPoints, POLY_TRIANGLES);

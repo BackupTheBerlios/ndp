@@ -311,22 +311,6 @@
                     <string>Max Iteration:</string>
                 </property>
             </widget>
-            <widget class="QCheckBox">
-                <property name="name">
-                    <cstring>entry_mc_tet</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>330</x>
-                        <y>60</y>
-                        <width>120</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Enable Tet</string>
-                </property>
-            </widget>
             <widget class="QLineEdit">
                 <property name="name">
                     <cstring>entry_mc_cs</cstring>
@@ -363,6 +347,25 @@
                 </property>
                 <property name="alignment">
                     <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QCheckBox">
+                <property name="name">
+                    <cstring>entry_mc_tet</cstring>
+                </property>
+                <property name="enabled">
+                    <bool>true</bool>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>330</x>
+                        <y>60</y>
+                        <width>120</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Enable Tet</string>
                 </property>
             </widget>
         </widget>

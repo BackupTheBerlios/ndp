@@ -1,4 +1,5 @@
 2004-04-24 Damien
+	* mwindow.cc: Mc now use Octree BoundingBox
 	* xmplparser.cc: generic format for entries class XMLEntry
 	* init.cc: Removed because useles.
 	* settings.h: Final version, float->int for tmin and tmax
