@@ -85,11 +85,7 @@ void VertexBuffer::Bind()
   glEnableClientState( GL_COLOR_ARRAY );
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_NORMAL_ARRAY );
-  if( !m_indices.empty() ){
-    printf("Enable indices\n");
-    glEnableClientState( GL_INDEX_ARRAY );
-  }
-
+ 
   if( type == TYPE_VERTEXBUFFER ){
     glVertexPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].pos);
     glColorPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].rgb);
@@ -103,7 +99,6 @@ void VertexBuffer::unBind()
   glDisableClientState(GL_COLOR_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_NORMAL_ARRAY);
-  glDisableClientState(GL_INDEX_ARRAY);
 }
 
 void VertexBuffer::LockBuffer() 
@@ -129,7 +124,7 @@ int VertexBuffer::DrawBuffer()
 
   glColor4f( 1.0,1.0,1.0, 0.0 );
   if( m_indices.empty() )
-      glDrawArrays( PolyTypes[polytype], 0, m_vertices.size() ); 
+    glDrawArrays( PolyTypes[polytype], 0, m_vertices.size() ); 
   else {
     glDrawElements(PolyTypes[polytype], m_indices.size(), GL_UNSIGNED_INT, 
 		   &m_indices[0]);
