@@ -2,7 +2,7 @@
 #include "opengl.h"
 #include "utils.h"
 
-Light::Light(unsigned int lightnum) :
+Light::Light (unsigned int lightnum) :
   m_lightnum(lightnum+GL_LIGHT0)
 {
   drawingColor.setValues (0, 1, 0);
@@ -10,9 +10,9 @@ Light::Light(unsigned int lightnum) :
   m_lightrx = 0;
   m_lightry = 0;
   m_lightdistance = 0;
-  m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
-  m_diffuse = Vec3f( 0.2, 0.2, 0.2 );
-  m_specular = Vec3f( 0.4, 0.4, 0.4 );
+  m_lightpos = Vec3f (0.0f, 0.0f, 0.0f);
+  m_diffuse = Vec3f (0.2, 0.2, 0.2);
+  m_specular = Vec3f (0.4, 0.4, 0.4);
   m_cst_atenuation = 1.0;
   m_lin_atenuation = 0.1;
   m_quad_atenuation = 0.1;
@@ -69,14 +69,14 @@ Light::ToOpenGL()
 void 
 Light::ChangeDiffuse (float changex, float changey, float changez)
 {
-  m_diffuse.x = clamp(m_diffuse.x+changex, 0.0f, 1.0f);
-  m_diffuse.y = clamp(m_diffuse.y+changey, 0.0f, 1.0f);
-  m_diffuse.z = clamp(m_diffuse.z+changez, 0.0f, 1.0f);
+  m_diffuse.x = clamp (m_diffuse.x+changex, 0.0f, 1.0f);
+  m_diffuse.y = clamp (m_diffuse.y+changey, 0.0f, 1.0f);
+  m_diffuse.z = clamp (m_diffuse.z+changez, 0.0f, 1.0f);
   glLightfv (m_lightnum, GL_DIFFUSE, &m_diffuse.x);
 }
 
 void
 Light::Enable ()
 {
-  glEnable(m_lightnum);
+  glEnable (m_lightnum);
 }
