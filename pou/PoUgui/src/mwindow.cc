@@ -221,6 +221,8 @@ namespace {
 void MWindow::menu_rendering_render() {
   std::vector<Point> vecPoints;
   int filter_npoints = settingsForm -> getPointsCount();
+  int mc_maxit = settingsForm -> getMaxIteration();
+  float mc_cubesize = settingsForm -> getCubeSize();
 
   if( !vbPoints )
     return;
@@ -240,6 +242,8 @@ void MWindow::menu_rendering_render() {
   ims->setCallBack (callback, 10);
 
   MCubes = new Mc(callback, 10);
+  MCubes->setMaxIteration( mc_maxit );
+  MCubes->setCubeSize( mc_cubesize );
   printf("[D] Start Surface reconstruction\n");
   ims->compute( ps, filter_npoints );
   printf("[D] Start Marching Cubes\n");

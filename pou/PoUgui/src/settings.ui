@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>500</width>
-            <height>241</height>
+            <height>243</height>
         </rect>
     </property>
     <property name="caption">
@@ -113,22 +113,6 @@
             <attribute name="title">
                 <string>PoU</string>
             </attribute>
-            <widget class="QLabel">
-                <property name="name">
-                    <cstring>textLabel1_2</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>20</x>
-                        <y>90</y>
-                        <width>30</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Tmin:</string>
-                </property>
-            </widget>
             <widget class="QLineEdit">
                 <property name="name">
                     <cstring>lineEdit1_2</cstring>
@@ -146,22 +130,6 @@
                 </property>
                 <property name="alignment">
                     <set>AlignRight</set>
-                </property>
-            </widget>
-            <widget class="QLabel">
-                <property name="name">
-                    <cstring>textLabel1_2_2</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>260</x>
-                        <y>90</y>
-                        <width>32</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Tmax:</string>
                 </property>
             </widget>
             <widget class="QLineEdit">
@@ -183,25 +151,6 @@
                     <set>AlignRight</set>
                 </property>
             </widget>
-            <widget class="QLineEdit">
-                <property name="name">
-                    <cstring>lineEdit1</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>140</x>
-                        <y>20</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>3000</string>
-                </property>
-                <property name="alignment">
-                    <set>AlignRight</set>
-                </property>
-            </widget>
             <widget class="QLabel">
                 <property name="name">
                     <cstring>textLabel1_3</cstring>
@@ -216,22 +165,6 @@
                 </property>
                 <property name="text">
                     <string>Phi Function:</string>
-                </property>
-            </widget>
-            <widget class="QLabel">
-                <property name="name">
-                    <cstring>textLabel1</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>20</x>
-                        <y>20</y>
-                        <width>110</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Points Count:</string>
                 </property>
             </widget>
             <widget class="QComboBox">
@@ -268,6 +201,73 @@
                     <number>0</number>
                 </property>
             </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>90</y>
+                        <width>30</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Tmin:</string>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1_2_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>260</x>
+                        <y>90</y>
+                        <width>32</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Tmax:</string>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>20</x>
+                        <y>20</y>
+                        <width>110</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Points Count:</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>lineEdit1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>140</x>
+                        <y>20</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>3000</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
         </widget>
         <widget class="QWidget">
             <property name="name">
@@ -276,6 +276,92 @@
             <attribute name="title">
                 <string>Marching Cubes</string>
             </attribute>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1_4</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>30</y>
+                        <width>70</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Cube Size:</string>
+                </property>
+            </widget>
+            <widget class="QCheckBox">
+                <property name="name">
+                    <cstring>checkBox1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>330</x>
+                        <y>60</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Enable Tet</string>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_mc_cs</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>150</x>
+                        <y>30</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>0.05</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QLineEdit">
+                <property name="name">
+                    <cstring>entry_mc_maxit</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>150</x>
+                        <y>90</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>10</string>
+                </property>
+                <property name="alignment">
+                    <set>AlignRight</set>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1_5</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>30</x>
+                        <y>90</y>
+                        <width>110</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Max Iteration:</string>
+                </property>
+            </widget>
         </widget>
         <widget class="QWidget">
             <property name="name">
@@ -328,7 +414,9 @@
     <include location="local" impldecl="in implementation">settings.ui.h</include>
 </includes>
 <variables>
+    <variable>int m_maxiteration;</variable>
     <variable>int m_pointscount;</variable>
+    <variable>float m_cubesize;</variable>
 </variables>
 <slots>
     <slot>pushButton3_clicked()</slot>
@@ -338,6 +426,8 @@
 </slots>
 <functions>
     <function returnType="int">getPointsCount()</function>
+    <function returnType="int">getMaxIteration()</function>
+    <function returnType="float">getCubeSize()</function>
     <function>Init()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>

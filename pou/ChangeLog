@@ -1,5 +1,7 @@
 2004-04-05  Damien
 
+	* PoUgui/src/mwindow.cc: You can change settings for mc
+
 	* PoUgui/src/context.cc: Light Motion
 	Use 'p' to see light position
 	Use direction keys for light motion

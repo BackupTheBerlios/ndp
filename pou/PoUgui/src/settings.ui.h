@@ -15,11 +15,21 @@
 void SettingsForm::pushButton3_clicked()
 {	
     QString spointscount  = lineEdit1->text();
+    QString scubesize = entry_mc_cs->text();
+    QString smaxit = entry_mc_maxit->text();
     bool res;
-    int pointscount = spointscount.toInt( &res );
     
-    if( res )
+    int pointscount = spointscount.toInt( &res );
+     if( res )
 	m_pointscount = pointscount;
+    
+    float  cubesize = scubesize.toFloat( &res );
+    if( res )
+	m_cubesize = cubesize;
+    
+    int  maxit = smaxit.toInt( &res );
+    if( res )
+	m_maxiteration = maxit;
     
     hide();
 }
@@ -50,7 +60,19 @@ int SettingsForm::getPointsCount()
     return m_pointscount;			
 }
 
+int SettingsForm::getMaxIteration()
+{
+    return m_maxiteration;
+}
+
+float SettingsForm::getCubeSize()
+{
+    return m_cubesize;
+}
+
 void SettingsForm::Init()
 {
     m_pointscount = 3000;
+    m_cubesize = 0.05;
+     m_maxiteration = 10;
 }
