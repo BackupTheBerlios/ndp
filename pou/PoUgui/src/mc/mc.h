@@ -3,10 +3,12 @@
 
 #include <vector>
 
-void domc(ImplicitSurface3D *imps);
-void getVertNorm(std::vector<double> &vertices, std::vector<double> &normals);
-const std::vector<int>& getIndices();
+#include "math/vector3.h"
 
+void setcallback(void (*c)(int, int));
+void domc(ImplicitSurface3D *imps, const Box3f &bbox);
+void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals);
+const std::vector<unsigned int>& getIndices();
 
 
 #endif

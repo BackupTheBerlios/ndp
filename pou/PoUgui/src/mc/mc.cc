@@ -38,7 +38,7 @@
 #include "box3d.h"
 
 using namespace std;
-vector<int> indices;
+vector<unsigned int> indices;
   
 #define TET	0  /* use tetrahedral decomposition */
 #define NOTET	1  /* no tetrahedral decomposition  */
@@ -152,12 +152,15 @@ typedef struct process {	   /* parameters, function, storage */
  void *calloc();
  char *mycalloc();
 
-
+void (*progress_callback)(int v, int max);
 
 int gntris;	     /* global needed by application */
 VERTICES gvertices;  /* global needed by application */
 ImplicitSurface3D *is;
 
+void setcallback(void (*c)(int, int)) {
+    progress_callback = c;
+}
 
 /* triangle: called by polygonize() for each triangle; write to stdout */
 
@@ -268,7 +271,7 @@ char *polygonize (FUN function,
 		  int mode)
 {
   PROCESS p;
-  int n, noabort;
+  int n, noabort, i=0;
   CORNER *setcorner();
   TEST in, out, find();
   
@@ -305,8 +308,9 @@ char *polygonize (FUN function,
   p.vertices.ptr = NULL;
   
   setcenter(p.centers, 0, 0, 0);
-  
+
   while (p.cubes != NULL) { /* process active cubes till none left */
+      i++;
     CUBE c;
     CUBES *temp = p.cubes;
     c = p.cubes->cube;
@@ -334,7 +338,9 @@ char *polygonize (FUN function,
     testface(c.i, c.j+1, c.k, &c, T, LTN, LTF, RTN, RTF, &p);
     testface(c.i, c.j, c.k-1, &c, N, LBN, LTN, RBN, RTN, &p);
     testface(c.i, c.j, c.k+1, &c, F, LBF, LTF, RBF, RTF, &p);
+  printf("%d\n",i);
   }
+  printf("%d\n",i);
   return NULL;
 }
 
@@ -730,47 +736,15 @@ void addtovertices (VERTICES *vertices,VERTEX v)
     vertices->ptr[vertices->count++] = v;
 }
 
-
-/* vnormal: compute unit length surface normal at point */
-
-/*
-void vnormal (POINT* point, PROCESS* p, POINT* v)
-{
-    double f = p->function(point->x, point->y, point->z);
-    v->x = p->function(point->x+p->delta, point->y, point->z)-f;
-    v->y = p->function(point->x, point->y+p->delta, point->z)-f;
-    v->z = p->function(point->x, point->y, point->z+p->delta)-f;
-    f = sqrt(v->x*v->x + v->y*v->y + v->z*v->z);
-    if (f != 0.0) {v->x /= f; v->y /= f; v->z /= f;}
-}
-*/
-
-
 void vnormal (POINT* point, PROCESS* p, POINT* v)
 {
   Vec3f norm, dest(point->x, point->y, point->z);
   
   is->evalNormal(dest, norm);
-  //cout << "Epsilon: " << norm << endl;
   //is.evalNormalAna(dest, norm);
-  //   cout << "nb " << is.nb(dest);
-  //  cout << "Analy: " << norm << endl;
-      v->x = norm[0];
-      v->y = norm[1];
-      v->z = norm[2];
-
-  /*
-  double delta = p->delta*20.0;
-  v->x = p->function(point->x+delta, point->y, point->z)-
-    p->function(point->x-delta, point->y, point->z);
-  v->y = p->function(point->x, point->y+delta, point->z)-
-    p->function(point->x, point->y-delta, point->z);
-  v->z = p->function(point->x, point->y, point->z+delta)-
-    p->function(point->x, point->y, point->z-delta);
-
-  double f = sqrt(v->x*v->x + v->y*v->y + v->z*v->z);
-  if (f != 0.0) {v->x /= f; v->y /= f; v->z /= f;}
-  */
+  v->x = norm[0];
+  v->y = norm[1];
+  v->z = norm[2];
 }
 
 
@@ -834,52 +808,43 @@ void converge (POINT* p1, POINT* p2,
  */
 
 
-
-//ImplicitSurface3Drbf is;
-
-
 double fun(double x, double y, double z)
 {
-  return -is->eval(Vec3f(x,y,z));//-243.f/255.f;
+  return -is->eval(Vec3f(x,y,z));
 }
 
-void domc(ImplicitSurface3D *imps)
+void domc(ImplicitSurface3D *imps, const Box3f &bbox)
 {
   is = imps;
-  Vec3f init(0, 0, 0);
-  
 
   char *err;
   gntris = 0;
 
+  
+  Vec3f size=bbox.getSize();
+  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)<<std::endl;
   if ((err = polygonize(fun, 
-			0.05, 200, 
-			init[0], init[1], init[2],
+			0.05, ((int)(bbox.getSize().maxValue()/0.05))/2+1, 
+			0, 0, 0,
 			triangle, NOTET)) != NULL) 
     {
       cout << "Error " << err << endl;
     }
 
-  //  cout << "OK in " << getSystemTime() - globalTime << " sec" << endl;
   cout << gntris << " triangles, " 
        << gvertices.count << "  vertices\n" << endl; 
 }
 
-void getVertNorm(vector<double> &vertices, vector<double> &normals) {
+void getVertNorm(vector<Vec3f> &vertices, vector<Vec3f> &normals) {
   for (int i = 0; i < gvertices.count; i++) {
     VERTEX v;
     v = gvertices.ptr[i];
     
-    vertices.push_back(v.position.x);
-    vertices.push_back(v.position.y);
-    vertices.push_back(v.position.z);
-
-    normals.push_back(v.normal.x);
-    normals.push_back(v.normal.y);
-    normals.push_back(v.normal.z);
+    vertices.push_back(Vec3f(v.position.x, v.position.y, v.position.z));
+    normals.push_back(Vec3f(v.normal.x, v.normal.y, v.normal.z));
   }
 }
 
-const vector<int>& getIndices() {
+const vector<unsigned int>& getIndices() {
   return indices;
 }
