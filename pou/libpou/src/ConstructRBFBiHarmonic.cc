@@ -25,7 +25,7 @@ float ConstructRBFBiHarmonic::eval(const Vec3f &p) const {
   return sum + c[0]*p[0] + c[1]*p[1] + c[2]*p[2] + c[3];
 }
 
-void
+/*void
 phiDist_d1(const Vec3f& p1, const Vec3f& p2, Vec3f& n)
 {
   Vec3f delta = p1-p2;
@@ -42,14 +42,7 @@ phiDist_d1(const Vec3f& p1, const Vec3f& p2, Vec3f& n)
   n[0] = delta[0] * distInv;
   n[1] = delta[1] * distInv;
   n[2] = delta[2] * distInv;
-}
-
-float
-ConstructRBFBiHarmonic::getL(const BoxVolume& box) const {
-  std::cerr << "WARNING: ImplicitSurface3DrbfBiharmonic::L not implemented yet " << std::endl;
-  return 0.0;
-}
-
+}*/
 
 void 
 ConstructRBFBiHarmonic::evalGradian(const Vec3f& p, Vec3f& v) const
@@ -227,3 +220,37 @@ void ConstructRBFBiHarmonic::getC(float& cx,
   cg = c[3];
 }
 
+void ConstructRBFBiHarmonic::load(std::ifstream &stream) {
+ unsigned int newSize;
+
+  stream >> newSize;
+  setSize(newSize);
+
+  for(unsigned int i = 0; i<newSize; i++)
+    {
+      float x,y,z,w;
+      
+      stream >> x >> y >> z >> w;
+      setCenter(i,Vec3f(x,y,z));
+      setW(i,w);
+    }
+
+  float cx,cy,cz,cg;
+
+  stream >> cx >> cy >> cz >> cg;
+  setC(cx,cy,cz,cg);
+}
+
+void ConstructRBFBiHarmonic::save(std::ofstream &stream) const {
+  stream << size << std::endl;
+  for(unsigned int i = 0; i<size; i++)
+    stream << getCenter(i)[0] << " " 
+	   << getCenter(i)[1] << " " 
+	   << getCenter(i)[2] << " " 
+	   << getW(i) << std::endl;
+  
+  stream << c[0] << " "
+	 << c[1] << " "
+	 << c[2] << " "
+	 << c[3] << std::endl;
+}

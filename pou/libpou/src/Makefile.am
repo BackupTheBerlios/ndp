@@ -1,14 +1,16 @@
 lib_LTLIBRARIES=libpou.la
 libpou_la_SOURCES=AreaCube.cc AreaSetAdapt.cc AreaSet.cc AreaSetGrid.cc \
 	AreaSetOctree.cc AreaSphere.cc PointSet.cc Solver.cc \
-	ConstructRBF.cc ConstructRBFTriHarmonic.cc ConstructRBFBiHarmonic.cc
+	ConstructRBF.cc ConstructRBFTriHarmonic.cc ConstructRBFBiHarmonic.cc \
+	ConstructRBFPOU.cc
 
 
 includedir=@includedir@/POU
 include_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h AreaSet.h \
 	Constraint.h PointSet.h vector3.h AreaSetAdapt.h \
-	ConstraintFilter.h Solver.h AreaSetGrid.h ConstructRBF.h W.h
+	ConstraintFilter.h Solver.h AreaSetGrid.h ConstructRBF.h W.h \
+	ConstructRBFPOU.h
 
 
 libpou_la_CXXFLAGS=@GSL_CFLAGS@

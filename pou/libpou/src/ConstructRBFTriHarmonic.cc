@@ -2,6 +2,8 @@
 #include "Solver.h"
 #include <iostream>
 
+#include <fstream>
+
 ConstructRBFTriHarmonic::ConstructRBFTriHarmonic() {
   c = new float[10];
 }
@@ -205,4 +207,45 @@ ConstructRBFTriHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz)
       // dfzz
       lz[2] = 3*(wi_dist_div * diff.z * diff.z + wi_dist) + 2 * c[2];
    }
+}
+
+void ConstructRBFTriHarmonic::load(std::ifstream &stream) {
+  unsigned int newSize;
+
+  stream >> newSize;
+  setSize(newSize);
+  
+  for(unsigned int i = 0; i<newSize; i++)
+    {
+      float x,y,z,w;
+      
+      stream >> x >> y >> z >> w;
+      setCenter(i,Vec3f(x,y,z));
+      setW(i,w);
+    }
+  
+  stream >> c[0] >> c[1] >> c[2]
+	 >> c[3] >> c[4] >> c[5]
+    	 >> c[6] >> c[7] >> c[8] >> c[9];
+}
+
+void ConstructRBFTriHarmonic::save(std::ofstream &stream) const {
+  stream << size << std::endl;
+
+  for(unsigned int i = 0; i<size; i++)
+    stream << getCenter(i)[0] << " " 
+	   << getCenter(i)[1] << " " 
+	   << getCenter(i)[2] << " " 
+	   << getW(i) << std::endl;
+  
+  stream << c[0] << " "
+	 << c[1] << " "
+	 << c[2] << " "	 
+	 << c[3] << " "
+	 << c[4] << " "
+	 << c[5] << " "
+	 << c[6] << " "
+	 << c[7] << " "
+	 << c[8] << " "
+	 << c[9] << std::endl;
 }

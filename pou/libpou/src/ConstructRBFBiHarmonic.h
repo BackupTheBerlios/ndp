@@ -1,6 +1,7 @@
 #ifndef CONSTRUCTRBFBIHARMONIC_H
 #define CONSTRUCTRBFBIHARMONIC_H
 
+#include <fstream>
 #include "ConstructRBF.h"
 #include "box3d.h"
 
@@ -13,6 +14,9 @@ class ConstructRBFBiHarmonic : public ConstructRBF {
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   void jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const;
   float getL(const BoxVolume&) const;
+  void load(std::ifstream &stream);
+  void save(std::ofstream &stream) const;
+
  private:
   void setC(float cx,
             float cy,

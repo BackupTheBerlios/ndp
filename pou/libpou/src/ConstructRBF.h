@@ -2,6 +2,7 @@
 #define CONSTRUCTRBF_H
 
 #include <vector>
+#include <fstream>
 #include "Constraint.h"
 #include "ConstraintFilter.h"
 #include "vector3.h"
@@ -22,6 +23,9 @@ class ConstructRBF {
   virtual float eval(const Vec3f &p) const = 0;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
   virtual void evalGradian(const Vec3f &p, Vec3f &v) const =0;
+
+  virtual void load(std::ifstream &stream) = 0;
+  virtual void save(std::ofstream &stream) const = 0;
 
 
   unsigned int getSize();
