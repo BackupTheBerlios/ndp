@@ -46,8 +46,10 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
   /* Polygon window => show fps */
   if( vb -> getPolyType() == POLY_TRIANGLES ){
     m_idledraw = true;
-    glcontext -> ShowFps( true );
+    glcontext -> ShowFps( false );
   }
+  
+  //setFocusProxy( this );
 }
 
 OpenglWidget::~OpenglWidget() {
@@ -119,6 +121,13 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
     break;
   }    
   glcontext -> SyncContext();
+}
+
+void OpenglWidget::keyPressEvent( QKeyEvent *e )
+{
+  printf("%c %d %d\n", e->ascii(), e->ascii(), e->key() );
+  if( tolower(e->ascii()) == 'f' )
+    glcontext -> ShowFps( !(glcontext -> getFpsState()) );    
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {

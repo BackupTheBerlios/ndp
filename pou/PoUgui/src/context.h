@@ -18,6 +18,7 @@ class OpenglContext {
   /* Draw the Head-Up-Display */
   void DrawHud();
   void ShowFps( bool flag );
+  inline bool getFpsState() { return m_showfps; }
 
   /********************/
   /* NEED SyncContext() */

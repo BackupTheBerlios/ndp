@@ -3,6 +3,10 @@
 	* PoUgui/src/mc/mc2.h: mc into a class. Need testing.
 
 2004-04-01  Damien
+
+	* openglview.cc: You must press 'f' to see fps
+
+	* BUG: segfault on some system if you use the default font for fps
 	
 	* mwindow.cc: You can create more opengl windows (mdi)
 	

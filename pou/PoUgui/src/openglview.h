@@ -26,6 +26,7 @@ class OpenglWidget : public QGLWidget
   inline OpenglContext *getOpenGLContext(){ return glcontext; }
 
  private:
+  void keyPressEvent( QKeyEvent *e );
   void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
@@ -51,6 +52,7 @@ class OpenglView : public QMainWindow {
  private:
   OpenglWidget *glwidget;
   QFrame *glframe;
+  bool m_fpsstate;
 };
 
 
