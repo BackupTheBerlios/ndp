@@ -1,3 +1,14 @@
+2004-03-28  Ben  <leserpent@berlios.de>
+
+	* libpou/src/ImplicitSurface3D.h: Added missing eval* methods and
+	and added rbf->load to ImplicitSurface3D::load
+
+	* libpou/configure.ac: gsl1.3->gsl1.1
+
+2004-03-27  Ben  <leserpent@berlios.de>
+
+	* libpou/configure.ac: gsl1.3->gsl1.1
+
 2004-03-26  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/openglview.cc (mapToSphere): Removed useless
