@@ -1,5 +1,11 @@
 2004-03-22  Ben  <leserpent@berlios.de>
 
+	* libpou/src/ImplicitSurface3D.cc: setFilter can't be called again
+	after a compute(BUG?).
+
+	* libpou/tests/implicitsurface3d.cc (main): The number of
+	points used for the test has been limited.
+
 	* libpou/src/ConstructRBF.cc: c is allocated and deleted by
 	derivated class.
 
