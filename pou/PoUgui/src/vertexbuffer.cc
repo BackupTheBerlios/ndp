@@ -18,6 +18,9 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Wednesday 31 March 2004:
+ *      - glDrawElements fixed by Benjamin Grange.
+ *
  */
 
 #include <string>
@@ -142,7 +145,8 @@ int VertexBuffer::DrawBuffer()
   if( !m_indices )
       glDrawArrays( PolyTypes[polytype], 0, n ); 
   else {
-   glDrawElements(PolyTypes[polytype], m_indices_count, GL_UNSIGNED_INT, m_indices);
+    glDrawElements(PolyTypes[polytype], m_indices_count, GL_UNSIGNED_INT, 
+		   m_indices);
   }
   return 0;
 }

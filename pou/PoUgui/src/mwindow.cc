@@ -61,6 +61,7 @@ OpenglView *PolysWindow;
 QMainWindow *MW_window;
 QApplication *QT_Gui;
 QWorkspace *MW_workspace;
+SettingsForm *settingsForm;
 
 MWindow::MWindow() 
   : QMainWindow( 0, NULL, 0 )
@@ -129,6 +130,9 @@ void MWindow::CreateMenu() {
   AddTool( this, MENU_RENDERING_RENDER, QPixmap(DATADIR"/render.png"),
 	   QKeySequence("Ctrl+R"), toolbar, menu_rendering, 
 	   SLOT(menu_rendering_render()));
+  
+  settingsForm = new SettingsForm;
+  settingsForm -> Init();
 }
 
 void MWindow::CreateWorkspace() {
@@ -202,8 +206,7 @@ void MWindow::menu_file_close() {
 }
 
 void MWindow::menu_settings_args() {
-  SettingsForm *setForm = new SettingsForm;
-  setForm->show();
+  settingsForm->show();
 }
 
 void MWindow::menu_windows_new() {
@@ -223,6 +226,7 @@ void MWindow::menu_rendering_render() {
   Vec3f *vertices;
   int nindices;
   int nvertices;
+  int filter_npoints = settingsForm -> getPointsCount();
 
   int i = 0;
 
@@ -231,12 +235,8 @@ void MWindow::menu_rendering_render() {
   
   qpd = new QProgressDialog( "Rendering...", "Abort Rendering", 100, 
 				   this, "progress", TRUE );
-  //  render_progress.setProgress( 1 );
   qpd->setProgress(1);
-  //for( i=0;i<1000000 && !render_progress.wasCancelled() ; i++ )
   QT_Gui->processEvents();
-  //render_progress.setProgress( 100 );
-  //QT_Gui->processEvents();
 
   //Start ImplicitSurface reconstruction
 
@@ -247,7 +247,7 @@ void MWindow::menu_rendering_render() {
   if( !ims )
     return ;
   printf("[D] Start Surface reconstruction\n");
-  ims->compute( *objectPointSet, 3000 );
+  ims->compute( *objectPointSet, filter_npoints );
   // Start MC
   printf("[D] Start Marching Cubes\n");
   domc(ims, m_bbox);
