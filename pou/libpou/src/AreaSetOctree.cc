@@ -257,14 +257,15 @@ AreaSetOctree::maxLevelRec(AreaSetOctree::Node* node)
      }
 }
 
-void 
-AreaSetOctree::getOctreeAreas(const Vec3f& p, AreaIndexVector & vec)
+unsigned int
+AreaSetOctree::getAreas(const Vec3f& p, unsigned int *vec)
 {
   std::vector<Node*> q;
   q.reserve (OCTREE_BUFFER_SIZE);
   unsigned int front = 0;
   q.push_back (root);
- 
+  int count=0;
+
   while (front < q.size ()) 
     {
       Node * node = q[front];
@@ -272,8 +273,7 @@ AreaSetOctree::getOctreeAreas(const Vec3f& p, AreaIndexVector & vec)
       if (node->isLeaf ())
 	{
 	  if (node->a->intersect (p))
-	    //vec.push_back (node->areaIndex);
-	    vec.insert (node->areaIndex);
+	    vec[count++]= node->areaIndex;
 	}
       else 
 	for (unsigned int i = 0; i < 8; i++)
@@ -281,6 +281,7 @@ AreaSetOctree::getOctreeAreas(const Vec3f& p, AreaIndexVector & vec)
 	    q.push_back (node->child[i]) ;
       front++;
     }
+  return count;
 }
 
 void AreaSetOctree::getIntersectionList (const Vec3f& origin,

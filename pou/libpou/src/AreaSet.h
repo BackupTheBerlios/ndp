@@ -6,6 +6,9 @@
  * @brief  Area set
  *
  * $Log: AreaSet.h,v $
+ * Revision 1.5  2004/04/28 17:12:33  pumpkins
+ * Octree
+ *
  * Revision 1.4  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -89,7 +92,7 @@ public:
 
   // tab is a table of index of Areas that contient p
   // result is a numet of these Areas 
-  unsigned int getAreas(const Vec3f& p, unsigned int* tab);
+  virtual unsigned int getAreas(const Vec3f& p, unsigned int* tab);
 
   // flag=true  - copy this[index] to desination
   // flag=false - copy all but this[index] to destination

@@ -1,4 +1,11 @@
 2004-04-28  Thomas
+
+	* computation now uses octree
+	
+	* libpou/src/AreaSetOctree.cc (getAreas): getOctreeAreas converted to
+	getAreas interface
+
+	* libpou/src/AreaSet.h: getAreas made virtual
 	
 	* libpou/src/helpers/gzstream.h(gzstreambase): added is_open method
 

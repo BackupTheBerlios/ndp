@@ -6,6 +6,9 @@
  * @brief  Area set construction, octree based
  * 
  * $Log: AreaSetOctree.h,v $
+ * Revision 1.7  2004/04/28 17:12:33  pumpkins
+ * Octree
+ *
  * Revision 1.6  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -83,7 +86,7 @@ public:
 #if (__GNUC__==3) && (__GNUC_MINOR__==0)
   typedef std::hash_set<unsigned int> AreaIndexVector;
 #else  
-  typedef __gnu_cxx::hash_set<unsigned int> AreaIndexVector;
+  typedef std::vector<unsigned int> AreaIndexVector;
 #endif
   
  public:
@@ -104,14 +107,14 @@ public:
   void fillOctreeTableRec(AreaSetOctree::Node* node, int level);
   
   /// Fill tab with all the leaf node's index of the octree containing p.
-  void getOctreeAreas(const Vec3f& p, AreaIndexVector & vec);
+  unsigned int getAreas(const Vec3f& p, unsigned int *tab);
   
   /// fill vec with all the intersections of a ray (defined by origin and direction)  with the octree
   void getIntersectionList (const Vec3f& origin, 
 			    const Vec3f& direction, 
 			    IntersectionVector & vec);
   inline BoxVolume getBBox () const { return root->box;}
-  
+ 
  private:
   unsigned int threMin;
   unsigned int threMax;
