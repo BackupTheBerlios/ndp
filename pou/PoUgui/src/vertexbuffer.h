@@ -33,7 +33,7 @@ class VertexBuffer{
   int ResizeBuffer( Vec3f *dataptr, int size, int step );
   int DrawBuffer();
   void SetIndices( void *data, int size );
-  inline int getSize(){ return size; }
+  inline int getSize(){ return m_indices?m_indices_count:size; }
   inline int getStep(){ return step; }
   inline int getPolyType(){ return polytype; }
  private:

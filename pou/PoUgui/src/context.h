@@ -18,8 +18,9 @@ class OpenglContext {
   /* Draw the Head-Up-Display */
   void DrawHud();
   void ShowFps( bool flag );
+  void ShowStats( bool flag );
   inline bool getFpsState() { return m_showfps; }
-
+  inline bool getStatsState() { return m_showstats; }
   /********************/
   /* NEED SyncContext() */
   /********************/
@@ -73,6 +74,7 @@ class OpenglContext {
   float m_lightx, m_lighty, m_lightz;
   int m_lighttype;
   /* Stats */
+  bool m_showstats;
   bool m_showfps;
   float m_fps;
   int m_frames;

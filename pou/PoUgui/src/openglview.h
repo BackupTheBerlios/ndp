@@ -24,6 +24,7 @@ class OpenglWidget : public QGLWidget
   void resizeGL( int w, int h );
   void paintGL();
   inline OpenglContext *getOpenGLContext(){ return glcontext; }
+  inline VertexBuffer *getVertexBuffer() { return vb; }
 
  private:
   void mouseReleaseEvent( QMouseEvent * e);

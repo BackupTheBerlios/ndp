@@ -30,6 +30,7 @@
 #include "context.h"
 #include "openglview.h"
 #include "opengl.h"
+#include "vertexbuffer.h"
 
 #define DEG2RAD( x ) (x) * M_PI / 180.0
 
@@ -184,6 +185,15 @@ void OpenglContext::DrawLightPosition( bool flag )
 
 void OpenglContext::DrawHud()
 {
+  if( m_showstats ){
+    char spolys[32];
+    VertexBuffer *vb = m_parent ->getVertexBuffer();
+    int npolys = vb->getSize();
+    sprintf( spolys, "Triangles: %d", npolys );
+    glColor3f( 1.0, 1.0, 1.0 );
+    m_parent -> renderText( 10, 30, spolys );
+  }
+
   if( m_showfps ){
     int curtime;
     char sfps[32];
@@ -217,6 +227,11 @@ void OpenglContext::ShowFps( bool flag )
   m_showfps = flag;
   if( !m_showfps )
     m_lasttime = -1;
+}
+
+void OpenglContext::ShowStats( bool flag )
+{
+  m_showstats = flag;
 }
 
 void OpenglContext::SyncContext() 

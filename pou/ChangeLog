@@ -7,6 +7,8 @@
 
 2004-04-01  Damien
 
+	* openglview.cc: You can see stats using 's'
+
 	* openglview.cc: You must press 'f' to see fps
 
 	* BUG: segfault on some system if you use the default font for fps

@@ -126,7 +126,9 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
 void OpenglWidget::ParseKey( int key )
 {
   if( tolower(key) == 'f' )
-    glcontext -> ShowFps( !(glcontext -> getFpsState()) );    
+    glcontext -> ShowFps( !(glcontext -> getFpsState()) );
+  if( tolower(key) == 's' )
+    glcontext -> ShowStats( !(glcontext -> getStatsState()) );
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
