@@ -1,6 +1,3 @@
-/*OpenSG accumule les imprecisions*/
-/*OpenSG renvoit epsilon comme val max si tous le vecteur est entierement neg*/
-/*operator/ n'existe pas*/
 #include <limits>
 #include <algorithm>
 #include <functional>
@@ -14,12 +11,11 @@
 
 #include "math/vector3.h"
 #include "box3d.h"
+#include "apply.h"
+#include "equal.h"
 
 #define NUMVECTOR 100000
 #define RANGE 1000
-#define EPSILON 1
-
-/*------------------------*/
 
 std::ostream& operator<<(std::ostream& os, const osg::BoxVolume& b) {
   return os << b.getMin() << " | " << b.getMax();
@@ -27,171 +23,6 @@ std::ostream& operator<<(std::ostream& os, const osg::BoxVolume& b) {
 
 float frand() {
   return (((float)rand()/(float)RAND_MAX) - 0.5f)*2*RANGE;
-}
-
-template<typename Iterator, typename InputIterator, typename Function>
-void for_each_binary(Iterator first, Iterator last,
-                     InputIterator firstArg, Function f)
-{
-  while( first != last )
-    f(*first++, *firstArg++);
-}
-
-/*------------------------*/
-
-bool isequal(float a, float b) {
-  return (((a-b)>-EPSILON)&&((a-b)<EPSILON));
-}
-
-bool isequalBool(bool a, bool b) {
-  return a==b;
-}
-
-bool isequalVector(const Vec3f& a, const osg::Vec3f& b) {
-  return isequal(a.x, b.x()) && isequal(a.y, b.y()) && isequal(a.z, b.z());
-}
-
-bool isequalVectorDumb(const Vec3f& a, const Vec3f& b) {
-  return isequal(a.x, b.x) && isequal(a.y, b.y) && isequal(a.z, b.z);
-}
-
-/*-Box3d-----------------------*/
-bool isequalPnt(const Vec3f& a, const osg::Pnt3f& b) {
-  return isequalVector(a, osg::Vec3f(b));
-}
-
-bool isequalBox(const Box3f& a, const osg::BoxVolume& b) {
-  return isequalVector(a.getMin(), osg::Vec3f(b.getMin())) &&
-    isequalVector(a.getMax(), osg::Vec3f(b.getMax()));
-}
-
-/*--------------------------*/
-
-template<typename ContainSource, typename ContainSourceOSG,
-         typename ContainSource2, typename ContainSource2OSG,
-         typename Contain, typename ContainOSG, typename Predicate>
-void checkBinaryError(ContainSource &source, ContainSourceOSG &sourceOSG,
-                      ContainSource2 &source2, ContainSource2OSG &source2OSG,
-                      Contain res, ContainOSG resOSG, Predicate eq)
-{
-  using namespace std;
-  pair<typename Contain::iterator, typename ContainOSG::iterator> p;
-  p = mismatch(res.begin(), res.end(), resOSG.begin(), eq);
-  if(p.first == res.end())
-    cout << " OK" << endl;
-  else {
-    cout << "***Error***" << endl;
-    int i = distance(res.begin(), p.first);
-    cout <<"MATH: (" << source[i] << ") (" << source2[i] << ") = " << fixed << *p.first << resetiosflags(ios::floatfield)  << endl;
-    cout << "OSG: (" << sourceOSG[i] << ") (" << source2OSG[i] << ") = " << fixed << *p.second << resetiosflags(ios::floatfield) << endl;
-  }
-}
-
-template<typename ContainSource, typename ContainSourceOSG,
-         typename Contain, typename ContainOSG, typename Predicate>
-void checkUnaryError(ContainSource &source, ContainSourceOSG &sourceOSG,
-                     Contain res, ContainOSG resOSG, Predicate eq)
-{
-  using namespace std;
-  pair<typename Contain::iterator, typename ContainOSG::iterator> p;
-  p = mismatch(res.begin(), res.end(), resOSG.begin(), eq);
-  if(p.first == res.end())
-    cout << " OK" << endl;
-  else {
-    cout << "***Error" << endl;
-    int i = distance(res.begin(), p.first);
-    cout <<"(" << source[i] << ") = " << fixed << *p.first << resetiosflags(ios::floatfield)  << endl;
-    cout <<"(" << sourceOSG[i] << ") = " << fixed << *p.second << resetiosflags(ios::floatfield)  << endl;
-  }
-}
-
-/*------------------------------*/
-
-/*1 argument and non void return value*/
-template<typename UnaryFunction1, typename UnaryFunction2,
-         typename ContainSource1, typename ContainSource2,
-         typename ContainDest, typename ContainDestOSG,
-         typename BinaryPredicate>
-void testUnary(ContainSource1 &source, ContainSource2 &sourceOSG,
-               ContainDest &dest, ContainDestOSG &destOSG,
-               UnaryFunction1 f, UnaryFunction2 fOSG, BinaryPredicate eq)
-{
-  using namespace std;
-  transform(source.begin(), source.end(), dest.begin(), f);
-  transform(sourceOSG.begin(), sourceOSG.end(), destOSG.begin(), fOSG);
-  checkUnaryError(source, sourceOSG, dest, destOSG, eq);
-}
-
-/*1 argument and void return value*/
-template<typename UnaryFunction1, typename UnaryFunction2,
-         typename ContainSource, typename ContainSourceOSG,
-         typename BinaryPredicate>
-void testApply(ContainSource &source, ContainSourceOSG &sourceOSG,
-               UnaryFunction1 f, UnaryFunction2 fOSG, BinaryPredicate eq)
-{
-  using namespace std;
-  ContainSource tmp(source.size());
-  ContainSourceOSG tmpOSG(sourceOSG.size());
-  pair<typename ContainSource::iterator, typename ContainSourceOSG::iterator> p;
-  copy(source.begin(), source.end(), tmp.begin());
-  copy(sourceOSG.begin(), sourceOSG.end(), tmpOSG.begin());
-  for_each(tmp.begin(), tmp.end(), f);
-  for_each(tmpOSG.begin(), tmpOSG.end(), fOSG);
-  checkUnaryError(source, sourceOSG, tmp, tmpOSG, eq);
-}
-
-/*2 arguments and non void return value*/
-template<typename BinaryFunction1, typename BinaryFunction2,
-         typename ContainSource, typename ContainSourceOSG,
-         typename ContainSource2, typename ContainSource2OSG,
-         typename ContainDest, typename ContainDestOSG,
-         typename BinaryPredicate>
-void testBinary(ContainSource &source, ContainSourceOSG &sourceOSG,
-                ContainSource2 &source2, ContainSource2OSG &source2OSG,
-                ContainDest &dest, ContainDestOSG &destOSG,
-                BinaryFunction1 f, BinaryFunction2 fOSG, BinaryPredicate eq)
-{
-  using namespace std;
-  transform(source.begin(), source.end(), source2.begin(), dest.begin(), f);
-  transform(sourceOSG.begin(), sourceOSG.end(), source2OSG.begin(), destOSG.begin(), fOSG);
-  checkBinaryError(source, sourceOSG, source2, source2OSG, dest, destOSG, eq);
-}
-
-/*2 arguments and void return value*/
-template<typename BinaryFunction1, typename BinaryFunction2,
-         typename ContainSource, typename ContainSourceOSG,
-         typename ContainSource2, typename ContainSource2OSG,
-         typename BinaryPredicate>
-void testBinary(ContainSource &source, ContainSourceOSG &sourceOSG,
-                ContainSource2 &source2, ContainSource2OSG &source2OSG,
-                BinaryFunction1 f, BinaryFunction2 fOSG, BinaryPredicate eq)
-{
-  using namespace std;
-  ContainSource tmp(source.size());
-  ContainSourceOSG tmpOSG(sourceOSG.size());
-
-  copy(source.begin(), source.end(), tmp.begin());
-  copy(sourceOSG.begin(), sourceOSG.end(), tmpOSG.begin());
-  for_each_binary(tmp.begin(), tmp.end(), source2.begin(), f);
-  for_each_binary(tmpOSG.begin(), tmpOSG.end(), source2OSG.begin(), fOSG);
-  checkBinaryError(source, sourceOSG, source2, source2OSG, tmp, tmpOSG, eq);
-}
-
-/*2 arguments, void return value and result into second argument */
-template<typename BinaryFunction1, typename BinaryFunction2,
-         typename ContainSource, typename ContainSourceOSG,
-         typename ContainDest, typename ContainDestOSG,
-         typename BinaryPredicate>
-void testBinarySecond(ContainSource &source, ContainSourceOSG &sourceOSG,
-                      ContainDest &dest, ContainDestOSG &destOSG,
-                      BinaryFunction1 f, BinaryFunction2 fOSG,
-                      BinaryPredicate eq)
-{
-  using namespace std;
-
-  for_each_binary(source.begin(), source.end(), dest.begin(), f);
-  for_each_binary(sourceOSG.begin(), sourceOSG.end(), destOSG.begin(), fOSG);
-  checkUnaryError(source, sourceOSG, dest, destOSG, eq);
 }
 
 /*------------------------------*/
@@ -336,6 +167,48 @@ main(int argc, char** argv)
 
   cout << "Testing Box3f::extendBy(Vec3f &v)...";
   testBinary(boxPool, boxPoolOSG, vectorPool, pntPoolOSG, mem_fun_ref(&Box3f::extendBy), mem_fun_ref(static_cast<void (osg::BoxVolume::*)(const osg::Pnt3f&)>(&osg::BoxVolume::extendBy)), isequalBox);
+
+  cout << "Testing Box3f::setBoundsByCenterAndSize(Vec3f &v, Vec3f &u)...";
+  unsigned int i;
+  for(i = 0; i < RANGE; i++) {
+    Box3f b = boxPool[i];
+    Vec3f v1 = vectorPool[i];
+    Vec3f v2 = vectorPool2[i];
+    b.setBoundsByCenterAndSize(v1, v2);
+
+    osg::BoxVolume bOSG = boxPoolOSG[i];
+    osg::Vec3f v1OSG = vectorPoolOSG[i];
+    osg::Vec3f v2OSG = vectorPoolOSG2[i];    
+    bOSG.setBoundsByCenterAndSize(v1OSG, v2OSG);
+    
+    if( !(isequalPnt(b.getMin(), bOSG.getMin()) &&
+          isequalPnt(b.getMax(), bOSG.getMax()))) {
+      cout <<"MATH: (" << v1 << ") (" << v2 << ") (" <<   boxPool[i] << ") = " << fixed << b << resetiosflags(ios::floatfield)  << endl;
+      cout << "OSG: (" << v1OSG << ") (" << v2OSG << ") (" << boxPoolOSG[i] << ") = " << fixed << bOSG << resetiosflags(ios::floatfield) << endl;
+      break;
+    }
+  }
+  if( i == RANGE )
+    cout << " OK" << endl;
+
+  cout << "Testing Box3f::getBounds...";
+  for(i = 0; i < RANGE; i++) {
+    Vec3f v1, v2;
+    boxPool[i].getBounds(v1, v2);
+
+    osg::Vec3f v1OSG, v2OSG;
+    boxPoolOSG[i].getBounds(v1OSG, v2OSG);
+    
+    if( !(isequalPnt(v1, v1OSG) &&
+          isequalPnt(v2, v2OSG))) {
+      cout <<"MATH: (" <<  boxPool[i] << ") = " << fixed << v1 << " "  << v2 << resetiosflags(ios::floatfield)  << endl;
+      cout << "OSG: (" << boxPoolOSG[i] << ") = " << fixed << v1OSG << " " << v2OSG << resetiosflags(ios::floatfield) << endl;
+      break;
+    }
+  }
+  if( i == RANGE )
+    cout << " OK" << endl;
+
 
   return 0;
 }
