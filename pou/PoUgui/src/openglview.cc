@@ -106,10 +106,10 @@ void OpenglWidget::paintGL() {
 void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
   switch(e->button()) {
   case QMouseEvent::LeftButton:
-    glcontext -> StartRotationMode( e->x(), e->y() );
+    glcontext -> StartRotationMode( e->x(), e->y(), true );
     break;
   case QMouseEvent::RightButton: // Reset transformation
-    glcontext -> InitRotationMode();
+    glcontext -> InitRotationMode( true );
     if( !m_idledraw )
       updateGL();
     break;
@@ -122,7 +122,7 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
   switch(e->button()) {
   case QMouseEvent::LeftButton:
-    glcontext->StopRotationMode();
+    glcontext->StopRotationMode( true );
     glcontext->SyncContext();
     if( !m_idledraw )
       updateGL();
@@ -134,7 +134,7 @@ void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
 
 void OpenglWidget::mouseMoveEvent( QMouseEvent *e ) {
   if(e->state()&QMouseEvent::LeftButton) {
-    glcontext->RotateView( e->x(), e->y() );
+    glcontext->RotateView( e->x(), e->y(), true );
     glcontext->SyncContext();
     if( !m_idledraw )
       updateGL();
@@ -143,7 +143,7 @@ void OpenglWidget::mouseMoveEvent( QMouseEvent *e ) {
 
 void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
   e->accept();
-  glcontext -> ZoomView( e->delta() );
+  glcontext -> ZoomView( e->delta(), true );
   glcontext -> SyncContext();
   if( !m_idledraw )
     updateGL();
@@ -180,5 +180,6 @@ void OpenglView::closeEvent( QCloseEvent *e )
   delete glwidget;
   glwidget = NULL;
   //e->accept();
-  close();
+  //close();
+  hide();
 }

@@ -18,11 +18,11 @@ class OpenglContext {
   /********************/
   /* NEED SyncContext() */
   /********************/
-  void StartRotationMode( int x, int y );
-  void StopRotationMode();
-  void InitRotationMode();
-  void RotateView( int x, int y );
-  void ZoomView( double factor );
+  void StartRotationMode( int x, int y, bool camera );
+  void StopRotationMode( bool camera );
+  void InitRotationMode( bool camera );
+  void RotateView( int x, int y, bool camera );
+  void ZoomView( double factor, bool camera );
   
   void SetViewSize( int width, int height );
   void SetFov( double fov );
@@ -31,9 +31,9 @@ class OpenglContext {
   /* DON'T NEED SyncContext() */
   /****************************/
   void SetLighting( bool state );
-  void SetLightingType( int type );
-  void SetLightingPosition( float x, float y, float z );
-  void DrawLightingPosition( bool flag );
+  void SetLightType( int type );
+  void SetLightPosition( float x, float y, float z );
+  void DrawLightPosition( bool flag );
   
  protected:
   void mapToSphere(Vec3f &dest);  
@@ -49,12 +49,18 @@ class OpenglContext {
   double m_near;
   bool m_updateproj;
   bool m_updatemview;
-  /* Motion */
+  /* Camera Motion */
   double m_zoomfactor;
   Vec3f m_startVector;
   Quaternionf m_orientation, m_startOrientation;
   static const float DEF_ZOOM = 0.5;
   static const float INVSQRT2;
+
+  /* Light Motion */
+  double m_lightzoomfactor;
+  Vec3f m_lightstartVector;
+  Quaternionf m_lightorientation, m_lightstartOrientation;
+  
   /* Lighting */
   bool m_lightstate;
   bool m_lightdraw;

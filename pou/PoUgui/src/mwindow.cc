@@ -32,6 +32,7 @@
 #include <qfiledialog.h>
 #include <qpixmap.h>
 #include <qprogressdialog.h>
+#include <qtimer.h>
 
 #include <iostream>
 
@@ -158,8 +159,6 @@ void MWindow::closeEvent( QCloseEvent *event ) {
   QMainWindow::closeEvent( event );
 }
 
-//WARNING: if you add a return on't forget to call killTimers();
-
 void MWindow::menu_file_open() {
   int i;
   QString filename = QFileDialog::
@@ -167,9 +166,6 @@ void MWindow::menu_file_open() {
 		     "Sur -- Ouvrir Fichier" );
 
   if( !filename.isEmpty() ){
-
-    startTimer( 1000 );
-
     Vec3f *vPoints;
     Point *p;
     int step = sizeof(Point) / sizeof(Vec3f);
@@ -198,8 +194,6 @@ void MWindow::menu_file_open() {
     OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
     mw -> resize( 200, 200 );
     mw -> show();
-    
-    killTimers();
   }
 }
 
@@ -273,7 +267,8 @@ void MWindow::menu_rendering_render() {
     /* normal coords*/
     vertices[i*3+1] = vec_normals[i];
     /* color */
-    vertices[i*3+2] = Vec3f(1.0, 1.0, 1.0);
+    //ims->eval/*ColorRGB*/( vertices[i*3+2]/*, vertices[i*3]*/ );
+    vertices[i*3+2] = Vec3f( 0.5, 0.5, 0.5 );
   }
 
   for( i=0; i< nindices; i++ )

@@ -26,7 +26,6 @@
 
 
 #include <cmath>
-#include <sys/time.h>
 #include <qdatetime.h>
 #include "context.h"
 #include "opengl.h"
@@ -74,46 +73,68 @@ void OpenglContext::mapToSphere(Vec3f &v)
       v.z = 1.0f/(2*std::sqrt(len2)); // On the hyperbole
 }
 
-void OpenglContext::StartRotationMode( int x, int y )
+void OpenglContext::StartRotationMode( int x, int y, bool camera )
 {
-  m_startVector.setValues(x, y, 0);
-  mapToSphere(m_startVector);
-  m_updatemview = true;
+  if( camera ){
+    m_startVector.setValues(x, y, 0);
+    mapToSphere(m_startVector);
+    m_updatemview = true;
+  }
+  else{
+
+  }
 }
 
-void OpenglContext::StopRotationMode()
+void OpenglContext::StopRotationMode( bool camera )
 {
-  m_startOrientation = m_orientation;
-  m_updatemview = true;
+  if( camera ){
+    m_startOrientation = m_orientation;
+    m_updatemview = true;
+  }
+  else {
+
+  }
 }
 
-void OpenglContext::InitRotationMode()
+void OpenglContext::InitRotationMode( bool camera )
 {
+  if( camera ){
     m_orientation.toIdentity();
     m_startOrientation.toIdentity();
     m_zoomfactor = DEF_ZOOM;
     m_updatemview = true;
+  }
+  else {
+
+  }
 }
 
-void OpenglContext::RotateView( int x, int y ) 
+void OpenglContext::RotateView( int x, int y, bool camera ) 
 {
-  Quaternionf q;
-  Vec3f endVector(x, y, 0);
-  mapToSphere(endVector);
-  q.toRotationArc(m_startVector, endVector);
-  m_orientation = q*m_startOrientation;
-  m_orientation.normalize();
-  m_updatemview = true;
+  if( camera ) {
+    Quaternionf q;
+    Vec3f endVector(x, y, 0);
+    mapToSphere(endVector);
+    q.toRotationArc(m_startVector, endVector);
+    m_orientation = q*m_startOrientation;
+    m_orientation.normalize();
+    m_updatemview = true;
+  }
+  else {
+
+  }
 }
 
-void OpenglContext::ZoomView( double factor )
+void OpenglContext::ZoomView( double factor, bool camera )
 {
-  if( factor < 0 )
-    m_zoomfactor *= 0.9;
-  else
-    m_zoomfactor *= 1.1;
-
-  m_updatemview = true;
+  if( camera ){
+    if( factor < 0 )
+      m_zoomfactor *= 0.9;
+    else
+      m_zoomfactor *= 1.1;
+    
+    m_updatemview = true;
+  }
 }
 
 void OpenglContext::SetViewSize( int width, int height )
@@ -142,24 +163,22 @@ void OpenglContext::SetLighting( bool state )
   m_lightstate = state;
 }
 
-void OpenglContext::SetLightingType( int type )
+void OpenglContext::SetLightType( int type )
 {
   m_lighttype = type;
 }
 
-void OpenglContext::SetLightingPosition( float x, float y, float z )
+void OpenglContext::SetLightPosition( float x, float y, float z )
 {
   m_lightx = x;
   m_lighty = y;
   m_lightz = z;
 }
 
-void OpenglContext::DrawLightingPosition( bool flag )
+void OpenglContext::DrawLightPosition( bool flag )
 {
   m_lightdraw = flag;
 }
-
-//struct timeval tv;
 
 void OpenglContext::DrawHud()
 {
@@ -167,10 +186,6 @@ void OpenglContext::DrawHud()
     int curtime;
     QTime t = QTime::currentTime();
     curtime = ( t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
-    //gettimeofday( &tv, NULL );
-    /* convert time in ms */
-    //curtime = tv.tv_usec * 1000;
-    
     m_frames ++;
     
     if( m_lasttime == -1 ) {
