@@ -6,6 +6,11 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.5  2004/04/06 16:14:06  leserpent
+ * Added a removeDeleteAll() method.
+ * Points are no longer deleted into PointSet's destructor.
+ * It's better to call explicitly removeDeleteAll for that.
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -15,6 +20,7 @@
 #include <iostream>
 #include "PointSet.h"
 #include "math/vector3.h"
+#include "helpers/deletor.h"
 #include "box3d.h"
 
 using namespace std;
@@ -59,15 +65,6 @@ PointSet::PointSet(const PointSet& ps, int number):
 	  thre2 --;
 	}
     }
-}
-
-void
-PointSet::clear()
-{
-  PointList::iterator end = getEnd();
-  for(PointList::iterator i = getBegin(); i != end; ++i)
-    delete *i;
-  points.clear();
 }
 
 void 
@@ -141,7 +138,6 @@ PointSet::load(const char* filename)
   ifstream fs(filename);
   int counter = 0;
 
-  clear();
   cout << "Reading... " << endl;
   while(!fs.eof())
     {

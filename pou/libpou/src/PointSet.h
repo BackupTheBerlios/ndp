@@ -4,6 +4,11 @@
  * @date   Mon Apr  5 20:40:07 2004
  * 
  * $Log: PointSet.h,v $
+ * Revision 1.6  2004/04/06 16:14:06  leserpent
+ * Added a removeDeleteAll() method.
+ * Points are no longer deleted into PointSet's destructor.
+ * It's better to call explicitly removeDeleteAll for that.
+ *
  * Revision 1.5  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -17,6 +22,7 @@
 #include <vector>
 #include "Area.h"
 #include "math/vector3.h"
+#include "helpers/deletor.h"
 #include "box3d.h"
 
 static const float colors[][3]={
@@ -137,7 +143,6 @@ public:
   //choose _number_ points from _ps_
   PointSet(const PointSet& ps, int number);
 
-  ~PointSet() { clear(); }
   // ---.oOo.---
   
   void getIndicesInArea(const Area* a, 
@@ -184,7 +189,13 @@ public:
 
   void removeAll(void)
   {
-    clear();
+    points.clear();
+  }
+
+  void removeDeleteAll(void)
+  {
+    for_each(points.begin(), points.end(), DeleteObject());
+    points.clear();
   }
 
   void remove(PointList::iterator i)
@@ -194,7 +205,7 @@ public:
 
   void remove(Point* p)
   {
-    points.remove(p);           // FIXME:Should we do a delete?
+    points.remove(p);
   }
 
 
