@@ -1,3 +1,7 @@
+2004-03-30 Damien
+	
+	* Bugs Fix in mwindow.cc
+	
 2004-03-28  Ben  <leserpent@berlios.de>
 
 	* libpou/src/AreaSetOctree.h (class AreaSetOctree): Use
@@ -8,6 +12,7 @@
 	* libpou/src/math/: Moved matrix* from PoUgui/src to libpou/src/math/
 
 2004-03-28 Damien
+
 	* Roation functions moved from openglview.cc to context.cc
 	* Copyright notice added to *.cc files
 

@@ -165,6 +165,11 @@ void MWindow::menu_file_open() {
 
     ps = new PointSet();    
     ps -> load( filename ); 
+    if( vbPoints ){
+      CloseWindows();
+      delete vbPoints;
+      }
+    	
     PointList::iterator psiterator = ps->getBegin();
     nPoints = ps->size(); 
     vPoints = new Vec3f [ nPoints * step];

@@ -29,36 +29,36 @@ template<class T> class Matrix3{
   }
 
   inline Matrix3<T>& operator*( Matrix3<T>& m ) {
-    Matrix3<T> *o = new Matrix3<T>;
+    Matrix3<T> o;
     for( int i=0; i<3; i++){
-      o->data[i][0] = data[i][0] * m.data[0][0] +
+      o.data[i][0] = data[i][0] * m.data[0][0] +
 	data[i][1] * m.data[1][0] + data[i][2] * m.data[2][0];
-      o->data[i][1] = data[i][0] * m.data[0][1] +
+      o.data[i][1] = data[i][0] * m.data[0][1] +
 	data[i][1] * m.data[1][1] + data[i][2] * m.data[2][1];
-      o->data[i][2] = data[i][0] * m.data[0][2] +
+      o.data[i][2] = data[i][0] * m.data[0][2] +
 	data[i][1] * m.data[1][2] + data[i][2] * m.data[2][2];
     }
-    return *o;
+    return o;
   }
 
   inline Matrix3<T>& operator+( Matrix3<T>& m ) {
-    Matrix3<T> *o = new Matrix3<T>;    
+    Matrix3<T> o;    
     for( int i=0; i<3; i++){
-      o->data[i][0] = m.data[i][0] + data[i][0];
-      o->data[i][1] = m.data[i][1] + data[i][1];
-      o->data[i][2] = m.data[i][2] + data[i][2];			     
+      o.data[i][0] = m.data[i][0] + data[i][0];
+      o.data[i][1] = m.data[i][1] + data[i][1];
+      o.data[i][2] = m.data[i][2] + data[i][2];			     
     }
     return *o;
   }
 
   inline Matrix3<T>& operator-( Matrix3<T>& m ) {
-    Matrix3<T> *o = new Matrix3<T>;    
+    Matrix3<T> o;    
     for( int i=0; i<3; i++){
-      o->data[i][0] = m.data[i][0] - data[i][0];
-      o->data[i][1] = m.data[i][1] - data[i][1];
-      o->data[i][2] = m.data[i][2] - data[i][2];			     
+      o.data[i][0] = m.data[i][0] - data[i][0];
+      o.data[i][1] = m.data[i][1] - data[i][1];
+      o.data[i][2] = m.data[i][2] - data[i][2];			     
     }
-    return *o;
+    return o;
   }
 
   inline Matrix3<T>& operator+=( Matrix3<T>& m ) {

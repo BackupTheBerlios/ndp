@@ -29,38 +29,38 @@ template<class T> class Matrix4{
   }
 
   Matrix4<T>& operator*( Matrix4<T>& m ) {
-    Matrix4<T> *o = new Matrix4<T>;
+    Matrix4<T> o;
     for( int i=0; i<4; i++){
-      o->data[i][0] = data[i][0] * m.data[0][0] + data[i][1] * m.data[1][0] + 
+      o.data[i][0] = data[i][0] * m.data[0][0] + data[i][1] * m.data[1][0] + 
 	data[i][2] * m.data[2][0] + data[i][3] * m.data[3][0]; 
-      o->data[i][1] = data[i][0] * m.data[0][1] + data[i][1] * m.data[1][1] + 
+      o.data[i][1] = data[i][0] * m.data[0][1] + data[i][1] * m.data[1][1] + 
 	data[i][2] * m.data[2][1] + data[i][3] * m.data[3][1];
-      o->data[i][2] = data[i][0] * m.data[0][2] + data[i][1] * m.data[1][2] + 
+      o.data[i][2] = data[i][0] * m.data[0][2] + data[i][1] * m.data[1][2] + 
 	data[i][2] * m.data[2][2] + data[i][3] * m.data[3][2];
-      o->data[i][3] = data[i][0] * m.data[0][3] + data[i][1] * m.data[1][3] + 
+      o.data[i][3] = data[i][0] * m.data[0][3] + data[i][1] * m.data[1][3] + 
 	data[i][2] * m.data[2][3] + data[i][3] * m.data[3][3];
     }
-    return *o;
+    return o;
   }
   
   Matrix4<T>& operator+( Matrix4<T>& m ) {
-    Matrix4<T> *o = new Matrix4<T>;    
+    Matrix4<T> o;    
     for( int i=0; i<4; i++){
-      o->data[i][0] = m.data[i][0] + data[i][0];
-      o->data[i][1] = m.data[i][1] + data[i][1];
-      o->data[i][2] = m.data[i][2] + data[i][2];
-      o->data[i][3] = m.data[i][3] + data[i][3];
+      o.data[i][0] = m.data[i][0] + data[i][0];
+      o.data[i][1] = m.data[i][1] + data[i][1];
+      o.data[i][2] = m.data[i][2] + data[i][2];
+      o.data[i][3] = m.data[i][3] + data[i][3];
     }
-    return *o;
+    return o;
   }
   
   Matrix4<T>& operator-( Matrix4<T>& m ) {
-    Matrix4<T> *o = new Matrix4<T>;    
+    Matrix4<T> o;    
     for( int i=0; i<4; i++){
-      o->data[i][0] = m.data[i][0] - data[i][0];
-      o->data[i][1] = m.data[i][1] - data[i][1];
-      o->data[i][2] = m.data[i][2] - data[i][2];
-      o->data[i][3] = m.data[i][3] - data[i][3];
+      o.data[i][0] = m.data[i][0] - data[i][0];
+      o.data[i][1] = m.data[i][1] - data[i][1];
+      o.data[i][2] = m.data[i][2] - data[i][2];
+      o.data[i][3] = m.data[i][3] - data[i][3];
     }
     return *o;
   }

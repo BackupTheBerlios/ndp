@@ -58,6 +58,7 @@ int VertexBuffer::CreateVertexBuffer( Vec3f *dataptr, int size, int step,
     this->size = size;
     this->step = step;
     this->polytype = polytype;
+    printf("New: size = %d\n", size*step);
     ptr = new Vec3f [ size*step ];
     if( !ptr )
       return -1;
