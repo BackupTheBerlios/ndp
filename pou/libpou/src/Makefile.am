@@ -5,8 +5,8 @@ libpou_la_SOURCES=AreaCube.cc AreaSet.cc \
 	ConstructRBFPOU.cc ImplicitSurface3D.cc ConstraintSet.cc
 
 pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
-	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h AreaSet.h \
-	Constraint.h PointSet.h vector3.h \
+	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h \
+	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h vector3.h \
 	ConstraintFilter.h Solver.h ConstructRBF.h W.h \
 	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h
 
