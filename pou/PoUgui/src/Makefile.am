@@ -14,7 +14,7 @@ PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc \
 nodist_PoUgui_SOURCES=settings.h settings.cc msettings.cc
 
 PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@
-PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la 
+PoUgui_LDFLAGS=../$(top_srcdir)/libpou/src/libpou.la mc/mc2.o
 PoUgui_LDADD=@QT_LIBS@ @GL_LIBS@
 
 
