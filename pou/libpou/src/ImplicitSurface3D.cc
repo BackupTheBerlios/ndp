@@ -1,8 +1,9 @@
 #include "ImplicitSurface3D.h"
 #include "PointSet.h"
 #include "ConstraintSet.h"
-#include <fstream>
 #include "ConstraintFilter.h"
+
+#include <fstream>
 
 
 class ConstraintFilterRGB : public ConstraintFilter {
@@ -61,6 +62,9 @@ ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
   b = new ConstructRBFPOU(_type);
   cs = new ConstraintSet();
   projDist=0.03f;
+  unsigned int min,max;
+  rbf->getThresholds(min, max);
+  rbf->setThresholds(min*3, max*3);
 }
 
 ImplicitSurface3D::~ImplicitSurface3D() {

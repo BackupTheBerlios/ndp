@@ -6,6 +6,7 @@
 #include "PointSet.h"
 #include <string>
 #include <vector>
+#include <cassert>
 
 class ImplicitSurface3D {
  public:
@@ -32,6 +33,7 @@ class ImplicitSurface3D {
   }
 
   void setCallBack(void (*c)(int, int), int s) {
+    assert(rbf&&r&&g&&b);
     rbf->setCallBack(c, s);
     r->setCallBack(c, s);
     g->setCallBack(c, s);
@@ -45,6 +47,14 @@ class ImplicitSurface3D {
   }
   float getProjDist() {
     return projDist;
+  }
+
+  void setThresholds(unsigned int tMin, unsigned tMax) {
+    assert(rbf&&r&&g&&b);
+    rbf->setThresholds(tMin, tMax);
+    r->setThresholds(tMin, tMax);
+    g->setThresholds(tMin, tMax);
+    b->setThresholds(tMin, tMax);
   }
 
  private:
