@@ -21,12 +21,16 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_C_INLINE
 
+AC_LANG([C++])
+
 dnl Checks for header files.
 AC_HEADER_STDC
 
 dnl Enable libtool without static lib build
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
+
+AC_CHECK_HEADER([ext/hash_set], :, AC_MSG_ERROR([*** cannot find hash_set header ***]))
 
 AM_PATH_GSL(1.3, :, AC_MSG_ERROR([*** libgsl not found ***]))
 

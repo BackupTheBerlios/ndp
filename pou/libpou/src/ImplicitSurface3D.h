@@ -2,14 +2,20 @@
 #define IMPLICITESURFACE3D_H
 
 #include "ConstructRBFPOU.h"
+#include "Constraint.h"
+#include "PointSet.h"
+#include <string>
+#include <vector>
 
 class ImplicitSurface3D {
  public:
   ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type = 
 		    ConstructRBFPOU::TRIHARMONIC);
   ~ImplicitSurface3D();
-  void load(std::string filename);
-  void save(std::string filename) const;
+  compute(PointSet &ps);
+
+  void load(const std::string &filename);
+  void save(const std::string &filename) const;
 
   float eval(const Vec3f &p) const;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
@@ -18,6 +24,8 @@ class ImplicitSurface3D {
 
  private:
   ConstructRBFPOU *rbf;
+  ConstructRBFPOU *r,g,b;
+  std::vector<Constraint> *cs;
 };
 
 inline const ConstructRBFPOU *ImplicitSurface3D::getRBFPOU() const {

@@ -7,7 +7,7 @@
 
 #include <fstream>
 #include <vector>
-#include <hash_set.h>
+#include <ext/hash_set>
 #include "vector3.h"
 #include "box3d.h"
 
@@ -67,7 +67,7 @@ public:
   
   typedef std::vector<Intersection> IntersectionVector;
   //  typedef std::vector<unsigned int> AreaIndexVector;
-  typedef hash_set<unsigned int/*, hash<unsigned int>, std::equal_to<unsigned int > */> AreaIndexVector;
+  typedef __gnu_cxx::hash_set<unsigned int/*, hash<unsigned int>, std::equal_to<unsigned int > */> AreaIndexVector;
 
 public:
   void create(const PointSet& ps, 
