@@ -1,6 +1,8 @@
 2004-04-27  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/context.cc (SyncContext): Added a gluLookAt
+	(SyncContext): glEnable(GL_NORMALIZE) needed for renormalizing
+	normal after a scale(fix specular problem).
 
 2004-04-27 Damien
 	
