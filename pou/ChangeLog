@@ -1,5 +1,12 @@
 2004-04-27  Ben  <leserpent@berlios.de>
 
+	* libpou/tests/Makefile.am: Added quaterniontest.cc
+
+	* libpou/tests/quaterniontest.cc: Completed tests
+
+	* PoUgui/src/context.cc: Added a comment about gcc 3.0 and static
+	arrays.
+
 	* libpou/tests/quaterniontest.cc: Test for quaternion(not finished).
 
 	* libpou/src/math/matrix4.h: Changed << for test
