@@ -10,9 +10,13 @@ pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h \
 	ConstraintFilter.h Solver.h ConstructRBF.h W.h \
 	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h Md5.h
+
 pkgincludemathdir=@includedir@/@PACKAGE_NAME@
 pkgincludemath_HEADERS=math/vector3.h math/quaternion.h math/matrix4.h \
 	math/matrix3.h math/matrix.h
+
+pkgincludehelpersdir=@includedir@/@PACKAGE_NAME@
+pkgincludehelpers_HEADERS=helpers/md5.h helpers/deletor.h
 
 
 libpou_la_CXXFLAGS=@GSL_CFLAGS@
