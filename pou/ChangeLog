@@ -1,7 +1,12 @@
+2004-04-28 Loic
+
+	* PoUgui/src/context.cc : added helper for light control
+	
 2004-04-29  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
 
 	* libpou/src/AreaSet.h (class AreaSet): Use a vector<unsigned int>
 	for area indices.
+
 
 2004-04-28  Thomas
 	* update version number to 1.0, because of release
