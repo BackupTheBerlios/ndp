@@ -102,10 +102,11 @@ public:
   void toRotationArc(Vector3<T> &u, Vector3<T> &v) {
     u.normalize();
     v.normalize();
-    if(u==v)
+    Vector3<T> w = u.cross(v);
+    
+    if(w.length2()<=Vec3f::epsilon)
       setValues(0, 0, 0, 1);
     else {
-      Vector3<T> w = u.cross(v);
       T d = u*v;
       T s = std::sqrt((1+d)*2);
       setValues(w.x/s, w.y/s, w.z/s, s/T(2));
