@@ -1,3 +1,7 @@
+2004-04-22  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mc/mc2.cc (clear): Forgotten to clear indices vector.
+
 2004-04-20  Thomas
 	* libpou/src/{ConstructRBF*, PointSet.*}: switch to gzstream
 	* libpou/src/helpers/gzstream{.C,.h}: support for zlib compressed
