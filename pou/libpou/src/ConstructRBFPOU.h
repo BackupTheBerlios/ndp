@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.11  2004/04/26 07:45:34  leserpent
+ * Added a typedef for the callback function
+ *
  * Revision 1.10  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -49,6 +52,7 @@
 #include "ConstructRBFBiHarmonic.h"
 #include "ConstructRBFTriHarmonic.h"
 #include "ConstructRBFThinPlate.h"
+#include "helpers/callback.h"
 
 class ConstructRBFPOU {
  public:
@@ -76,7 +80,7 @@ class ConstructRBFPOU {
   const AreaSet *getOctree();  
   void setFilter(ConstraintFilter *f, int p = 0);
 
-  void setCallBack(bool (*c)(int, int), int s, int pass = 0, int numPass = 1) {
+  void setCallBack(Callback c, int s, int pass = 0, int numPass = 1) {
     step = (s!=0)?s:step;
     this->pass = pass;
     this->numPass = (numPass!=0)?numPass:1;
@@ -99,7 +103,7 @@ class ConstructRBFPOU {
   ConstructRBF *newRBF(void);
   
   void applyFilter(ConstraintSet &cs);
-  bool (*callback)(int v, int max);
+  Callback callback;
   int step, pass, numPass;
 };
 

@@ -6,6 +6,9 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.14  2004/04/26 07:45:34  leserpent
+ * Added a typedef for the callback function
+ *
  * Revision 1.13  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -44,6 +47,7 @@
 #include "ConstructRBFPOU.h"
 #include "Constraint.h"
 #include "PointSet.h"
+#include "helpers/callback.h"
 #include <string>
 #include <vector>
 #include <cassert>
@@ -80,7 +84,7 @@ class ImplicitSurface3D {
     v.setValues(r->eval(p), g->eval(p), b->eval(p));
   }
 
-  void setCallBack(bool (*c)(int, int), int s) {
+  void setCallBack(Callback c, int s) {
     assert(rbf&&r&&g&&b);
     rbf->setCallBack(c, s);
     r->setCallBack(c, s, 0, 3);
