@@ -1,3 +1,10 @@
+2004-04-27 loic martin  <lemartinpecheur@berlios.de>
+	* PoUgui/src/context.cc:added diffuse, specular and shininess control
+	* PoUgui/src/context.h:added diffuse, specular and shininess
+	control and associate variables
+	* PoUgui/src/openglview.cc:added control key for diffuse,
+	specular, shininess.
+	
 2004-04-27  Ben  <leserpent@berlios.de>
 
 	* libpou/tests/Makefile.am: Added quaterniontest.cc

@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.38  2004/04/27 17:55:37  lemartinpecheur
+ * added light control
+ *
  * Revision 1.37  2004/04/27 14:32:37  ob821
  * bugfix
  *
@@ -236,24 +239,48 @@ OpenglWidget::ParseKey (int key, int key_ascii)
     break;
 
   case Qt::Key_Plus:
-    m_glcontext->MoveLight (0, 0, -0.2);
-    break;
-
-  case Qt::Key_Minus:
     m_glcontext->MoveLight (0, 0, 0.2);
+    break;
+    
+  case Qt::Key_Minus:
+    m_glcontext->MoveLight (0, 0, -0.2);
     break;
     
   case Qt::Key_1:
     m_glcontext->SetLightType (OpenglContext::LIGHT_FLAT);
     break;
-
+    
   case Qt::Key_2:
     m_glcontext->SetLightType (OpenglContext::LIGHT_SMOOTH);
     break;
     
-  }
+  case Qt::Key_4:
+    m_glcontext->ChangeShininess (-2.0);
+    break;
+    
+  case Qt::Key_7:
+    m_glcontext->ChangeShininess (2.0);
+    break;
+    
+  case Qt::Key_5:
+    m_glcontext->ChangeDiffuse (-0.05, -0.05, -0.05);
+    break;
+    
+  case Qt::Key_8:
+    m_glcontext->ChangeDiffuse (0.05, 0.05, 0.05);
+    break;
+    
+  case Qt::Key_6:
+    m_glcontext->ChangeSpecular (-0.05, -0.05, -0.05);
+    break;
+    
+  case Qt::Key_9:
+    m_glcontext->ChangeSpecular (0.05, 0.05, 0.05);
+    break;
 
-  if (!m_idledraw)
+  }
+  
+  if( !m_idledraw )
     updateGL();
 }
 

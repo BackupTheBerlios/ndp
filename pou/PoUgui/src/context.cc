@@ -71,12 +71,19 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_lightry = 0;
   m_lightdistance = 0;
   m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
-  m_light_ambient = Vec3f( 0.3, 0.3, 0.3 );
+  //m_light_ambient = Vec3f( 0.3, 0.3, 0.3 );
   m_light_diffuse = Vec3f( 0.2, 0.2, 0.2 );
   m_light_specular = Vec3f( 0.4, 0.4, 0.4 );
-  
+  m_light_cst_atenuation = 1.0;
+  m_light_lin_atenuation = 0.1;
+  m_light_quad_atenuation = 0.1;
+  m_material_ambient = Vec3f( 0.3, 0.3, 0.3 ) ;
+  m_material_diffuse = Vec3f( 0.2, 0.2, 0.2 );
+  m_material_specular = Vec3f( 0.4, 0.4, 0.4 );
+  m_material_shininess = 0.0f;
+
   m_polygonmode = false;
-  m_colorflag = false;
+  m_colorflag = true;
   /* init font */
   //m_font.setStyleStrategy( QFont::OpenGLCompatible );
   m_font.setFamily("fixed");
@@ -193,7 +200,8 @@ void OpenglContext::SetLighting( bool state )
       glEnable (GL_LIGHTING);
       glEnable (GL_LIGHT0);
       float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
-      glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+      glLightfv (GL_LIGHT0, GL_POSITION, (float *)pos);
+      SetLight ();
       SetMaterial ();
       glPopMatrix();
     }
@@ -203,6 +211,14 @@ void OpenglContext::SetLighting( bool state )
   }
 }
 
+void OpenglContext::SetLight ()
+{
+  glLightfv (GL_LIGHT0, GL_POSITION, &m_light_diffuse.x);
+  glLightfv (GL_LIGHT0, GL_SPECULAR, &m_light_specular.x);
+  glLightfv (GL_LIGHT0, GL_CONSTANT_ATTENUATION, &m_light_cst_atenuation);
+  glLightfv (GL_LIGHT0, GL_LINEAR_ATTENUATION, &m_light_lin_atenuation);
+  glLightfv (GL_LIGHT0, GL_QUADRATIC_ATTENUATION, &m_light_quad_atenuation);
+}
 void OpenglContext::SetLightType( OpenglContext::LightType type )
 {
   m_lighttype = type;
@@ -248,11 +264,59 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
   glPopMatrix();
 }
 
+void OpenglContext::ChangeShininess (float change)
+{
+  m_material_shininess += change;
+  m_material_shininess = (m_material_shininess < 0.0)?0.0:m_material_shininess;
+  m_material_shininess = (m_material_shininess > 128.0)?128.0:m_material_shininess;
+  glPushMatrix();
+  glLoadIdentity();
+  glMaterialfv( GL_FRONT_AND_BACK, GL_SHININESS, &m_material_shininess );
+  glPopMatrix();
+
+}
+
+void OpenglContext::ChangeDiffuse (float changex, float changey, float changez)
+{
+  m_light_diffuse.x += changex;
+  m_light_diffuse.x = (m_light_diffuse.x < 0.0)?0.0:m_light_diffuse.x;
+  m_light_diffuse.x = (m_light_diffuse.x > 1.0)?1.0:m_light_diffuse.x;
+  m_light_diffuse.y += changey;
+  m_light_diffuse.y = (m_light_diffuse.y < 0.0)?0.0:m_light_diffuse.y;
+  m_light_diffuse.y = (m_light_diffuse.y > 1.0)?1.0:m_light_diffuse.y;
+  m_light_diffuse.z += changez;
+  m_light_diffuse.z = (m_light_diffuse.z < 0.0)?0.0:m_light_diffuse.z;
+  m_light_diffuse.z = (m_light_diffuse.z > 1.0)?1.0:m_light_diffuse.z;
+  glPushMatrix();
+  glLoadIdentity();
+  glLightfv( GL_LIGHT0, GL_DIFFUSE, &m_light_diffuse.x );
+  glPopMatrix();
+
+}
+
+void OpenglContext::ChangeSpecular (float changex, float changey, float changez)
+{
+  m_material_specular.x += changex;
+  m_material_specular.x = (m_material_specular.x < 0.0)?0.0:m_material_specular.x;
+  m_material_specular.x = (m_material_specular.x > 1.0)?1.0:m_material_specular.x;
+  m_material_specular.y += changey;
+  m_material_specular.y = (m_material_specular.y < 0.0)?0.0:m_material_specular.y;
+  m_material_specular.y = (m_material_specular.y > 1.0)?1.0:m_material_specular.y;
+  m_material_specular.z += changez;
+  m_material_specular.z = (m_material_specular.z < 0.0)?0.0:m_material_specular.z;
+  m_material_specular.z = (m_material_specular.z > 1.0)?1.0:m_material_specular.z;
+  glPushMatrix();
+  glLoadIdentity();
+  glMaterialfv (GL_FRONT_AND_BACK, GL_SPECULAR, &m_material_specular.x );
+  //glLightfv (GL_LIGHT0, GL_SPECULAR,  &m_material_specular.x);
+  glPopMatrix();
+}
+
 void OpenglContext::SetMaterial ()
 {
-  glMaterialfv( GL_BACK, GL_AMBIENT, &m_light_ambient.x );
-  glMaterialfv( GL_BACK, GL_DIFFUSE, &m_light_diffuse.x );
-  glMaterialfv( GL_BACK, GL_SPECULAR, &m_light_specular.x );
+  glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT, &m_material_ambient.x );
+  glMaterialfv( GL_FRONT_AND_BACK, GL_DIFFUSE, &m_material_diffuse.x );
+  glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, &m_material_specular.x );
 }
 
 void OpenglContext::OppositeColorFlags ()
@@ -329,9 +393,22 @@ void OpenglContext::DrawHud()
   glColor3f( 1.0, 1.0, 1.0 );
   if( m_showstats ){
     QString spolys("Triangles ");
+    QString sshininess ("Shininess ");
+    QString sdiffuse ("Diffuse (");
+    QString sspecular ("Specular (");
     VertexBuffer *vb = m_parent ->getVertexBuffer();
     spolys += QString::number(vb->getSize());
     m_parent->renderText( 10, starty+40, spolys, m_font );
+    sshininess += QString::number (m_material_shininess);
+    m_parent->renderText( 10, starty+50, sshininess, m_font );
+    sdiffuse += QString::number(m_light_diffuse.x) + ", ";
+    sdiffuse += QString::number(m_light_diffuse.y) + ", ";
+    sdiffuse += QString::number(m_light_diffuse.z) + " )";
+    m_parent->renderText( 10, starty+60, sdiffuse, m_font );
+    sspecular += QString::number(m_material_specular.x) + ", ";
+    sspecular += QString::number(m_material_specular.y) + ", ";
+    sspecular += QString::number(m_material_specular.z) + " )";
+    m_parent->renderText( 10, starty+70, sspecular, m_font );
   }
 
   if( m_showfps ){

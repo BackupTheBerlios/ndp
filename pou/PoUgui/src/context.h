@@ -46,8 +46,12 @@ class OpenglContext {
   /****************************/
   void SetDepthTest (bool state);
   void SetLighting (bool state);
+  void SetLight ();
   void SetLightType (LightType type);
   void MoveLight (int anglex, int angley, double distance);
+  void ChangeShininess (float change);
+  void ChangeDiffuse (float changex, float changey, float changez);
+  void ChangeSpecular (float changex, float changey, float changez);
   void SetMaterial ();
   void OppositeColorFlags ();
   void OppositePolygonMode ();
@@ -83,7 +87,9 @@ class OpenglContext {
   bool m_lightstate, m_lightdraw;
   int m_lighttype;
   Vec3f m_light_ambient, m_light_diffuse, m_light_specular;
-
+  float m_light_cst_atenuation, m_light_lin_atenuation, m_light_quad_atenuation;
+  Vec3f m_material_ambient, m_material_diffuse, m_material_specular;
+  float m_material_shininess;
   /* Polygon Mode*/
   bool m_polygonmode;
   /* Material*/
