@@ -195,6 +195,10 @@ void OpenglContext::SetLighting( bool state )
       float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
       glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
     }
+  else{
+      glDisable (GL_LIGHTING);
+      glDisable (GL_LIGHT0);
+  }
 }
 
 void OpenglContext::SetLightType( int type )

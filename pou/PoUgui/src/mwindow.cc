@@ -223,6 +223,7 @@ void MWindow::menu_rendering_render() {
   int filter_npoints = settingsForm -> getPointsCount();
   int mc_maxit = settingsForm -> getMaxIteration();
   float mc_cubesize = settingsForm -> getCubeSize();
+  bool enabletet = settingsForm -> isTetEnable();
 
   if( !vbPoints )
     return;
@@ -244,9 +245,8 @@ void MWindow::menu_rendering_render() {
   MCubes = new Mc(callback, 10);
   MCubes->setMaxIteration( mc_maxit );
   MCubes->setCubeSize( mc_cubesize );
-  printf("[D] Start Surface reconstruction\n");
+  MCubes->enableTet( enabletet );
   ims->compute( ps, filter_npoints );
-  printf("[D] Start Marching Cubes\n");
   qpd->setLabelText("Polygonizing surface...");
   MCubes -> domc(ims, m_bbox);
   MCubes -> getPoints(vecPoints);

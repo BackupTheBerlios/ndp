@@ -138,17 +138,24 @@ void OpenglWidget::ParseKey( int key, int key_ascii )
   if( tolower(key_ascii) == 'p' )
     glcontext -> ShowLightPosition( !(glcontext -> getLightPositionState()) );
 
-  if( key == Qt::Key_Right)
+  if( key == Qt::Key_Left)
     glcontext -> MoveLight( 0, 5, 0.0 );
 
-  if(  key == Qt::Key_Left )
+  if(  key == Qt::Key_Right )
     glcontext -> MoveLight( 0, -5, 0.0 );
 
-  if(  key == Qt::Key_Up )
+  if(  key == Qt::Key_Down )
     glcontext -> MoveLight( 5, 0, 0.0 );
 
-  if(  key == Qt::Key_Down )
+  if(  key == Qt::Key_Up )
     glcontext -> MoveLight( -5, 0, 0.0 );
+
+  if( tolower(key_ascii) == '+' )
+    glcontext -> MoveLight( 0, 0, -0.2 );
+
+  if( tolower(key_ascii) == '-' )
+    glcontext -> MoveLight( 0, 0, 0.2 );
+
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {

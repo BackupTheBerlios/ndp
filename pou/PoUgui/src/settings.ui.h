@@ -31,6 +31,8 @@ void SettingsForm::pushButton3_clicked()
     if( res )
 	m_maxiteration = maxit;
     
+    m_enabletet = entry_mc_tet-> isChecked();
+    
     hide();
 }
 
@@ -70,9 +72,15 @@ float SettingsForm::getCubeSize()
     return m_cubesize;
 }
 
+bool SettingsForm::isTetEnable()
+{
+    return m_enabletet;
+}
+
 void SettingsForm::Init()
 {
     m_pointscount = 3000;
     m_cubesize = 0.05;
      m_maxiteration = 10;
+     m_enabletet = false;
 }

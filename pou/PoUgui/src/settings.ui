@@ -292,22 +292,6 @@
                     <string>Cube Size:</string>
                 </property>
             </widget>
-            <widget class="QCheckBox">
-                <property name="name">
-                    <cstring>checkBox1</cstring>
-                </property>
-                <property name="geometry">
-                    <rect>
-                        <x>330</x>
-                        <y>60</y>
-                        <width>90</width>
-                        <height>21</height>
-                    </rect>
-                </property>
-                <property name="text">
-                    <string>Enable Tet</string>
-                </property>
-            </widget>
             <widget class="QLineEdit">
                 <property name="name">
                     <cstring>entry_mc_cs</cstring>
@@ -362,6 +346,22 @@
                     <string>Max Iteration:</string>
                 </property>
             </widget>
+            <widget class="QCheckBox">
+                <property name="name">
+                    <cstring>entry_mc_tet</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>330</x>
+                        <y>60</y>
+                        <width>90</width>
+                        <height>21</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Enable Tet</string>
+                </property>
+            </widget>
         </widget>
         <widget class="QWidget">
             <property name="name">
@@ -414,6 +414,7 @@
     <include location="local" impldecl="in implementation">settings.ui.h</include>
 </includes>
 <variables>
+    <variable>bool m_enabletet;</variable>
     <variable>int m_maxiteration;</variable>
     <variable>int m_pointscount;</variable>
     <variable>float m_cubesize;</variable>
@@ -428,6 +429,7 @@
     <function returnType="int">getPointsCount()</function>
     <function returnType="int">getMaxIteration()</function>
     <function returnType="float">getCubeSize()</function>
+    <function returnType="bool">isTetEnable()</function>
     <function>Init()</function>
 </functions>
 <layoutdefaults spacing="6" margin="11"/>
