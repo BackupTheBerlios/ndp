@@ -256,4 +256,4 @@ if test ! -z "$am_depcomp"; then
 fi
 AC_SUBST(DEPCOMP)
 
-AC_OUTPUT([Makefile icons/Makefile src/Makefile src/gl-headers/Makefile])
+AC_OUTPUT([Makefile icons/Makefile src/Makefile src/gl-headers/Makefile src/mc/Makefile])
