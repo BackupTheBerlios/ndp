@@ -1,3 +1,19 @@
+2004-04-03  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/openglview.cc (initializeGL): GL_DEPTH to GL_DEPTH_TEST
+
+	* PoUgui/src/mwindow.cc: Adapted code to the modified VertexBuffer and
+	Mc classes.
+
+	* PoUgui/src/mc/mc2.h: Added methods: set{InitPoint, CubeSize,
+	MaxIteration} and enableTet to class Mc
+	Added a destructor which free previously allocated vertices.
+	Added a getPoints method
+
+	* PoUgui/src/vertexbuffer.h: Changed arrays to vector(effective
+	STL item 13)
+	Normal, position and color are now packed into a class Point
+
 2004-04-02  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
 
 	* libpou/src/ConstructRBFPOU.cc (compute): Removed printing of regions
