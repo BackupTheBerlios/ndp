@@ -1,3 +1,16 @@
+2004-03-22  Thomas <thomas@pumpkins.snapshotlinux.org>
+	* tests/constructrbf.cc: use BIHARMONIC instead of TRI (because 
+	TRI does not work)
+	use point reduction from ImplicitSurface
+	save computed file in test.pou
+
+	* src/ConstructRBF.cc: use 0 instead of NULL in constructor
+	(cf Stroustrup)
+
+	* src/ImplicitSurface3D.cc: filter set to null because
+	constraints are filled the way (rgb,0) would have done.
+
+
 2004-03-22  Ben  <leserpent@berlios.de>
 
 	* libpou/src/ImplicitSurface3D.cc: setFilter can't be called again

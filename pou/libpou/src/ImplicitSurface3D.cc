@@ -81,13 +81,11 @@ void ImplicitSurface3D::compute(PointSet &ps) {
     Point *p=*i;
     cs->add(new Constraint(p->getPos(), p->getRGB()[0]));
   } 
-  std::cout << std::endl;
-  //r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
-  r->setFilter(rgb, 0);
+  r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
   r->compute(*cs);
   g->setFilter(rgb, 1);
   g->compute(*cs);
-  b->setFilter(rgb, 2); //BUG?:setFilter can't be called again after a compute
+  b->setFilter(rgb, 2);
   b->compute(*cs);
   rbf->setFilter(nz, 0);
   rbf->compute(*cs);

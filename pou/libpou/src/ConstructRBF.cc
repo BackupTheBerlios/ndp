@@ -1,6 +1,6 @@
 #include "ConstructRBF.h"
 
-ConstructRBF::ConstructRBF(): size(0), w(NULL), center(NULL), c(NULL) {
+ConstructRBF::ConstructRBF(): size(0), w(0), center(0), c(0) {
   cf=const_cast<ConstraintFilter*>(NULL_FILTER);
 }
 
