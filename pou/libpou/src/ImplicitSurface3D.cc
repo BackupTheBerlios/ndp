@@ -6,6 +6,12 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.12  2004/04/06 16:16:11  leserpent
+ * Splitted compute() into computeRGB() and computeGeometry().
+ * The Constraints Set is now a local variable in computeRGB/Geometry()
+ * since it's not used anywhere else.
+ * Constraints are now deleted after compute.
+ *
  * Revision 1.11  2004/04/06 10:08:33  ob821
  * Removed comments
  *
@@ -22,6 +28,7 @@
 #include "PointSet.h"
 #include "ConstraintSet.h"
 #include "ConstraintFilter.h"
+#include "helpers/deletor.h"
 
 #include <fstream>
 
@@ -80,11 +87,8 @@ ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
   r = new ConstructRBFPOU(_type);
   g = new ConstructRBFPOU(_type);
   b = new ConstructRBFPOU(_type);
-  cs = new ConstraintSet();
   projDist=0.03f;
-  unsigned int min,max;
-  rbf->getThresholds(min, max);
-  rbf->setThresholds(min*3, max*3);
+  rbf->setThresholds(rbf->getThreMin()*3, rbf->getThreMax()*3);
 }
 
 ImplicitSurface3D::~ImplicitSurface3D() {
@@ -94,33 +98,65 @@ ImplicitSurface3D::~ImplicitSurface3D() {
   delete rbf;
 }
 
-void ImplicitSurface3D::compute(PointSet &ps) {
+void ImplicitSurface3D::computeRGB(PointSet &ps) {
   PointList::const_iterator end=ps.getEnd();
   PointList::const_iterator i;
   const AreaSet *o;
-
+  ConstraintSet cs;
+  ConstraintFilterRGB rgb(&ps);
   
-  rgb = new ConstraintFilterRGB(&ps);
-  nz = new ConstraintFilterNonZero(&ps, projDist);
-  
-  for(i=ps.getBegin(); i!=end; i++) {
+  for(i=ps.getBegin(); i!=end; ++i) {
     Point *p=*i;
-    cs->add(new Constraint(p->getPos(), p->getRGB()[0]));
-  } 
+    cs.add(new Constraint(p->getPos(), p->getRGB()[0]));
+  }
+  
   r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
-  r->compute(*cs);
+  r->compute(cs);
   o=r->getOctree();
-  g->setFilter(rgb, 1);
-  g->compute(*cs, o);
-  b->setFilter(rgb, 2);
-  b->compute(*cs, o);
-  rbf->setFilter(nz, 0);
-  rbf->compute(*cs);
+  g->setFilter(&rgb, 1);
+  g->compute(cs, o);
+  b->setFilter(&rgb, 2);
+  b->compute(cs, o);
+  
+  cs.removeDeleteAll(); // We no longer need our constraints
+}
+
+void ImplicitSurface3D::computeGeometry(PointSet &ps) {
+  PointList::const_iterator end=ps.getEnd();
+  PointList::const_iterator i;
+  const AreaSet *o;
+  ConstraintSet cs;
+  
+  for(i=ps.getBegin(); i!=end; ++i) {
+    Point *p=*i;
+    cs.add(new Constraint(p->getPos(), 0));
+  }
+  
+  ConstraintFilterNonZero nz(&ps, projDist);
+  rbf->setFilter(&nz, 0);
+  rbf->compute(cs);
+
+  cs.removeDeleteAll();
+}
+
+void ImplicitSurface3D::compute(PointSet &ps) {
+  computeRGB(ps);
+  computeGeometry(ps);
 }
 
 void ImplicitSurface3D::compute(PointSet &ps, unsigned int size) {
   PointSet psFiltered(ps, size);
   compute(psFiltered);
+}
+
+void ImplicitSurface3D::computeRGB(PointSet &ps, unsigned int size) {
+  PointSet psFiltered(ps, size);
+  computeRGB(psFiltered);
+}
+
+void ImplicitSurface3D::computeGeometry(PointSet &ps, unsigned int size) {
+  PointSet psFiltered(ps, size);
+  computeGeometry(psFiltered);
 }
 
 void ImplicitSurface3D::load(const std::string &filename) {

@@ -6,6 +6,12 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.8  2004/04/06 16:16:11  leserpent
+ * Splitted compute() into computeRGB() and computeGeometry().
+ * The Constraints Set is now a local variable in computeRGB/Geometry()
+ * since it's not used anywhere else.
+ * Constraints are now deleted after compute.
+ *
  * Revision 1.7  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -29,6 +35,10 @@ class ImplicitSurface3D {
   ~ImplicitSurface3D();
   void compute(PointSet &ps);
   void compute(PointSet &ps, unsigned int size);
+  void computeRGB(PointSet &ps, unsigned int size);
+  void computeRGB(PointSet &ps);
+  void computeGeometry(PointSet &ps, unsigned int size);
+  void computeGeometry(PointSet &ps);
 
   void load(const std::string &filename);
   void save(const std::string &filename) const;
@@ -65,7 +75,7 @@ class ImplicitSurface3D {
 
   void setThresholds(unsigned int tMin, unsigned tMax) {
     assert(rbf&&r&&g&&b);
-    rbf->setThresholds(tMin, tMax);
+    rbf->setThresholds(tMin*3, tMax*3);
     r->setThresholds(tMin, tMax);
     g->setThresholds(tMin, tMax);
     b->setThresholds(tMin, tMax);
@@ -74,8 +84,6 @@ class ImplicitSurface3D {
  private:
   ConstructRBFPOU *rbf;
   ConstructRBFPOU *r,*g,*b;
-  ConstraintSet *cs;
-  ConstraintFilter *rgb, *nz;
   float projDist;
 };
 
