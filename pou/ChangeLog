@@ -1,3 +1,12 @@
+2004-04-02  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/mwindow.cc: Trivial: Changed progress dialog text.
+
+	* PoUgui/src/mc/mc2.cc: Changed stating point from (0,0,0) to
+	(-0.269614, 0.228464, 0.0772211). A good starting point has to be
+	found for each object(A random point from PointSet doesn't work).
+	Added a setInitPoint method.
+
 2004-04-01  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/mc/mc2.cc: Moved private methods from mc2.h to mc2.cc
