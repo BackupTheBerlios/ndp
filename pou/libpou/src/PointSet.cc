@@ -6,6 +6,10 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.6  2004/04/07 07:35:18  leserpent
+ * Changed var ++ to var++.
+ * Removed blank lines and some commented code.
+ *
  * Revision 1.5  2004/04/06 16:14:06  leserpent
  * Added a removeDeleteAll() method.
  * Points are no longer deleted into PointSet's destructor.
@@ -57,12 +61,12 @@ PointSet::PointSet(const PointSet& ps, int number):
       if (thre*thre2 < thre1)
 	{
 	  add(*i);
-	  thre1 --;
-	  thre2 --;
+	  thre1--;
+	  thre2--;
 	}
       else
 	{
-	  thre2 --;
+	  thre2--;
 	}
     }
 }
@@ -86,12 +90,12 @@ PointSet::getIndicesInArea(const Area* a,
       if (thre*thre2 < thre1)
 	{
 	  index.push_back(i);
-	  thre1 --;
-	  thre2 --;
+	  thre1--;
+	  thre2--;
 	}
       else
 	{
-	  thre2 --;
+	  thre2--;
 	}
     }
   */
@@ -115,13 +119,13 @@ PointSet::randomSplit(const unsigned int number,
       if (thre*thre2 < thre1)
 	{
 	  ps1.add(p);
-	  thre1 --;
-	  thre2 --;
+	  thre1--;
+	  thre2--;
 	}
       else
 	{
 	  ps2.add(p);
-	  thre2 --;
+	  thre2--;
 	}
     }
 
@@ -147,24 +151,15 @@ PointSet::load(const char* filename)
       fs >> xn >> yn >> zn;
       fs >> r >> g >> b;
 
-
-
       if (!fs.eof())
 	{
-	  //cout << counter << endl;
-	  //cout << x << " " << y << " " << z << endl;
 	  Point* p = new Point(x, y, z, xn, yn, zn, r, g, b);
 	  add(p);
 	  counter++;
 	} 
-
-
       
       if ((counter & 0xfff) == 0xfff)
         cout << "\r " << counter << " read..." << flush;
-      
-      
-      
     }
   
   fs.close();
@@ -195,10 +190,7 @@ PointSet::save(const char* filename)
       fs << p->rgb[0] << " "
 	 << p->rgb[1] << " "
 	 << p->rgb[2] << endl << endl;
-
-
     }
-  
   fs.close();
 }
 
@@ -232,13 +224,9 @@ PointSet::getNearest(const Vec3f& v)
       Point* p = *i;
       dist = v.dist2(p->pos);
       if (dist < nearestDist)
-	{
 	  nearestDist = dist;
-	  //index = i;
-	}
     }
     
-  //return index;
   return 1;
 }
 
