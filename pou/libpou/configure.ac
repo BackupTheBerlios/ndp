@@ -39,8 +39,8 @@ AM_PATH_GSL(1.1, :, AC_MSG_ERROR([*** libgsl not found ***]))
 
 dnl Modify CFLAGS after all tests
 dnl Add args to configure
-AC_ARG_ENABLE(debug,   [  --enable-debug          Enable debugging information],
-        USE_DEBUG="$enableval", USE_DEBUG="no")
+AC_ARG_ENABLE(debug,   [  --disable-debug          Enable debugging information],
+        USE_DEBUG="no", USE_DEBUG="yes")
 
 AC_ARG_ENABLE(optimise,[  --enable-optimise       Enable code optimising],
 	USE_OPTIMISE="$enableval", USE_OPTIMISE="no")

@@ -119,22 +119,29 @@ AC_SUBST(GL_CFLAGS)
 AC_SUBST(GL_LIBS)
 
 
-dnl Check for QTDIR environment variable.
+dnl Check for Qt
+AC_ARG_WITH(qt-dir, [  --with-qt-dir           directory where Qt is installed ], [ qt_dir=`eval echo "$withval"/` ])
+
 AC_MSG_CHECKING([whether QTDIR environment variable is set])
-if test "x$QTDIR" = "x"; then
-  AC_MSG_RESULT([no])
-  AC_MSG_ERROR([QTDIR must be properly set.])
-else
-  AC_MSG_RESULT([$QTDIR])
+if test -z "$qt_dir"; then
+   if test "x$QTDIR" = "x"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_ERROR([QTDIR or --with-qt-dir must be properly set.])
+   else
+      qt_dir=$QTDIR
+   fi
 fi
+AC_MSG_RESULT([$qt_dir])
 
 dnl Checks for Qt library.
+AC_ARG_WITH(qt-libraries, [  --with-qt-libraries           directory where Qt libraries are installed ], [ qt_libs=`eval echo "$withval"` ], [ qt_libs=$qt_dir/lib ])
+
 AC_CACHE_CHECK([for Qt library],
   QT_LIBS, [
   for X in qt-mt qt; do
     if test "x$ac_qtlib" = "x"; then
-      if test -f $QTDIR/lib/lib$X.so -o -f $QTDIR/lib/lib$X.a; then
-        QT_LIBS="-L$QTDIR/lib -l$X"
+      if test -f $qt_libs/lib$X.so -o -f $qt_libs/lib$X.a; then
+        QT_LIBS="-L$qt_libs -l$X"
 	break
       fi
     fi
@@ -151,14 +158,18 @@ if test "x$ac_qtlib" = "xqt-mt"; then
 fi
 AC_SUBST(QT_THREADS)
 
-QT_CFLAGS="-I$QTDIR/include"
+dnl Checks for Qt includes.
+AC_ARG_WITH(qt-includes, [  --with-qt-includes           directory where Qt includes are installed ], [ qt_includes=`eval echo "$withval"` ], [ qt_includes=$qt_dir/include ])
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADERS([$qt_includes/qapplication.h],,AC_MSG_ERROR([Qt headers not found.]))
+
+QT_CFLAGS="-I$qt_includes"
 AC_SUBST(QT_CFLAGS)
 
 save_CXXFLAGS="$CXXFLAGS"
 save_LIBS="$LIBS"
 CXXFLAGS="$CXXFLAGS $QT_CFLAGS"
 LIBS="$QT_LIBS"
-AC_LANG_PUSH([C++])
 
 AC_CACHE_CHECK([for Qt library version >= 3.1.1],
   ac_qtlib_version, [
@@ -194,14 +205,14 @@ dnl A common error message:
 ac_qtdir_errmsg="not found in current PATH. Maybe QT development environment isn't available (qt3-devel)."
 
 dnl Check for Qt moc utility.
-AC_PATH_PROG(MOC, moc, [no], $QTDIR/bin:${PATH})
+AC_PATH_PROG(MOC, moc, [no], $qt_dir/bin:${PATH})
 if test "x$MOC" = "xno"; then
    AC_MSG_ERROR([moc $ac_qtdir_errmsg])
 fi
 AC_SUBST(MOC)
 
 dnl Check for Qt uic utility.
-AC_PATH_PROG(UIC, uic, [no], $QTDIR/bin:${PATH})
+AC_PATH_PROG(UIC, uic, [no], $qt_dir/bin:${PATH})
 if test "x$UIC" = "xno"; then
    AC_MSG_ERROR([uic $ac_qtdir_errmsg])
 fi
@@ -209,8 +220,8 @@ AC_SUBST(UIC)
 
 dnl Modify CFLAGS after all tests
 dnl Add args to configure
-AC_ARG_ENABLE(debug,   [  --enable-debug          Enable debugging information],
-        USE_DEBUG="$enableval", USE_DEBUG="no")
+AC_ARG_ENABLE(debug,   [  --disable-debug          Enable debugging information],
+        USE_DEBUG="no", USE_DEBUG="yes")
 
 AC_ARG_ENABLE(optimise,[  --enable-optimise       Enable code optimising],
 	USE_OPTIMISE="$enableval", USE_OPTIMISE="no")
