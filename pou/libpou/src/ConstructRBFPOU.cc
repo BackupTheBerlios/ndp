@@ -34,8 +34,8 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       if (i % step == 0 && callback)
 	callback(i, size);
 
-      std::cerr << "Region " << i << "/" << cells->size()
-                << " --> " << std::flush;
+//       std::cerr << "Region " << i << "/" << cells->size()
+//                 << " --> " << std::flush;
 
       while(1)
 	{
@@ -51,7 +51,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 	}
 
       ConstraintSet filtered(cs, &area);
-      std::cerr << filtered.size() << " points "<< std::endl << std::flush;
+//       std::cerr << filtered.size() << " points "<< std::endl << std::flush;
       
       ConstructRBF* newrbf = newRBF(); 
       /*      newrbf->setProjDist(_projDist);
