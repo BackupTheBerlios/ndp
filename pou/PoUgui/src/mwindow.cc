@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.36  2004/04/25 15:27:46  leserpent
+ * Alloc Mc on the stack
+ *
  * Revision 1.35  2004/04/25 15:19:48  pumpkins
  * callback fixes
  * exception fixes
@@ -190,7 +193,7 @@ MainWindow::MenuFileOpen()
     getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
 		     "Sur -- Ouvrir Fichier" );
 
-  if (!filename.isEmpty()){
+  if (!filename.isEmpty()) {
     std::vector<Point> vecPoints;
 
     CloseWindows();
@@ -204,8 +207,6 @@ MainWindow::MenuFileOpen()
 	return;
       }
 
-    m_boundingbox = m_pointset.getBoundingBox();
-    
     PointList::iterator psend = m_pointset.getEnd();
     
     for( PointList::iterator i=m_pointset.getBegin(); i != psend; ++i)
@@ -262,7 +263,6 @@ void
 MainWindow::MenuRenderingRender() 
 {
   ImplicitSurface3D *ims;
-  Mc *MCubes;
   std::vector<Point> vecPoints;
   int filter_npoints = m_settingsform->getPointsCount();
   int mc_maxit = m_settingsform->getMaxIteration();
@@ -297,18 +297,16 @@ MainWindow::MenuRenderingRender()
 
   qpd->setLabelText ("Polygonizing surface...");
   boundingbox = ((AreaSetOctree *)ims->getOctree())->getBBox();
-  MCubes = new Mc (callback, 10);
-  MCubes->setMaxIteration (mc_maxit);
-  MCubes->setCubeSize (mc_cubesize);
-  MCubes->enableTet (enabletet);
-  MCubes->domc (ims, boundingbox);
-  MCubes->getPoints (vecPoints);
+  Mc MCubes(callback, 10);
+  MCubes.setMaxIteration (mc_maxit);
+  MCubes.setCubeSize (mc_cubesize);
+  MCubes.enableTet (enabletet);
+  MCubes.domc (ims, boundingbox);
+  MCubes.getPoints (vecPoints);
 
   m_polys = new VertexBuffer (vecPoints, POLY_TRIANGLES);
-  m_polys->SetIndices (MCubes->getIndices());
+  m_polys->SetIndices (MCubes.getIndices());
 
-  delete MCubes;
- 
   m_polywin = new OpenglView (NULL, m_polys);
   m_polywin->resize (1024, 768);
   m_polywin->show();

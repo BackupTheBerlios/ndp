@@ -49,7 +49,6 @@ class MainWindow : public QMainWindow
  
   /* Geometry */
   PointSet m_pointset;
-  BoxVolume m_boundingbox;
   Vec3f m_initpoint;
   VertexBuffer *m_points;
   VertexBuffer *m_polys;
