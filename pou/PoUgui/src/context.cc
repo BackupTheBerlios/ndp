@@ -194,20 +194,28 @@ void OpenglContext::DrawLightPosition( bool flag )
 
 void OpenglContext::DrawHud()
 {
+  QFont f;
+  f.setStyleStrategy( QFont::OpenGLCompatible );
+  f.setFamily("fixed");
+  f.setRawMode(true);
+  f.setPixelSize(10);           // Workaround for a bug with renderText()
+  f.setFixedPitch ( true )  ;   // and nvidia's driver
+  f.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
+
+  glPushAttrib(GL_ENABLE_BIT);
+  glDisable (GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
   if( m_showstats ){
-    char spolys[32];
+    QString spolys("Triangles ");
     VertexBuffer *vb = m_parent ->getVertexBuffer();
-    int npolys = vb->getSize();
-    sprintf( spolys, "Triangles: %d", npolys );
+    spolys += QString::number(vb->getSize());
     glColor3f( 1.0, 1.0, 1.0 );
-    glDisable (GL_LIGHTING);
-    m_parent -> renderText( 10, 40, spolys );
-    glEnable (GL_LIGHTING);
+    m_parent -> renderText( 10, 40, spolys, f );
   }
 
   if( m_showfps ){
     int curtime;
-    char sfps[32];
+    QString sfps("FPS: ");
     QTime t = QTime::currentTime();
     curtime = ( t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
     m_frames ++;
@@ -225,13 +233,11 @@ void OpenglContext::DrawHud()
       m_lasttime = curtime;
     }
     
-    sprintf( sfps, "FPS: %f", m_fps );
+    sfps += QString::number(m_fps);
     glColor3f( 1.0, 1.0, 1.0 );
-    glDisable (GL_LIGHTING);
-    m_parent -> renderText( 10, 20, sfps );
-    glEnable (GL_LIGHTING);
-  }
-  
+    m_parent -> renderText( 10, 20, sfps, f );
+   }
+  glPopAttrib();  
 }
 
 void OpenglContext::ShowFps( bool flag )
