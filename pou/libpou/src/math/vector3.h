@@ -34,11 +34,8 @@ public:
     x = v[0]; y = v[1]; z = v[2];
   }
 
-  // If everything is negatif, OpenSG returns epsilon
   T maxValue() {
-    T w = (x>epsilon)?x:epsilon;
-    w = (y>w)?y:w;
-    return (w>z)?w:z;
+    return std::max(std::max(x, y), z);
   }
 
   T& operator[](unsigned int i) {
@@ -136,7 +133,7 @@ public:
     if(l == 0)
       x=y=z=0;
     else
-      *this *= 1.0/l;
+      *this *= T(1.0)/l;
   }
   
   T dot(const Vector3<T> &v) const {

@@ -25,19 +25,12 @@ public:
   
   Quaternion<T> operator*(const Quaternion<T> &r) const {
     Quaternion<T> res;
-//       res.v = v^r.v+r.w*v+w*r.v;
-//       res.w = w*r.w-v*r.v;
-//       std::cout << "Resulta1:" << res.v<<std::endl;
-//      std::cout << "Resulta1:" << res.w<<std::endl;
 
     res.w = w*r.w - v.x*r.v.x - v.y*r.v.y - v.z*r.v.z;
     res.v.x = w*r.v.x + v.x*r.w + v.y*r.v.z - v.z*r.v.y;
     res.v.y = w*r.v.y + v.y*r.w + v.z*r.v.x - v.x*r.v.z;
     res.v.z = w*r.v.z + v.z*r.w + v.x*r.v.y - v.y*r.v.x ;
 
-    //    std::cout << "Resultat2:" << res.w<<std::endl;
-//      std::cout << "Resultat2:" << res.v<<std::endl;
-            
     return res;
   }
 
@@ -80,7 +73,7 @@ public:
     setValues(0, 0, 0, 1);
   }
   
-  void unitToMatrix44(T m[4][4]) const {
+  void unitToMatrix44(Matrix4<T> &m) const {
     T x2=v.x*v.x;
     T y2=v.y*v.y;
     T z2=v.z*v.z;
@@ -100,6 +93,7 @@ public:
 
   // Reference: Stan Melax, Game Programming Gems
   void toRotationArc(Vector3<T> &u, Vector3<T> &v) {
+    assert(!(u.isNull() && v.isNull()));
     u.normalize();
     v.normalize();
     Vector3<T> w = u.cross(v);
@@ -111,11 +105,6 @@ public:
       T s = std::sqrt((1+d)*2);
       setValues(w.x/s, w.y/s, w.z/s, s/T(2));
     }
-  }
-
-  void fromAxisRotation(T theta, T ax, T ay, T az) {
-    T s = std::sin(theta/T(2));
-    setValues(ax*s, ay*s, az*s, std::cos(theta/T(2)));
   }
 
   friend std::ostream& operator<<(std::ostream& os, const Quaternion<T>& q) {
