@@ -1,3 +1,6 @@
+2004-04-22  Thomas
+	* libpou/src/ImplicitSurface.h: getOctree()
+
 2004-04-22  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/mc/mc2.cc (clear): Forgotten to clear indices vector.

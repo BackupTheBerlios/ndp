@@ -6,6 +6,9 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.12  2004/04/23 20:18:07  pumpkins
+ * getOctree
+ *
  * Revision 1.11  2004/04/20 11:16:39  pumpkins
  * gzstream
  * authors
@@ -94,6 +97,10 @@ class ImplicitSurface3D {
     r->setThresholds(tMin, tMax);
     g->setThresholds(tMin, tMax);
     b->setThresholds(tMin, tMax);
+  }
+
+  const AreaSet *getOctree() {
+  	return rbf->getOctree();
   }
 
  private:
