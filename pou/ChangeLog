@@ -1,5 +1,11 @@
 2004-03-25  Ben  <leserpent@berlios.de>
 
+	* libpou/src/math/quaternion.h: added quaternion.h
+
+	* libpou/src/math/vector3.h (class Vector3): moved vector3.h to
+	math/ and changed all include "vector3.h" to include
+	"math/vector3.h" in libpou and PoUgui
+
 	* PoUgui/src/Makefile.am (INCLUDES): Moved
 	-I../$(top_srcdir)/libpou/src/ to INCLUDES
 
