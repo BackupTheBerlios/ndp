@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.30  2004/04/06 20:00:27  leserpent
+ * Use killTimer(timerid) instead of killTimers()(see qt doc)
+ *
  * Revision 1.29  2004/04/06 16:18:45  leserpent
  * Added log keyword
  *
@@ -46,7 +49,7 @@ bool isOpenglReady = false;
 /* -+-+-+-+-+-+-+-+-+ OpenglWidget +-+-+-+-+-+-+-+-+-+-+-+-*/
 OpenglWidget::OpenglWidget( QWidget *parent, const char *name, 
 			    VertexBuffer *vbuffer ) 
-  :QGLWidget( parent, name )
+  :QGLWidget( parent, name ), m_timerid(-1)
 {
   vb = vbuffer;
   glcontext = new OpenglContext( this );
@@ -62,7 +65,8 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
 }
 
 OpenglWidget::~OpenglWidget() {
-  killTimers();
+  if(m_timerid != -1)
+    killTimer(m_timerid);
   delete glcontext;
 }
 
@@ -79,7 +83,7 @@ void OpenglWidget::initializeGL()
   vb -> Bind();
 
   if( m_idledraw ){
-    startTimer( FRAME_DELAY );
+    m_timerid = startTimer( FRAME_DELAY );
     SetLighting (true, GL_SMOOTH);
     glcontext->SetDepthTest( true );
     /* Don't cull points only polys */

@@ -36,6 +36,7 @@ class OpenglWidget : public QGLWidget
   VertexBuffer *vb;
   OpenglContext *glcontext;
   bool m_idledraw;
+  int m_timerid;
 };
 
 class OpenglView : public QMainWindow {
