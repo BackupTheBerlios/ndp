@@ -213,8 +213,6 @@ void OpenglContext::SetLightType( OpenglContext::LightType type )
   case LIGHT_SMOOTH:
     glShadeModel( GL_SMOOTH );
     break;
-  case LIGHT_PIXEL:
-    break;
   default:
     break;
   }

@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.36  2004/04/27 08:14:29  ob821
+ * bugfix
+ *
  * Revision 1.35  2004/04/26 08:56:16  leserpent
  * Removed unusued method and define in vertexbuffer
  *
@@ -245,9 +248,6 @@ OpenglWidget::ParseKey( int key, int key_ascii )
     m_glcontext->SetLightType (OpenglContext::LIGHT_SMOOTH);
     break;
     
-  case Qt::Key_3:
-    m_glcontext->SetLightType (OpenglContext::LIGHT_PIXEL);
-    break;
   }
 
   if( !m_idledraw )
