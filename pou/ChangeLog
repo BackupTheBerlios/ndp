@@ -1,4 +1,7 @@
 2004-04-25    <thomas@pumpkins>
+	* libpou/src/ConstructRBFPOU.cc (compute): stop when callback return
+	false. Manages several calls to compute for the same ConstructRBFPOU
+	object
 	* libpou/src/ConstraintSet: load and save now use gzstream and
 	thow runtime_error
 	* libpou/src/ConstructRBFPOU.{h,c} (ConstructRBFPOU): Callback new

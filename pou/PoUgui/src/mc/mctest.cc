@@ -6,7 +6,7 @@
 //#include "mc.h"
 using namespace std;
 
-void callback (int v, int max) {
+bool callback (int v, int max) {
 }
 
 

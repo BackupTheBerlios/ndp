@@ -152,7 +152,7 @@ typedef struct process {	   /* parameters, function, storage */
  void *calloc();
  char *mycalloc();
 
-void (*progress_callback)(int v, int max);
+bool (*progress_callback)(int v, int max);
 unsigned int progress_step;
 unsigned int progress_max;
 
@@ -160,7 +160,7 @@ int gntris;	     /* global needed by application */
 VERTICES gvertices;  /* global needed by application */
 ImplicitSurface3D *is;
 
-void mc_setcallback(void (*c)(int, int), unsigned int step) {
+void mc_setcallback(bool (*c)(int, int), unsigned int step) {
     progress_callback = c;
     progress_step = step;
 }

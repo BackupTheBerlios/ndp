@@ -9,7 +9,7 @@
 #include "mc2.h"
 #include "ImplicitSurface3D.h"
 
-Mc::Mc(void (*callback)(int, int), int step):
+Mc::Mc(bool (*callback)(int, int), int step):
   cubeSize(0.05), maxIt(10), tetActive(false), progress_step(step)
 {
   assert(callback);
@@ -636,6 +636,11 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.9  2004/04/25 15:19:48  pumpkins
+* callback fixes
+* exception fixes
+* multiple constructrbfpou compute allowed
+*
 * Revision 1.8  2004/04/23 16:17:54  leserpent
 * Forgotten to clear indices vector
 *

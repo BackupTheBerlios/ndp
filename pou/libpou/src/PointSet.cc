@@ -6,6 +6,11 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.9  2004/04/25 15:19:48  pumpkins
+ * callback fixes
+ * exception fixes
+ * multiple constructrbfpou compute allowed
+ *
  * Revision 1.8  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -162,14 +167,17 @@ PointSet::load(const char* filename) throw (std::runtime_error)
       fs >> x >> y >> z;
       fs >> xn >> yn >> zn;
       fs >> r >> g >> b;
-
+	
       if (!fs.eof())
 	{
 	  Point* p = new Point(x, y, z, xn, yn, zn, r, g, b);
 	  add(p);
 	  counter++;
 	} 
-      
+	
+      if (!fs && !fs.eof())
+        throw std::runtime_error("Error while reading\n");
+	      
       if ((counter & 0xfff) == 0xfff)
         cout << "\r " << counter << " read..." << flush;
     }

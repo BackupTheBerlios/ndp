@@ -19,6 +19,11 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.35  2004/04/25 15:19:48  pumpkins
+ * callback fixes
+ * exception fixes
+ * multiple constructrbfpou compute allowed
+ *
  * Revision 1.34  2004/04/24 13:46:12  ob821
  * mc now use octree BoundingBox
  *
@@ -247,8 +252,9 @@ MainWindow::MenuWindowsNew()
 namespace 
 {
   QProgressDialog *qpd;
-  void callback (int v, int max) {
+  bool callback (int v, int max) {
     qpd->setProgress ( 100*v/max);
+    return true;
   }
 }
 

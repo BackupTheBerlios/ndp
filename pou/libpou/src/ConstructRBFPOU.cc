@@ -6,6 +6,11 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.13  2004/04/25 15:19:48  pumpkins
+ * callback fixes
+ * exception fixes
+ * multiple constructrbfpou compute allowed
+ *
  * Revision 1.12  2004/04/25 12:09:24  pumpkins
  * error throw std::runtime_exception
  * Compute(POU) throw logic_error if (cs.size < threMin)
@@ -51,14 +56,15 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 
   applyFilter(cs);
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
-
+  rbf.clear();
   unsigned int size=cells->size();
   for(unsigned int i=0; i<size; i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
 
       if (i % step == 0 && callback)
-	callback(i+pass*size, size*numPass);
+	if (!callback(i+pass*size, size*numPass))
+	  return ;
 
       
       while(1)

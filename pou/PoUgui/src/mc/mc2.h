@@ -11,10 +11,10 @@ class ImplicitSurface3D;
 
 class Mc {
 public:
-  Mc(void (*callback)(int, int), int step);
+  Mc(bool (*callback)(int, int), int step);
   Mc::~Mc();
   
-  void setcallback(void (*c)(int, int), unsigned int step) {
+  void setcallback(bool (*c)(int, int), unsigned int step) {
     progress_callback = c;
     progress_step = step;
   }
@@ -37,7 +37,7 @@ private:
   int maxIt;
   bool tetActive;
 
-  void (*progress_callback)(int v, int max);
+  bool (*progress_callback)(int v, int max);
   unsigned int progress_step, progress_max;
 
   void clear();
@@ -170,6 +170,11 @@ private:
 
 /* History:
 * $Log: mc2.h,v $
+* Revision 1.6  2004/04/25 15:19:48  pumpkins
+* callback fixes
+* exception fixes
+* multiple constructrbfpou compute allowed
+*
 * Revision 1.5  2004/04/03 11:16:00  leserpent
 * Added methods: set{InitPoint, CubeSize,	MaxIteration} and enableTet to class Mc
 * Added a destructor which free previously allocated vertices.
