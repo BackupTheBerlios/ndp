@@ -337,5 +337,5 @@ void SettingsForm::ApplyValues()
     entry_mc_cs->setText (QString().setNum (m_cubesize));
     entry_mc_maxit->setText (QString().setNum (m_maxiteration, 10));	 
     
-    entry_mc_tet->setEnabled(m_enabletet==1);
+    entry_mc_tet->setChecked(m_enabletet==1);
 }

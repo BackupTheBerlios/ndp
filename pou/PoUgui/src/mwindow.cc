@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.43  2004/04/27 17:17:33  ob821
+ * enableTet checkbox works
+ *
  * Revision 1.42  2004/04/27 14:32:37  ob821
  * bugfix
  *
@@ -203,7 +206,6 @@ void
 MainWindow::closeEvent( QCloseEvent *event ) 
 {
   CloseWindows();
-  CleanMemory();
   QMainWindow::closeEvent( event );
 }
 
@@ -337,7 +339,14 @@ MainWindow::MenuRenderingRender()
   MCubes.setMaxIteration (mc_maxit);
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
-  MCubes.doMc (ims, boundingbox);
+  try
+    {
+      MCubes.doMc (ims, boundingbox);
+    } 
+  catch(std::exception e) 
+    {
+      printf("ben est null %s \n",e.what());
+    }
 
   if (!qpd)
     return;
