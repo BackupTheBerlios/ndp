@@ -141,7 +141,7 @@ int VertexBuffer::DrawBuffer()
   /* Don't draw locked buffers */
   if( isLocked )
     return -1;
-  glColor3f( 1.0,1.0,1.0 );
+  glColor4f( 1.0,1.0,1.0,0.0 );
   if( !m_indices )
       glDrawArrays( PolyTypes[polytype], 0, n ); 
   else {

@@ -4,6 +4,10 @@
 
 2004-04-01  Damien
 	
+	* BUG: Alpha channel ?!?!
+	
+	* openglview.cc: Culling on front polygons
+	
 	* context.cc: on screen fps
 
 	* context.cc: flag added in all moving functions in order to choose

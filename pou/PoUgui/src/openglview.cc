@@ -66,7 +66,9 @@ void OpenglWidget::initializeGL()
   glMatrixMode( GL_MODELVIEW );
   glLoadIdentity();
   gluLookAt( 0.0, 0.0, 3, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
+  glEnable( GL_CULL_FACE );
   glEnable( GL_DEPTH );
+  glCullFace( GL_FRONT );
   vb -> Bind();
   if( m_idledraw )
     startTimer( FRAME_DELAY );
