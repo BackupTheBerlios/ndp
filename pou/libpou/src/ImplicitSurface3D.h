@@ -19,13 +19,27 @@ class ImplicitSurface3D {
   void save(const std::string &filename) const;
 
   float eval(const Vec3f &p) const { return rbf->eval(p); }
+
   void evalNormal(const Vec3f &p, Vec3f &v) const {
     return rbf->evalNormal(p, v);
   }
   void evalGradian(const Vec3f &p, Vec3f &v) const {
     return rbf->evalGradian(p, v);
   }
+
+  void evalColorRGB(const Vec3f &p, Vec3f &v) const {
+    v.setValues(r->eval(p), g->eval(p), b->eval(p));
+  }
+
+  void setCallBack(void (*c)(int, int), int s) {
+    rbf->setCallBack(c, s);
+    r->setCallBack(c, s);
+    g->setCallBack(c, s);
+    b->setCallBack(c, s);
+  }
+
   const ConstructRBFPOU *getRBFPOU() const;
+
   void setProjDist(float d) {
     projDist=d;
   }

@@ -58,7 +58,6 @@ PointSet *objectPointSet;
 // Main Window class
 /*****************************************************************************/
 OpenglView *PolysWindow;
-SettingsForm *settingsForm;
 QMainWindow *MW_window;
 QApplication *QT_Gui;
 QWorkspace *MW_workspace;
@@ -137,8 +136,6 @@ void MWindow::CreateWorkspace() {
   MW_workspace = new QWorkspace( vbox );
   MW_workspace -> setScrollBarsEnabled( TRUE );
   this -> setCentralWidget( vbox );
-  settingsForm = new SettingsForm;
-  settingsForm -> Init();
 }
 
 void MWindow::CloseWindows() {
@@ -160,8 +157,8 @@ void MWindow::closeEvent( QCloseEvent *event ) {
 void MWindow::menu_file_open() {
   int i;
   QString filename = QFileDialog::
-    getOpenFileName( QString::null, "Files .sur (*.sur)", this,"file open", 
-		     "Sur -- Open File" );
+    getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
+		     "Sur -- Ouvrir Fichier" );
 
   if( !filename.isEmpty() ){
     Vec3f *vPoints;
@@ -204,11 +201,18 @@ void MWindow::menu_file_close() {
 }
 
 void MWindow::menu_settings_args() {
-  //
-  settingsForm->show();
+  SettingsForm *setForm = new SettingsForm;
+  setForm->show();
 }
 
 void MWindow::menu_windows_new() {
+}
+
+namespace {
+  QProgressDialog *qpd;
+  void callback (int v, int max) {
+    qpd->setProgress ( 100*v/max);
+  }
 }
 
 void MWindow::menu_rendering_render() {
@@ -218,15 +222,16 @@ void MWindow::menu_rendering_render() {
   Vec3f *vertices;
   int nindices;
   int nvertices;
-  int filter_npoints = settingsForm -> getPointsCount();
+
   int i = 0;
 
   if( !vbPoints )
     return;
   
-  QProgressDialog render_progress( "Rendering...", "Abort Rendering", 100, 
+  qpd = new QProgressDialog( "Rendering...", "Abort Rendering", 100, 
 				   this, "progress", TRUE );
-  render_progress.setProgress( 1 );
+  //  render_progress.setProgress( 1 );
+  qpd->setProgress(1);
   //for( i=0;i<1000000 && !render_progress.wasCancelled() ; i++ )
   QT_Gui->processEvents();
   //render_progress.setProgress( 100 );
@@ -235,11 +240,13 @@ void MWindow::menu_rendering_render() {
   //Start ImplicitSurface reconstruction
 
   /* First check if api is OK */
-  ims = new ImplicitSurface3D();
+  ims = new ImplicitSurface3D(ConstructRBFPOU::BIHARMONIC);
+  ims->setCallBack (callback, 10);
+
   if( !ims )
     return ;
-  printf("[D] Start Surface reconstruction with %d points\n", filter_npoints);
-  ims->compute( *objectPointSet, filter_npoints );
+  printf("[D] Start Surface reconstruction\n");
+  ims->compute( *objectPointSet, 3000 );
   // Start MC
   printf("[D] Start Marching Cubes\n");
   domc(ims);
@@ -280,6 +287,7 @@ void MWindow::menu_rendering_render() {
   PolysWindow = new OpenglView( NULL, vbPolys );
   PolysWindow->resize( 1024, 768 );
   PolysWindow->show();
+  delete qpd;
 }
 
 void MWindow::CleanMemory() 

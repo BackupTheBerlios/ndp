@@ -73,6 +73,8 @@ ImplicitSurface3D::~ImplicitSurface3D() {
 void ImplicitSurface3D::compute(PointSet &ps) {
   PointList::const_iterator end=ps.getEnd();
   PointList::const_iterator i;
+  const AreaSet *o;
+
   
   rgb = new ConstraintFilterRGB(&ps);
   nz = new ConstraintFilterNonZero(&ps, projDist);
@@ -83,10 +85,11 @@ void ImplicitSurface3D::compute(PointSet &ps) {
   } 
   r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
   r->compute(*cs);
+  o=r->getOctree();
   g->setFilter(rgb, 1);
-  g->compute(*cs);
+  g->compute(*cs, o);
   b->setFilter(rgb, 2);
-  b->compute(*cs);
+  b->compute(*cs, o);
   rbf->setFilter(nz, 0);
   rbf->compute(*cs);
 }

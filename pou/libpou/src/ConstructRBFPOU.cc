@@ -5,13 +5,15 @@
 #include <fstream>
 #include <iostream>
 
-ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF _type) 
+ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF _type)
 {
   cells = new AreaSetOctree();
   type = _type;
   threMin = 50;
   threMax = 100;
   overlap=0.5f;
+  step=1;
+  callback=0;
   cf=const_cast<ConstraintFilter*>(ConstructRBF::NULL_FILTER);
 }
 
@@ -20,15 +22,23 @@ ConstructRBFPOU::~ConstructRBFPOU() {
 }
 
 void
-ConstructRBFPOU::compute(ConstraintSet& cs)
+ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 {
   int result;
   applyFilter(cs);
-  dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
+  if (octree)
+    cells=const_cast<AreaSet *>(octree);
+  else {
+    dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
+
+  unsigned int size=cells->size();
   std::cerr << "octree fini" << std::endl;
-  for(unsigned int i=0; i<cells->size(); i++)
+  for(unsigned int i=0; i<size; i++)
     {
       AreaSphere area(*dynamic_cast<AreaSphere*>((*cells)[i]));
+
+      if (i % step == 0 && callback)
+	callback(i, size);
 
       std::cerr << "Region " << i << "/" << cells->size()
                 << " --> " << std::flush;
@@ -63,6 +73,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs)
       rbf.push_back(newrbf);
       flag.push_back(OK_FLAG);
     }
+  }
 }
 
 void

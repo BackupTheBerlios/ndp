@@ -27,7 +27,7 @@ class ConstructRBFPOU {
 
   ConstructRBFPOU(TypeRBF _type = TRIHARMONIC);
   ~ConstructRBFPOU();
-  void compute(ConstraintSet& cs);
+  void compute(ConstraintSet& cs, const AreaSet *octree = 0);
   void setThresholds(unsigned int tMin, unsigned tMax);
   float eval(const Vec3f &p) const;
   void evalGradian(const Vec3f &p, Vec3f &v) const;
@@ -37,6 +37,12 @@ class ConstructRBFPOU {
   void save(std::ofstream &stream) const;
   const AreaSet *getOctree();  
   void setFilter(ConstraintFilter *f, int p);
+
+  void setCallBack(void (*c)(int, int), int s) {
+    if (s!=0)
+      step=s;
+    callback=c;
+  }
 
  private:
   AreaSet* cells;
@@ -51,6 +57,8 @@ class ConstructRBFPOU {
   ConstructRBF *newRBF(void);
   
   void applyFilter(ConstraintSet &cs);
+  void (*callback)(int v, int max);
+  int step;
 };
 
 inline const AreaSet *
