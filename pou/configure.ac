@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([pou], [0.1], [http://developer.berlios.de/bugs/?func=addbug&group_id=1564])
+AC_INIT([pou], [1.0], [http://developer.berlios.de/bugs/?func=addbug&group_id=1564])
 AC_CONFIG_AUX_DIR(admin)
 AC_PREREQ([2.5])
 
