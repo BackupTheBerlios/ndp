@@ -1,5 +1,11 @@
 2004-04-03  Ben  <leserpent@berlios.de>
 
+	* libpou/src/ConstructRBFPOU.cc (eval): Fixed a *BIG* memory
+	leak(I'm guilty).
+
+	* PoUgui/src/vertexbuffer.cc (Bind): Removed GL_INDEX_ARRAY, it's
+	for colors not for vertices.	
+
 	* PoUgui/configure.ac: Fixed a configure bug with Mandrake
 	9.{1,2}: for AC_CHECK_HEADERS #include <full_path_to/file.h>
 	doesn't work, adding temporarily -Ifull_path_to to CXXFLAGS and

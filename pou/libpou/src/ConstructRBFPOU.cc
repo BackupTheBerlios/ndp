@@ -112,7 +112,7 @@ ConstructRBFPOU::eval(const Vec3f &p) const
     sumW += w;
     sum += s * w;
   }
-  if (sumW == 0)
+//  if (sumW == 0)
       //std::cerr << "WARNING: in eval sumW = 0" << std::endl;
   delete[] tab;
   if (sumW == 0)
