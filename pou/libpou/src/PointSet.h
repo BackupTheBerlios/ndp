@@ -108,6 +108,8 @@ private:
   PointList points;
   BoxVolume box;
 
+  void clear();
+
 public:
   PointSet():
     points(),box()
@@ -122,7 +124,8 @@ public:
 
   //choose _number_ points from _ps_
   PointSet(const PointSet& ps, int number);
-  
+
+  ~PointSet() { clear(); }
   // ---.oOo.---
   
   void getIndicesInArea(const Area* a, 
@@ -169,7 +172,7 @@ public:
 
   void removeAll(void)
   {
-    points.clear();
+    clear();
   }
 
   void remove(PointList::iterator i)
@@ -179,7 +182,7 @@ public:
 
   void remove(Point* p)
   {
-    points.remove(p);
+    points.remove(p);           // FIXME:Should we do a delete?
   }
 
 

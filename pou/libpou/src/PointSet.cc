@@ -48,6 +48,14 @@ PointSet::PointSet(const PointSet& ps, int number):
     }
 }
 
+void
+PointSet::clear()
+{
+  PointList::iterator end = getEnd();
+  for(PointList::iterator i = getBegin(); i != end; ++i)
+    delete *i;
+  points.clear();
+}
 
 void 
 PointSet::getIndicesInArea(const Area* a, 
@@ -120,6 +128,7 @@ PointSet::load(const char* filename)
   ifstream fs(filename);
   int counter = 0;
 
+  clear();
   cout << "Reading... " << endl;
   while(!fs.eof())
     {
@@ -223,8 +232,6 @@ PointSet::getNearest(const Vec3f& v)
   //return index;
   return 1;
 }
-
-
 
 
 void 
