@@ -10,53 +10,74 @@
 #include "ImplicitSurface3D.h"
 
 Mc::Mc(void (*callback)(int, int), int step):
-  initPoint(-0.269614, 0.228464, 0.0772211), progress_callback(callback),
-  progress_step(step), RES(10) {
+  cubeSize(0.05), maxIt(10), tetActive(false), progress_step(step)
+{
   assert(callback);
+  progress_callback = callback;
+  initPoint = Vec3f(-0.269614, 0.228464, 0.0772211);
   memset(cubetable, 0, 256*sizeof(int));
+  gvertices.ptr = NULL;
 }
 
+Mc::~Mc() {
+  clear();
+}
 
-void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox, bool tet)
+// Free resulting vertices of a previous call to domc
+void Mc::clear() {
+  if(gvertices.ptr) {
+    gntris = 0;
+    free((char *) gvertices.ptr);
+    gvertices.ptr = NULL;
+    gvertices.max = 0;
+    gvertices.count = 0;
+  }
+}
+
+void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
 {
   is = imps;
 
   char *err;
-  gntris = 0;
 
+  clear();
   
 //BUG: The Pointset bounding box doesn't seem to be a good bounding
 //	box for the surface
   Vec3f size=bbox.getSize();
   int bounds = (int)(size.maxValue()/(2*0.05))+20;
 //  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
-  progress_max = (int)((size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)/8);
-  if ((err = polygonize(0.05, bounds, 
+  progress_max = (int)((size.x/cubeSize)*(size.y/cubeSize)*(size.z/cubeSize)/8);
+  if ((err = polygonize(cubeSize, bounds, 
                         initPoint.x, initPoint.y, initPoint.z,
-                        tet)) != NULL) 
+                        tetActive)) != NULL) 
   {
-    std::cout << "Error " << err << std::endl;
+    std::cerr << "Error " << err << std::endl;
   }
 
-  std::cout << gntris << " triangles, " 
+  std::cerr << gntris << " triangles, " 
             << gvertices.count << "  vertices\n" << std::endl; 
-}
-
-void Mc::getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals) {
-  for (int i = 0; i < gvertices.count; i++) {
-    VERTEX v;
-    v = gvertices.ptr[i];
-    
-    vertices.push_back(Vec3f(v.position.x, v.position.y, v.position.z));
-    normals.push_back(Vec3f(v.normal.x, v.normal.y, v.normal.z));
-  }
 }
 
 const std::vector<unsigned int>& Mc::getIndices() {
   return indices;
 }
 
-/***********************************************************************/
+void Mc::getPoints(std::vector<Point> &points) {
+  for (int i = 0; i < gvertices.count; i++) {
+    VERTEX v;
+    Vec3f pos, normal, color;
+    v = gvertices.ptr[i];
+
+    pos.setValues(v.position.x, v.position.y, v.position.z);
+    normal.setValues(v.normal.x, v.normal.y, v.normal.z);
+    is->evalColorRGB(pos, color);
+    points.push_back(Point(pos, normal, color));
+  }
+}
+
+
+/*****************Wrapped code*********************************************/
 double Mc::RAND() {
   return (rand()&32767)/32767.0;
 }
@@ -132,7 +153,7 @@ char *Mc::polygonize (double size,
   
   p.size = size;
   p.bounds = bounds;
-  p.delta = size/(double)(RES*RES);
+  p.delta = size/(double)(maxIt*maxIt);
   
   /* allocate hash tables and build cube polygon table: */
   p.centers = (CENTERLIST **) mycalloc(HASHSIZE,sizeof(CENTERLIST *));
@@ -574,7 +595,7 @@ void Mc::converge (POINT* p1, POINT* p2,
     p->x = 0.5*(pos.x + neg.x);
     p->y = 0.5*(pos.y + neg.y);
     p->z = 0.5*(pos.z + neg.z);
-    if (i++ == RES) return;
+    if (i++ == maxIt) return;
     if ((fun(p->x, p->y, p->z)) > 0.0)
     {pos.x = p->x; pos.y = p->y; pos.z = p->z;}
     else {neg.x = p->x; neg.y = p->y; neg.z = p->z;}
@@ -595,6 +616,11 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.5  2004/04/03 11:16:00  leserpent
+* Added methods: set{InitPoint, CubeSize,	MaxIteration} and enableTet to class Mc
+* Added a destructor which free previously allocated vertices.
+* Added a getPoints method
+*
 * Revision 1.4  2004/04/02 08:59:24  leserpent
 * Flipped normal
 *

@@ -2,6 +2,7 @@
 #define MC_H
 
 #include <vector>
+#include "PointSet.h"
 
 class ImplicitSurface3D;
 
@@ -9,16 +10,9 @@ class ImplicitSurface3D;
 #include "box3d.h"
 
 class Mc {
-private:
-  Vec3f initPoint;
-  std::vector<unsigned int> indices;
-  void (*progress_callback)(int v, int max);
-  unsigned int progress_step;
-  unsigned int progress_max;
-  ImplicitSurface3D *is;
-
 public:
   Mc(void (*callback)(int, int), int step);
+  Mc::~Mc();
   
   void setcallback(void (*c)(int, int), unsigned int step) {
     progress_callback = c;
@@ -26,13 +20,30 @@ public:
   }
 
   const std::vector<unsigned int>& getIndices();
-  void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals);
-  void domc(ImplicitSurface3D *imps, const Box3f &bbox, bool tet=false);
+  void getPoints(std::vector<Point> &points);
+  void domc(ImplicitSurface3D *imps, const Box3f &bbox);
   
   void setInitPoint(const Vec3f& init) { initPoint = init; }
+  void setCubeSize(float size) { cubeSize = size; }
+  void setMaxIteration(unsigned int max) { maxIt = max; }
+  void enableTet(bool on) { tetActive = on; }
 
 private:
-  int RES; /* # converge iterations    */
+  ImplicitSurface3D *is;
+  std::vector<unsigned int> indices;
+  
+  Vec3f initPoint;
+  float cubeSize;
+  int maxIt;
+  bool tetActive;
+
+  void (*progress_callback)(int v, int max);
+  unsigned int progress_step, progress_max;
+
+  void clear();
+  
+/**********Wrapped code*********************************************/
+private:
 
   enum Direction {L=0,R,B,T,N,F};
   enum Corner {LBN=0,LBF,LTN,LTF,RBN,RBF,RTN,RTF};
@@ -159,6 +170,11 @@ private:
 
 /* History:
 * $Log: mc2.h,v $
+* Revision 1.5  2004/04/03 11:16:00  leserpent
+* Added methods: set{InitPoint, CubeSize,	MaxIteration} and enableTet to class Mc
+* Added a destructor which free previously allocated vertices.
+* Added a getPoints method
+*
 * Revision 1.4  2004/04/02 07:25:33  leserpent
 * Added a setInitPoint method.
 *
