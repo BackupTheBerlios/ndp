@@ -1,3 +1,9 @@
+2004-04-28  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/context.cc: Use class trackball
+
+	* PoUgui/src/trackball.h: Added class trackball
+
 2004-04-27  Damien
 
 	* PoUgui/src/openglview.cc (ParseKey): Disable keys, useless for points
