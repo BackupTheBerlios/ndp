@@ -181,7 +181,7 @@ void MWindow::menu_file_open() {
     objectPointSet = new PointSet();    
     objectPointSet -> load( filename );
     m_bbox = objectPointSet -> getBoundingBox();
-
+    
     PointList::iterator psiterator = objectPointSet->getBegin();
     nPoints = objectPointSet->size(); 
     vPoints = new Vec3f [ nPoints * step];
@@ -190,6 +190,7 @@ void MWindow::menu_file_open() {
       p = *psiterator;
       memcpy( (void *)&vPoints[i*step], (void *)p,sizeof( Point ) );
     }
+    initPoint = vPoints[0];
 
     vbPoints = new VertexBuffer();
     vbPoints -> CreateVertexBuffer( vPoints, nPoints,step, POLY_POINTS );
@@ -244,8 +245,8 @@ void MWindow::menu_rendering_render() {
   if( !vbPoints )
     return;
   
-  qpd = new QProgressDialog( "Rendering...", "Abort Rendering", 100, 
-				   this, "progress", TRUE );
+  qpd = new QProgressDialog( "Computing implicit surface...",
+                             "Abort Rendering", 100, this, "progress", TRUE );
   qpd->setProgress(1);
   QT_Gui->processEvents();
 
@@ -263,6 +264,8 @@ void MWindow::menu_rendering_render() {
   ims->compute( *objectPointSet, filter_npoints );
   // Start MC
   printf("[D] Start Marching Cubes\n");
+  //MCubes->setInitPoint(initPoint);
+  qpd->setLabelText("Polygonizing surface...");
   MCubes -> domc(ims, m_bbox);
   MCubes -> getVertNorm( vec_vertices, vec_normals );
   vec_indices = MCubes -> getIndices();
