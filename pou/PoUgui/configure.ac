@@ -95,9 +95,9 @@ save_LIBS="$LIBS"
         #include <GL/gl.h>
         #include <GL/glu.h>
         #else
-        char gluTessBeginContour(void *p);
+        char gluBeginPolygon(void *p);
         #endif
-       ], [ gluTessBeginContour(0); ], has_glu="yes", has_glu="")
+       ], [ gluBeginPolygon(0); ], has_glu="yes", has_glu="")
        if test x$has_glu != x; then
           AC_MSG_RESULT([yes])
           GL_LIBS="$GL_LIBS -l$SYS_GLU_LIB"
