@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.32  2004/04/21 11:40:56  ob821
+ * depth  test for points rendering
+ *
  * Revision 1.31  2004/04/07 18:23:17  ob821
  * segfault fix
  * lighting bugfix
@@ -104,11 +107,13 @@ OpenglWidget::initializeGL()
     /* Don't cull points only polys */
     glEnable (GL_CULL_FACE);
     glCullFace (GL_FRONT);
-    /* Enable zbuffer */
     m_glcontext->SetDepthTest (true);
     /* Enable Lighting*/
     SetLighting (true, LIGHT_SMOOTH);
   }
+  /* Enable zbuffer */
+  m_glcontext->SetDepthTest (true);
+      
   m_glcontext->OppositeColorFlags();
 }
 
