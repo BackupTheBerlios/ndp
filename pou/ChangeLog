@@ -1,3 +1,9 @@
+2004-04-04  Ben  <leserpent@berlios.de>
+
+	* PoUgui/src/context.cc (DrawHud): Fixed renderText() bug
+	Changed sprintf to QString and operator +.
+	Moved DrawHud's code between a glPushAttrib and a glPopAttrib 
+
 2004-04-03  Ben  <leserpent@berlios.de>
 
 	* libpou/src/ConstructRBFPOU.cc (eval): Fixed a *BIG* memory
