@@ -6,6 +6,9 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.6  2004/04/06 16:15:22  leserpent
+ * Changed getThresholds() to getThreMin/ThreMax().
+ *
  * Revision 1.5  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -59,10 +62,8 @@ class ConstructRBFPOU {
     callback=c;
   }
 
-  void getThresholds(unsigned int &min, unsigned int &max) {
-    min = threMin;
-    max = threMax;
-  }
+  unsigned int getThreMin() { return threMin; }
+  unsigned int getThreMax() { return threMax; }
 
  private:
   AreaSet* cells;
