@@ -109,6 +109,10 @@ public:
     return abs(x-v.x)<epsilon && abs(y-v.y)<epsilon && abs(z-v.z)<epsilon;
   }
 
+  bool isNull() const {
+    return *this == Vector3<T>(0,0,0);
+  }
+  
   T dist(const Vector3<T> &v) const {
     return (*this - v).length();
   }
