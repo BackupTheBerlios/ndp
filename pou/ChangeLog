@@ -14,7 +14,13 @@
 
 2004-04-28  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/light.h|material.h: Added Light and material class.
+	Changed all ?: to clamp()
+
+	* PoUgui/src/utils.h: Added a clamp function which uses min/max.
+
 	* PoUgui/src/context.cc: Use class trackball
+	Move all the material and light code to Light and Material.
 
 	* PoUgui/src/trackball.h: Added class trackball
 
