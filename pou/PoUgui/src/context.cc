@@ -462,6 +462,7 @@ void OpenglContext::ShowStats( bool flag )
 
 void OpenglContext::SyncContext() 
 {
+  glEnable(GL_NORMALIZE);
   if (m_updateproj){
     m_updateproj = false;
     glMatrixMode (GL_PROJECTION);
