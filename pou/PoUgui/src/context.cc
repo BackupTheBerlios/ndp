@@ -311,7 +311,7 @@ void OpenglContext::DrawHud()
     QString sfps("FPS: ");
     QTime t = QTime::currentTime();
     curtime = ( t.hour()*3600 + t.minute()*60 + t.second())*1000 + t.msec();
-    m_frames ++;
+    m_frames++;
     
     if( m_lasttime == -1 ) {
       m_lasttime = curtime;
