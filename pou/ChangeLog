@@ -1,5 +1,9 @@
 2004-04-25  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mc/Makefile.am: Removed mc.h mc.cc
+
+	* PoUgui/src/context.cc (DrawHud): Draw fps and stat under help screen
+
 	* PoUgui/src/mwindow.cc and co: Added help screen.
 	Changed keyhandler into a big switch.
 	
@@ -7,6 +11,9 @@
 	* libpou/src/math/quaternion.h: Removed unusued methods
 
 	* libpou/src/math/matrix4.h: Removed all unusued methods
+	Added operator[]
+
+	* libpou/src/math/matrix3.h: Removed matrix3
 
 	* PoUgui/src/mc/mc2.cc: Bounding box doesn't work, use a default
 	bound of 200
