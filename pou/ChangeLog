@@ -1,7 +1,7 @@
 2004-04-07 Damien
 	* mwindow.cc: New class name (from MWindow to MainWindow )
 	No more global var.
-	Only hungrian notation, slots: conversion from xxxx_xxxx_xxxx() to XxxxXxxxXxxx()
+	Only hungarian notation, slots: conversion from xxxx_xxxx_xxxx() to XxxxXxxxXxxx()
 	Segfault after 3 loading removed (Some windows return false in CloseWindows !!!! )
 	
 	* context.cc: Lighting bugfix: SetMaterials in appropriate functions, using 
