@@ -16,7 +16,7 @@ pkgincludemath_HEADERS=math/vector3.h math/quaternion.h math/matrix4.h \
 	math/matrix.h
 
 pkgincludehelpersdir=@includedir@/@PACKAGE_NAME@
-pkgincludehelpers_HEADERS=helpers/md5.h helpers/deletor.h helpers/gzstream.h
+pkgincludehelpers_HEADERS=helpers/md5.h helpers/deletor.h helpers/gzstream.h helpers/callback.h
 
 
 libpou_la_CXXFLAGS=@GSL_CFLAGS@
