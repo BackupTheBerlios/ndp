@@ -1,3 +1,7 @@
+2004-04-29  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
+
+	* PoUgui/src/vertexbuffer.h: Getdatapointer returns a pointer.
+
 2004-04-29  Thomas Arcila  <arcila@liszt.emi.u-bordeaux.fr>
 
 	* Corrected assertion in ConstructRBFPOU
