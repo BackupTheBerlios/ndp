@@ -10,7 +10,7 @@ using namespace std;
 //v must be (1,0,0), (0,1,0) or (0,0,1)
 void testUnitToMatrix(const Vec3f &v) {
   Matrix4f m;
-  Quaternionf q, q2, r;
+  Quaternionf q; 
   float s, c;
   
   cout << endl << "Input quaternion: rotation of 2PI around (" << v << ")"
