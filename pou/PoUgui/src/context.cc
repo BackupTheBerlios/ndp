@@ -201,7 +201,9 @@ void OpenglContext::DrawHud()
     int npolys = vb->getSize();
     sprintf( spolys, "Triangles: %d", npolys );
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 30, spolys );
+    glDisable (GL_LIGHTING);
+    m_parent -> renderText( 10, 40, spolys );
+    glEnable (GL_LIGHTING);
   }
 
   if( m_showfps ){
@@ -223,11 +225,12 @@ void OpenglContext::DrawHud()
       m_frames = 0;
       m_lasttime = curtime;
     }
-
+    
     sprintf( sfps, "FPS: %f", m_fps );
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 10, sfps );
-
+    glDisable (GL_LIGHTING);
+    m_parent -> renderText( 10, 20, sfps );
+    glEnable (GL_LIGHTING);
   }
   
 }
