@@ -1,5 +1,8 @@
 2004-04-01  Ben  <leserpent@berlios.de>
 
+	* PoUgui/src/mc/mc2.cc: Moved private methods from mc2.h to mc2.cc
+	Removed typedef.
+
 	* PoUgui/src/mc/mc2.h: mc into a class. Need testing.
 
 2004-04-01  Damien
