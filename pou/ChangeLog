@@ -8,6 +8,11 @@
 
 2004-03-30  Ben  <leserpent@berlios.de>
 
+	* libpou/configure.ac: Changed --enable-debug in --disable-debug
+
+	* PoUgui/configure.ac: Added --with-qt-{libraries,includes,dir}
+	Changed --enable-debug in --disable-debug
+
 	* libpou/src/math/matrix*.h: Added missing const and removed
 	superfluous methods(probably needs more fixing).
 
