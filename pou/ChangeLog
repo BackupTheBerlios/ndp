@@ -1,5 +1,8 @@
 2004-03-28  Ben  <leserpent@berlios.de>
 
+	* libpou/src/math/vector3.h (class Vector3): sqrtf->std::sqrt
+	(class Vector3): epsilon is now public
+
 	* libpou/src/ImplicitSurface3D.h: Added missing eval* methods and
 	and added rbf->load to ImplicitSurface3D::load
 

@@ -9,10 +9,8 @@
 template<class T>
 class Vector3
 {
-private:
-  static const T epsilon;
-  
 public:
+  static const T epsilon;
   T x, y, z;
     
 public:
@@ -126,7 +124,7 @@ public:
   }
   
   T length() const {
-    return sqrtf(x*x+y*y+z*z);
+    return std::sqrt(x*x+y*y+z*z);
   }
   
   T length2() const {
