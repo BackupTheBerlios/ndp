@@ -7,6 +7,9 @@
 #include <qframe.h>
 #include <qevent.h>
 
+#include "math/vector3.h"
+#include "math/quaternion.h"
+
 class VertexBuffer;
 class OpenglContext;
 
@@ -23,12 +26,22 @@ class OpenglWidget : public QGLWidget
   inline OpenglContext *getOpenGLContext(){ return glcontext; }
 
  private:
+  void mouseReleaseEvent( QMouseEvent * e);
   void mousePressEvent( QMouseEvent *e );
   void mouseMoveEvent( QMouseEvent *e );
-    
+  void wheelEvent ( QWheelEvent * e );
+  
+  void mapToSphere(Vec3f &dest);
+  
  private:
   VertexBuffer *vb;
   OpenglContext *glcontext;
+
+  Vec3f startVector;
+  Quaternionf orientation, startOrientation;
+  float zoom;
+  
+  static const float DEF_ZOOM = 2;
 };
 
 class OpenglView : public QMainWindow {

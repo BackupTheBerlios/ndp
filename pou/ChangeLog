@@ -1,5 +1,9 @@
 2004-03-25  Ben  <leserpent@berlios.de>
 
+	* libpou/src/math/quaternion.h: Added toIdentity()
+
+	* PoUgui/src/openglview.cc: Added the virtual trackball
+
 	* libpou/src/math/quaternion.h: added quaternion.h
 
 	* libpou/src/math/vector3.h (class Vector3): moved vector3.h to
