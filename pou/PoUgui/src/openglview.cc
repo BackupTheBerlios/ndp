@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.34  2004/04/25 15:22:10  leserpent
+ * Added help string
+ *
  * Revision 1.33  2004/04/24 13:06:36  ob821
  * xmlparser.cc completed
  * settings.* bugfix, code cleanup
@@ -115,8 +118,9 @@ OpenglWidget::initializeGL()
     glEnable (GL_CULL_FACE);
     glCullFace (GL_FRONT);
     m_glcontext->SetDepthTest (true);
+    m_glcontext->OppositeShowHelp ();
     /* Enable Lighting*/
-    SetLighting (true, LIGHT_SMOOTH);
+    SetLighting (true, OpenglContext::LIGHT_SMOOTH);
   }
   /* Enable zbuffer */
   m_glcontext->SetDepthTest (true);
@@ -154,7 +158,7 @@ OpenglWidget::paintGL()
     m_vbuffer -> DrawBuffer();
 
   m_glcontext -> DrawHud();
-  
+
   swapBuffers();
 }
 
@@ -178,50 +182,70 @@ OpenglWidget::mousePressEvent( QMouseEvent *e ) {
 void 
 OpenglWidget::ParseKey( int key, int key_ascii )
 {
-  if( tolower(key_ascii) == 'f' )
-    {
-      bool flag = !m_glcontext->getFpsState ();
-      SetIdleDraw (flag);
-      m_glcontext->ShowFps (flag);
-    }
-  if( tolower(key_ascii) == 's' )
+  switch( key ) {
+  case Qt::Key_F: {
+    bool flag = !m_glcontext->getFpsState ();
+    SetIdleDraw (flag);
+    m_glcontext->ShowFps (flag);
+    break;
+  }
+  
+  case Qt::Key_S:
     m_glcontext->ShowStats (!(m_glcontext->getStatsState ()));
+    break;
 
-  if( tolower(key_ascii) == 'p' )
+  case Qt::Key_P:
     m_glcontext->ShowLightPosition (!(m_glcontext->getLightPositionState ()));
-
-  if( tolower(key_ascii) == 'c' )
+    break;
+    
+  case Qt::Key_C:
     m_glcontext->OppositeColorFlags ();
+    break;
 
-  if( tolower(key_ascii) == 'q' )
+  case Qt::Key_Q:
     m_glcontext->OppositePolygonMode ();
+    break;
 
-  if( key == Qt::Key_Left)
-   m_glcontext->MoveLight (0, 5, 0.0);
+  case Qt::Key_H:
+    m_glcontext->OppositeShowHelp();
+    break;
+  
+  case Qt::Key_Left:
+    m_glcontext->MoveLight (0, 5, 0.0);
+    break;
 
-  if(  key == Qt::Key_Right )
+  case Qt::Key_Right:
     m_glcontext->MoveLight (0, -5, 0.0);
+    break;
 
-  if(  key == Qt::Key_Down )
+  case Qt::Key_Down:
     m_glcontext->MoveLight (5, 0, 0.0);
+    break;
 
-  if(  key == Qt::Key_Up )
+  case Qt::Key_Up:
     m_glcontext->MoveLight (-5, 0, 0.0);
+    break;
 
-  if( tolower(key_ascii) == '+' )
+  case Qt::Key_Plus:
     m_glcontext->MoveLight (0, 0, -0.2);
+    break;
 
-  if( tolower(key_ascii) == '-' )
+  case Qt::Key_Minus:
     m_glcontext->MoveLight (0, 0, 0.2);
+    break;
+    
+  case Qt::Key_1:
+    m_glcontext->SetLightType (OpenglContext::LIGHT_FLAT);
+    break;
 
-  if( key_ascii == '1' )
-    m_glcontext->SetLightType (LIGHT_FLAT);
-
-  if( key_ascii == '2' )
-    m_glcontext->SetLightType (LIGHT_SMOOTH);
-
-  if( key_ascii == '3' )
-    m_glcontext->SetLightType (LIGHT_PIXEL);
+  case Qt::Key_2:
+    m_glcontext->SetLightType (OpenglContext::LIGHT_SMOOTH);
+    break;
+    
+  case Qt::Key_3:
+    m_glcontext->SetLightType (OpenglContext::LIGHT_PIXEL);
+    break;
+  }
 
   if( !m_idledraw )
     updateGL();
@@ -264,7 +288,7 @@ OpenglWidget::wheelEvent ( QWheelEvent * e )
 }
 
 
-void OpenglWidget::SetLighting( bool state, int type )
+void OpenglWidget::SetLighting( bool state,  OpenglContext::LightType type )
 {
   m_glcontext->SetLightType (type);
   m_glcontext->SetLighting ( state );

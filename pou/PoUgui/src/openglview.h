@@ -7,8 +7,9 @@
 #include <qframe.h>
 #include <qevent.h>
 
+#include "context.h"
+
 class VertexBuffer;
-class OpenglContext;
 
 class OpenglWidget : public QGLWidget 
 {
@@ -16,7 +17,7 @@ class OpenglWidget : public QGLWidget
   OpenglWidget( QWidget *parent, const char *name, VertexBuffer *vbuffer );
   ~OpenglWidget();
   
-  void SetLighting( bool state, int type );
+  void SetLighting( bool state,  OpenglContext::LightType type );
   void ParseKey( int key, int key_ascii );
   /* Surcharge des fonctions de base */
   void initializeGL();

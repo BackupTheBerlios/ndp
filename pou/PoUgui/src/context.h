@@ -7,18 +7,18 @@
 #include "math/vector3.h"
 #include "math/quaternion.h"
 
-#define LIGHT_FLAT 1
-#define LIGHT_SMOOTH 2
-#define LIGHT_PIXEL 3
-
 class OpenglWidget;
 
 class OpenglContext {
+ public:
+  enum LightType { LIGHT_FLAT=1, LIGHT_SMOOTH, LIGHT_PIXEL };
+  
  public:
   OpenglContext( OpenglWidget *parent );
   ~OpenglContext();
 
   void SyncContext();
+  void DrawHelp();
   /* Draw the Head-Up-Display */
   void DrawHud();
   void ShowFps( bool flag );
@@ -40,12 +40,14 @@ class OpenglContext {
   void SetViewSize( int width, int height );
   void SetFov( double fov );
   void SetClipDistance( double near, double far );
+  void OppositeShowHelp() { m_showhelp = !m_showhelp; }
+
   /****************************/
   /* DON'T NEED SyncContext() */
   /****************************/
   void SetDepthTest( bool state );
   void SetLighting( bool state );
-  void SetLightType( int type );
+  void SetLightType( LightType type );
   void MoveLight( int anglex, int angley, double distance );
   void SetMaterial ();
   void OppositeColorFlags ();
@@ -59,14 +61,10 @@ class OpenglContext {
   /* View */
   Matrix4f m_modelview;
   Matrix4d m_projection;
-  double m_fov;
-  double m_viewaspect;
+  double m_fov, m_viewaspect;
   int m_width, m_height;
-  double m_far;
-  double m_near;
-  bool m_updateproj;
-  bool m_updatemview;
-  bool m_depthtest;
+  double m_far, m_near;
+  bool m_updateproj, m_updatemview, m_depthtest;
 
   /* Camera Motion */
   double m_zoomfactor;
@@ -81,12 +79,9 @@ class OpenglContext {
   Vec3f m_lightpos;
   
   /* Lighting */
-  bool m_lightstate;
-  bool m_lightdraw;
+  bool m_lightstate, m_lightdraw;
   int m_lighttype;
-  Vec3f m_light_ambient;
-  Vec3f m_light_diffuse;
-  Vec3f m_light_specular;
+  Vec3f m_light_ambient, m_light_diffuse, m_light_specular;
 
   /* Polygon Mode*/
   bool m_polygonmode;
@@ -94,13 +89,17 @@ class OpenglContext {
   bool m_colorflag;
 
   /* Stats */
-  bool m_showstats;
-  bool m_showfps;
-  float m_fps;
-  int m_frames;
-  int m_lasttime;
-  /* Fonts */
   QFont m_font;
+  bool m_showstats, m_showfps, m_showhelp;
+  float m_fps;
+  int m_frames, m_lasttime;
+ 
+  struct helpStruct {
+    const QChar key;
+    const QString helpString;
+  };
+  static helpStruct helpInfos[];
+
 };
 
 

@@ -33,8 +33,22 @@
 #include "vertexbuffer.h"
 #include "utils.h"
 
+//Static members initialisation
 const float OpenglContext::DEF_ZOOM;
 const float OpenglContext::INVSQRT2 = 1.0f/std::sqrt(2.0f);
+
+OpenglContext::helpStruct OpenglContext::helpInfos[] = {
+  'h', "Hide/Unhide this help screen",
+  'p', "Hide/Unhide light",
+  's', "Hide/Unhide statistics",
+  'f', "Hide/Unhide fps",
+  'c', "Enable/Disable colors",
+  'q', "Enable/Disable wireframe",
+  '+', "Increase light distance from center",
+  '-', "Decrease light distance from center",
+  '1', "Enable flat shading",
+  '2', "Enable gouraud shading"
+};
 
 OpenglContext::OpenglContext( OpenglWidget *parent ) 
   : m_zoomfactor(DEF_ZOOM) 
@@ -49,6 +63,7 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_updateproj = true;
   m_lasttime = -1;
   m_showfps = false;
+  m_showhelp = false;
   m_parent = parent;
   /*lighting / material*/
   m_lightrx = 0;
@@ -187,7 +202,7 @@ void OpenglContext::SetLighting( bool state )
   }
 }
 
-void OpenglContext::SetLightType( int type )
+void OpenglContext::SetLightType( OpenglContext::LightType type )
 {
   m_lighttype = type;
 
@@ -214,12 +229,10 @@ void OpenglContext::MoveLight( int anglex, int angley, double distance ){
   double cTheta, sTheta, cPhi, sPhi, theta, phi;
   m_lightdistance += distance;
   m_lightrx += anglex;
-  //m_lightrx %= 360; // [0, 2PI]
   m_lightry += angley;
-  //m_lightry %= 360; // [0, 2PI ]
   
-  theta = DEG2RAD((double)m_lightry );
-  phi = DEG2RAD((double)m_lightrx );
+  theta = deg2rad( (double)m_lightry );
+  phi = deg2rad( (double)m_lightrx );
 
   cTheta = cos( theta );
   cPhi = cos( phi );
@@ -266,6 +279,22 @@ void OpenglContext::OppositePolygonMode ()
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
+void
+OpenglContext::DrawHelp() {
+  int cury=0;
+
+  glDisable(GL_DEPTH_TEST);
+  glColor3f( 1.0, 1.0, 1.0 );
+
+  for(unsigned int i = 0; i < sizeof(helpInfos)/sizeof(helpStruct); i++) {
+    QString tmp(helpInfos[i].key);
+    tmp += " ";
+    tmp += helpInfos[i].helpString;
+    m_parent->renderText( 10, cury+=m_font.pixelSize(), tmp, m_font );
+  }
+  
+}
+
 void OpenglContext::DrawHud()
 {
   glPushAttrib( GL_ENABLE_BIT );
@@ -302,7 +331,7 @@ void OpenglContext::DrawHud()
     VertexBuffer *vb = m_parent ->getVertexBuffer();
     spolys += QString::number(vb->getSize());
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 40, spolys, m_font );
+    m_parent->renderText( 10, 40, spolys, m_font );
   }
 
   if( m_showfps ){
@@ -326,8 +355,12 @@ void OpenglContext::DrawHud()
     
     sfps += QString::number(m_fps);
     glColor3f( 1.0, 1.0, 1.0 );
-    m_parent -> renderText( 10, 20, sfps, m_font );
+    m_parent->renderText( 10, 20, sfps, m_font );
   }
+
+  if(m_showhelp)
+    DrawHelp();
+  
   /* Restore gl flags */
   glPopAttrib();
   
@@ -352,18 +385,18 @@ void OpenglContext::SyncContext()
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
     /* Build the Matrix */
-    double tfov = tan( DEG2RAD( m_fov / 2.0 ) );
+    double tfov = tan( deg2rad( m_fov / 2.0 ) );
     double top = m_near * tfov;
     double right = top * m_viewaspect;
 
-    m_projection.data[0][0] = m_near / right ;
-    m_projection.data[1][1] = m_near / top ;
-    m_projection.data[2][2] = -( m_far + m_near ) / ( m_far - m_near ) ;
-    m_projection.data[2][3] = -1.0 ;
-    m_projection.data[3][2] = ( -2 * m_far * m_near ) / ( m_far - m_near ) ;
+    m_projection[0][0] = m_near / right ;
+    m_projection[1][1] = m_near / top ;
+    m_projection[2][2] = -( m_far + m_near ) / ( m_far - m_near ) ;
+    m_projection[2][3] = -1.0 ;
+    m_projection[3][2] = ( -2 * m_far * m_near ) / ( m_far - m_near ) ;
 
     /*Send the Matrix*/
-    glLoadMatrixd( (double *)m_projection.data );
+    glLoadMatrixd( (double *)m_projection[0] );
     glMatrixMode( GL_MODELVIEW );
   }
 
@@ -371,9 +404,9 @@ void OpenglContext::SyncContext()
     m_updateproj = false;
     glMatrixMode( GL_MODELVIEW );
     /* Build the Matrix */
-    m_orientation.unitToMatrix44( m_modelview.data );
+    m_orientation.unitToMatrix44( m_modelview );
     /* Send the Matrix */
-    glLoadMatrixf( (float *)m_modelview.data );
+    glLoadMatrixf( (float *)m_modelview[0] );
     /* Apply Zoom */
     glScalef( m_zoomfactor, m_zoomfactor, m_zoomfactor );
   }
