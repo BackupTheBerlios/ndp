@@ -160,15 +160,20 @@ AC_SUBST(QT_THREADS)
 
 dnl Checks for Qt includes.
 AC_ARG_WITH(qt-includes, [  --with-qt-includes           directory where Qt includes are installed ], [ qt_includes=`eval echo "$withval"` ], [ qt_includes=$qt_dir/include ])
-AC_LANG_PUSH([C++])
-AC_CHECK_HEADERS([$qt_includes/qapplication.h],,AC_MSG_ERROR([Qt headers not found.]))
-
 QT_CFLAGS="-I$qt_includes"
-AC_SUBST(QT_CFLAGS)
+
+AC_LANG_PUSH([C++])
 
 save_CXXFLAGS="$CXXFLAGS"
-save_LIBS="$LIBS"
+save_CPPFLAGS="$CPPFLAGS"
 CXXFLAGS="$CXXFLAGS $QT_CFLAGS"
+CPPFLAGS="$CPPFLAGS -I$qt_includes"
+AC_CHECK_HEADERS([qapplication.h],,AC_MSG_ERROR([Qt headers not found.]))
+CPPFLAGS="$save_CPPFLAGS"
+
+AC_SUBST(QT_CFLAGS)
+
+save_LIBS="$LIBS"
 LIBS="$QT_LIBS"
 
 AC_CACHE_CHECK([for Qt library version >= 3.1.1],
