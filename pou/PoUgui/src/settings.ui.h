@@ -169,6 +169,7 @@ SettingsForm::XMLTagParser (void *parser)
 {
     bool noerror;
     int intvalue;
+    int tmp_tmin, tmp_tmax;
     float floatvalue;
     QString tagname;
     QString value;
@@ -196,15 +197,15 @@ SettingsForm::XMLTagParser (void *parser)
 	    intvalue = value.toInt (&noerror, 10);
 	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
 		ShowErrorMessage (this, "Error Bad value for Tmin : Valid value: [1..+oo]");		    else 
-	      m_tmin = intvalue;
+	      tmp_tmin = intvalue;
 	}
 	
 	if (tagname=="tmax")
 	{
 	    intvalue = value.toInt (&noerror, 10);
-	    if (!noerror || CheckIntValue (1,-1, intvalue) ) 
+	    if (!noerror || CheckIntValue (1,-1, intvalue)) 
 		ShowErrorMessage (this, "Error Bad value for Tmax : Valid value: [1..+oo]");		    else 
-	      m_tmax = intvalue;
+	      tmp_tmax = intvalue;
 	}
 
 	if (tagname=="phi")
@@ -243,6 +244,15 @@ SettingsForm::XMLTagParser (void *parser)
 		m_enabletet = intvalue;
 	}
     }
+    
+    if (tmp_tmax < tmp_tmin)
+	ShowErrorMessage (this, "Error Tmin > Tmax");
+    else
+    {
+	m_tmin = tmp_tmin;
+	m_tmax = tmp_tmax;
+    }
+    
 }		
 
 bool SettingsForm::CheckIntValue( int minvalue, int maxvalue, int value )
@@ -274,6 +284,7 @@ bool SettingsForm::RetreiveValues()
 
      bool res;
      bool retvalue = false;
+     int tmin, tmax;
     
     m_phi = combo_pou_phi->currentItem();
          
@@ -286,23 +297,19 @@ bool SettingsForm::RetreiveValues()
     else
 	m_pointscount = pointscount;
     
-    int tmin = stmin.toInt (&res);
-    if (!res) 
+    tmin = stmin.toInt (&res);
+    if (!res  || CheckIntValue (1,-1, tmin)) 
     {
 	retvalue = true;
 	ShowErrorMessage (this, "Error Bad value for tmin: Valid value: [1..+oo]");
     }
-    else
-	m_tmin = tmin;
     
-    int tmax = stmax.toInt (&res);
-    if (!res) 
+    tmax = stmax.toInt (&res);
+    if (!res || CheckIntValue (1,-1, tmax) ) 
     {
 	retvalue = true;
 	ShowErrorMessage (this, "Error Bad value for tmax: Valid value: [1..+oo]");
     }
-    else
-	m_tmax = tmax;
     
     float  cubesize = scubesize.toFloat (&res);
     if (!res)
@@ -323,7 +330,20 @@ bool SettingsForm::RetreiveValues()
 	m_maxiteration = maxit;
     
     m_enabletet = entry_mc_tet-> isChecked();
- 
+    if (!retvalue) 
+    {		
+	if (tmax < tmin)
+	{
+	    ShowErrorMessage(this, "Error Tmin > Tmax");
+	    retvalue = true;
+	}
+	else
+	{
+	    m_tmin = tmin;
+	    m_tmax = tmax;
+	}
+    }
+    
     return retvalue;
 }
 

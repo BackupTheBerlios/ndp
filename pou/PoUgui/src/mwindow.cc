@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.51  2004/04/29 09:30:41  ob821
+ * bugfix
+ *
  * Revision 1.50  2004/04/29 08:59:17  ob821
  * exception
  *
@@ -297,7 +300,7 @@ MainWindow::MenuSettingsArgs()
   unsigned int newNumPoints, oldNumPoints = m_settingsform->getPointsCount ();
   m_settingsform->exec();
   newNumPoints = m_settingsform->getPointsCount ();
-  if (oldNumPoints != newNumPoints) {
+  if ( (oldNumPoints != newNumPoints) && m_points) {
     m_pointset_filtered.randomFilter(m_pointset, newNumPoints);
     m_points->LockBuffer();
     std::vector<Point> points = m_points->getDataPointer();
@@ -377,12 +380,15 @@ MainWindow::MenuRenderingRender()
   MCubes.setMaxIteration (mc_maxit);
   MCubes.setCubeSize (mc_cubesize);
   MCubes.enableTet (enabletet);
+  MCubes.setInitPoint (Vec3f (-1000, -1000, -1000));
   try
     {
       MCubes.doMc (&ims, boundingbox);
     } 
   catch(std::exception e) 
     {
+      ShowErrorMessage (this, QString (e.what ()));
+      return;
     }
 
   if (!qpd)

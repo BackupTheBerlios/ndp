@@ -1,8 +1,14 @@
+2004-04-29 Damien
+
+	* PoUgui/src/mwindow.cc: exceptions
+
+	*PoUgui/src/settings.ui.h: check if 0<tmin<tmax
+
 2004-04-29  Benjamin Grange  <bgrange@liszt.emi.u-bordeaux.fr>
 
 	* libpou/src/ConstructRBF.cc: Removed useless if.
 
-2004-04-28 Loic
+2004-04-29 Loic
 
 	* PoUgui/src/context.cc : added helper for light control
 	
