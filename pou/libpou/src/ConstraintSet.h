@@ -6,6 +6,10 @@
  * @brief  Constraint set support
  * 
  * $Log: ConstraintSet.h,v $
+ * Revision 1.7  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.6  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -27,6 +31,7 @@
 #define CONSTRAINTSET_H
 
 #include <vector>
+#include <stdexcept>
 #include "Area.h"
 #include "math/vector3.h"
 #include "helpers/deletor.h"
@@ -45,9 +50,10 @@ class ConstraintSet
   ConstraintSet::ConstraintSet () {}
   ConstraintSet::ConstraintSet (const PointSet &ps);
   ConstraintSet (const ConstraintSet & cs, const Area * a);
-
-  void load (const char *filename);
-  void save (const char *filename);
+  void load (const char *filename) throw (std::runtime_error);
+;
+  void save (const char *filename) throw (std::runtime_error);
+;
 
   Constraint *operator[] (int i) const;
   std::vector<Constraint *>::const_iterator getBegin () const;

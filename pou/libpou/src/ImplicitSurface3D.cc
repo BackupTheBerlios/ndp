@@ -6,6 +6,10 @@
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.15  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.14  2004/04/20 11:16:39  pumpkins
  * gzstream
  * authors
@@ -151,12 +155,19 @@ void ImplicitSurface3D::computeGeometry(const PointSet &ps, unsigned int size) {
   computeGeometry(psFiltered);
 }
 
-void ImplicitSurface3D::load(const std::string &filename) {
+void ImplicitSurface3D::load(const std::string &filename) 
+  throw (std::runtime_error)
+{
   igzstream stream(filename.c_str());
+  if (!stream)
+    throw std::runtime_error("File cannot be opened for reading");
   rbf->load(stream);
 }
 
-void ImplicitSurface3D::save(const std::string &filename) const {
+void ImplicitSurface3D::save(const std::string &filename) const 
+throw (std::runtime_error) {
   ogzstream stream(filename.c_str());
+  if (!stream)
+    throw std::runtime_error("File cannot be opened for writing");
   rbf->save(stream);
 }

@@ -4,6 +4,10 @@
  * @date   Mon Apr  5 20:40:07 2004
  * 
  * $Log: PointSet.h,v $
+ * Revision 1.7  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.6  2004/04/06 16:14:06  leserpent
  * Added a removeDeleteAll() method.
  * Points are no longer deleted into PointSet's destructor.
@@ -20,6 +24,8 @@
 
 #include <list>
 #include <vector>
+#include <stdexcept>
+#include <exception>
 #include "Area.h"
 #include "math/vector3.h"
 #include "helpers/deletor.h"
@@ -179,8 +185,8 @@ public:
     box.extendBy(p->pos);
   }
 
-  void load(const char* filename);
-  void save(const char* filename);
+  void load(const char* filename) throw (std::runtime_error) ;
+  void save(const char* filename) throw (std::runtime_error);
 
   unsigned int size(void) const 
   {

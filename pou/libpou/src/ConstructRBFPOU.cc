@@ -6,6 +6,10 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.12  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.11  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -39,8 +43,12 @@ ConstructRBFPOU::~ConstructRBFPOU() {
 
 void
 ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
+  throw (std::logic_error)
 {
   int result;
+  if (cs.size() < threMin)
+    throw std::runtime_error ("ConstraintSet size is lower than min thresold");
+
   applyFilter(cs);
   dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
 

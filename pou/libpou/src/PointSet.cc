@@ -6,6 +6,10 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.8  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.7  2004/04/20 11:16:39  pumpkins
  * gzstream
  * authors
@@ -142,9 +146,12 @@ PointSet::randomSplit(const unsigned int number,
 
 
 void 
-PointSet::load(const char* filename)
+PointSet::load(const char* filename) throw (std::runtime_error)
 {
   igzstream fs(filename);
+  if (!fs)
+    throw std::runtime_error("File Cannot be opened for reading\n");
+
   int counter = 0;
 
   cout << "Reading... " << endl;
@@ -173,9 +180,11 @@ PointSet::load(const char* filename)
 
 
 void 
-PointSet::save(const char* filename)
+PointSet::save(const char* filename) throw (std::runtime_error)
 {
   ogzstream fs(filename);
+  if (!fs)
+    throw std::runtime_error("File Cannot be opened for writing\n");
   
   cout << "Save " << filename << endl;
   for(PointList::iterator i=points.begin(); i!=points.end(); i++)

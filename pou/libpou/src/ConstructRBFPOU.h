@@ -6,6 +6,10 @@
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.10  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.9  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -34,6 +38,9 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
+#include <stdexcept>
+#include <exception>
+
 
 #include "AreaSetOctree.h"
 #include "math/vector3.h"
@@ -57,7 +64,8 @@ class ConstructRBFPOU {
 
   ConstructRBFPOU(TypeRBF _type = TRIHARMONIC);
   ~ConstructRBFPOU();
-  void compute(ConstraintSet& cs, const AreaSet *octree = 0);
+  void compute(ConstraintSet& cs, const AreaSet *octree = 0) 
+    throw (std::logic_error);
   void setThresholds(unsigned int tMin, unsigned tMax);
   float eval(const Vec3f &p) const;
   void evalGradian(const Vec3f &p, Vec3f &v) const;
@@ -68,7 +76,7 @@ class ConstructRBFPOU {
   const AreaSet *getOctree();  
   void setFilter(ConstraintFilter *f, int p = 0);
 
-  void setCallBack(void (*c)(int, int), int s, int pass = 0, int numPass = 1) {
+  void setCallBack(bool (*c)(int, int), int s, int pass = 0, int numPass = 1) {
     step = (s!=0)?s:step;
     this->pass = pass;
     this->numPass = (numPass!=0)?numPass:1;
@@ -91,7 +99,7 @@ class ConstructRBFPOU {
   ConstructRBF *newRBF(void);
   
   void applyFilter(ConstraintSet &cs);
-  void (*callback)(int v, int max);
+  bool (*callback)(int v, int max);
   int step, pass, numPass;
 };
 

@@ -6,6 +6,10 @@
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.13  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.12  2004/04/23 20:18:07  pumpkins
  * getOctree
  *
@@ -44,6 +48,9 @@
 #include <vector>
 #include <cassert>
 
+#include <stdexcept>
+#include <exception>
+
 class ImplicitSurface3D {
  public:
   ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type = 
@@ -56,8 +63,8 @@ class ImplicitSurface3D {
   void computeGeometry(const PointSet &ps, unsigned int size);
   void computeGeometry(const PointSet &ps);
 
-  void load(const std::string &filename);
-  void save(const std::string &filename) const;
+  void load(const std::string &filename) throw (std::runtime_error);
+  void save(const std::string &filename) const throw (std::runtime_error);
 
   float eval(const Vec3f &p) const { return rbf->eval(p); }
 
@@ -73,7 +80,7 @@ class ImplicitSurface3D {
     v.setValues(r->eval(p), g->eval(p), b->eval(p));
   }
 
-  void setCallBack(void (*c)(int, int), int s) {
+  void setCallBack(bool (*c)(int, int), int s) {
     assert(rbf&&r&&g&&b);
     rbf->setCallBack(c, s);
     r->setCallBack(c, s, 0, 3);

@@ -1,3 +1,13 @@
+2004-04-25    <thomas@pumpkins>
+	* libpou/src/ConstraintSet: load and save now use gzstream and
+	thow runtime_error
+	* libpou/src/ConstructRBFPOU.{h,c} (ConstructRBFPOU): Callback new
+        needs to return bool
+	Compute throws logic_error if PointSet.size < threMin
+	* libpou/src/ImplicitSurface3D.{h,c} (): load and save throw
+	std::runtime_error.
+	Callback now needs to return bool (stop?)
+								
 2004-04-24 Damien
 	* mwindow.cc: Mc now use Octree BoundingBox
 	* xmplparser.cc: generic format for entries class XMLEntry

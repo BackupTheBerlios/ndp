@@ -6,6 +6,10 @@
  * @brief  ConstraintSet management
  * 
  * $Log: ConstraintSet.cc,v $
+ * Revision 1.7  2004/04/25 12:09:24  pumpkins
+ * error throw std::runtime_exception
+ * Compute(POU) throw logic_error if (cs.size < threMin)
+ *
  * Revision 1.6  2004/04/20 11:16:38  pumpkins
  * gzstream
  * authors
@@ -25,7 +29,7 @@
  */
 #include <fstream>
 #include <iostream>
-
+#include "helpers/gzstream.h"
 #include "PointSet.h"
 #include "ConstraintSet.h"
 #include "math/vector3.h"
@@ -57,8 +61,12 @@ ConstraintSet::ConstraintSet (const ConstraintSet &cs, const Area *a):
 
 void
 ConstraintSet::load (const char *filename)
+ throw (std::runtime_error)
 {
-  std::ifstream fs (filename);
+  igzstream fs (filename);
+  if (!fs)
+    throw std::runtime_error ("ConstraintSet file cannot be opened for "
+			      "reading\n");
   int counter = 0;
 
   while (!fs.eof ()) {
@@ -80,8 +88,12 @@ ConstraintSet::load (const char *filename)
 
 void
 ConstraintSet::save (const char *filename)
+  throw (std::runtime_error)
 {
-  std::ofstream fs (filename);
+  ogzstream fs (filename);
+  if (!fs)
+    throw std::runtime_error ("ConstraintSet file cannot be opened for "
+			      "writing\n");
 
   for (std::vector<Constraint *>::iterator i = constraints.begin ();
        i != constraints.end (); i++) {
