@@ -21,7 +21,7 @@ PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc\
 	language.h mwindow.h openglview.h utils.h xmlparser.h\
 	context.h opengl.h vertexbuffer.h trackball.cc trackball.h\
 	light.h light.cc material.h material.cc\
-	settings.ui.h settings.ui
+	settings.ui.h settings.ui icons.h
 
 nodist_PoUgui_SOURCES=settings.h settings.cc msettings.cc
 
