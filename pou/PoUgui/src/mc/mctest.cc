@@ -9,13 +9,13 @@ int main(int argc, char *argv) {
   vector<double> vertices, normals;
   vector<int> indices;
   
-// 	ImplicitSurface3D is(ConstructRBFPOU::BIHARMONIC);
-// 	PointSet ps;
-// 	ps.load("dragon-soft.sur");
-// 	is.compute(ps, 3000);
-// 	is.save("test.pou");
-  ImplicitSurface3D is;
-  is.load("test.pou");
+  ImplicitSurface3D is(ConstructRBFPOU::BIHARMONIC);
+  PointSet ps;
+  ps.load("dragon-soft.sur");
+  is.compute(ps, 3000);
+  is.save("test.pou");
+//  ImplicitSurface3D is;
+//  is.load("test.pou");
   domc(&is);
   getVertNorm(vertices, normals);
   indices = getIndices();

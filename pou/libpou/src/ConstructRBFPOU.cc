@@ -12,6 +12,7 @@ ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF _type)
   threMin = 50;
   threMax = 100;
   overlap=0.5f;
+  cf=const_cast<ConstraintFilter*>(ConstructRBF::NULL_FILTER);
 }
 
 ConstructRBFPOU::~ConstructRBFPOU() {

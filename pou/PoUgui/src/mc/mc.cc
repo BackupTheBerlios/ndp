@@ -846,7 +846,7 @@ double fun(double x, double y, double z)
 void domc(ImplicitSurface3D *imps)
 {
   is = imps;
-  Vec3f init(3, -2.06667, -2.06667);
+  Vec3f init(0, 0, 0);
   
 
   char *err;

@@ -8,9 +8,10 @@ pkginclude_HEADERS=Area.h AreaSetOctree.h ConstructRBFBiHarmonic.h box3d.h \
 	AreaCube.h AreaSphere.h ConstructRBFTriHarmonic.h \
 	ConstructRBFThinPlate.h AreaSet.h Constraint.h PointSet.h \
 	ConstraintFilter.h Solver.h ConstructRBF.h W.h \
-	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h \
-	math/vector3.h math/quaternion.h math/matrix4.h math/matrix3.h \
-	math/matrix.h
+	ConstructRBFPOU.h ImplicitSurface3D.h ConstraintSet.h
+pkgincludemathdir=@includedir@/@PACKAGE_NAME@
+pkgincludemath_HEADERS=math/vector3.h math/quaternion.h math/matrix4.h \
+	math/matrix3.h math/matrix.h
 
 
 libpou_la_CXXFLAGS=@GSL_CFLAGS@

@@ -1,7 +1,7 @@
 #include "ImplicitSurface3D.h"
 
 int main(int argc, char *argv) {
-	ImplicitSurface3D is(ConstructRBFPOU::BIHARMONIC);
+	ImplicitSurface3D is(ConstructRBFPOU::TRIHARMONIC);
 	PointSet ps;
 	ps.load("dragon-soft.sur");
 	is.compute(ps, 3000);
