@@ -2,6 +2,7 @@
 #define MWINDOW_H
 
 #include <qmainwindow.h>
+#include "PointSet.h"
 #include "math/vector3.h"
 #include "box3d.h"
 #include "language.h"
@@ -34,6 +35,7 @@ class MWindow : public QMainWindow
  private:
   void CleanMemory();
 
+  PointSet ps;
   BoxVolume m_bbox;
   Vec3f initPoint;
 };

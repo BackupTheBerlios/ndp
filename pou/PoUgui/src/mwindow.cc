@@ -54,7 +54,6 @@ int nPolys;
 // ImpliciteSurface3D API class
 /*****************************************************************************/
 ImplicitSurface3D *ims;
-PointSet *objectPointSet;
 /*****************************************************************************/
 // MC API class
 /*****************************************************************************/
@@ -165,37 +164,25 @@ void MWindow::closeEvent( QCloseEvent *event ) {
 }
 
 void MWindow::menu_file_open() {
-  int i;
   QString filename = QFileDialog::
     getOpenFileName( QString::null, "Fichiers .sur (*.sur)", this,"file open", 
 		     "Sur -- Ouvrir Fichier" );
 
   if( !filename.isEmpty() ){
-    Vec3f *vPoints;
-    Point *p;
-    int step = sizeof(Point) / sizeof(Vec3f);
+    std::vector<Point> vecPoints;
 
     CloseWindows();
     CleanMemory();
     
-    objectPointSet = new PointSet();    
-    objectPointSet -> load( filename );
-    m_bbox = objectPointSet -> getBoundingBox();
+    ps.load( filename );
+    m_bbox = ps.getBoundingBox();
     
-    PointList::iterator psiterator = objectPointSet->getBegin();
-    nPoints = objectPointSet->size(); 
-    vPoints = new Vec3f [ nPoints * step];
+    PointList::iterator psEnd = ps.getEnd();
     
-    for( i=0; i<nPoints; i++, psiterator++){
-      p = *psiterator;
-      memcpy( (void *)&vPoints[i*step], (void *)p,sizeof( Point ) );
-    }
-    initPoint = vPoints[0];
+    for( PointList::iterator i=ps.getBegin(); i != psEnd; ++i)
+      vecPoints.push_back(**i);
 
-    vbPoints = new VertexBuffer();
-    vbPoints -> CreateVertexBuffer( vPoints, nPoints,step, POLY_POINTS );
-    
-    delete[] vPoints;
+    vbPoints = new VertexBuffer(vecPoints, POLY_POINTS);
 
     OpenglView *mw = new OpenglView( MW_workspace, vbPoints );
     mw -> resize( 200, 200 );
@@ -232,15 +219,8 @@ namespace {
 }
 
 void MWindow::menu_rendering_render() {
-  std::vector<Vec3f> vec_vertices, vec_normals;
-  std::vector<unsigned int> vec_indices;
-  int *indices;
-  Vec3f *vertices;
-  int nindices;
-  int nvertices;
+  std::vector<Point> vecPoints;
   int filter_npoints = settingsForm -> getPointsCount();
-
-  int i = 0;
 
   if( !vbPoints )
     return;
@@ -254,47 +234,22 @@ void MWindow::menu_rendering_render() {
 
   /* First check if api is OK */
   ims = new ImplicitSurface3D(ConstructRBFPOU::BIHARMONIC);
-  ims->setCallBack (callback, 10);
   if( !ims )
     return ;
+  ims->setCallBack (callback, 10);
+
   MCubes = new Mc(callback, 10);
-  if( !MCubes )
-    return ;
   printf("[D] Start Surface reconstruction\n");
-  ims->compute( *objectPointSet, filter_npoints );
-  // Start MC
+  ims->compute( ps, filter_npoints );
   printf("[D] Start Marching Cubes\n");
-  //MCubes->setInitPoint(initPoint);
   qpd->setLabelText("Polygonizing surface...");
   MCubes -> domc(ims, m_bbox);
-  MCubes -> getVertNorm( vec_vertices, vec_normals );
-  vec_indices = MCubes -> getIndices();
-  // Copy data
-  nindices = vec_indices.size();
-  nvertices = vec_vertices.size();
-  // nvertices * 3 = (coords) + (normals) + (color)
-  vertices = new Vec3f[ nvertices*3 ];
-  indices = new int[ nindices ];
-  for( i=0; i<nvertices; i++ ){
-    /* coords */
-    vertices[i*3] = vec_vertices[i];
-    /* normal coords*/
-    vertices[i*3+1] = vec_normals[i];
-    /* color */
-    ims->evalColorRGB( vertices[i*3], vertices[i*3+2] );
-    //    vertices[i*3+2] = Vec3f( 0.5, 0.5, 0.5 );
-  }
-
-  for( i=0; i< nindices; i++ )
-    indices[i] = vec_indices[i];
+  MCubes -> getPoints(vecPoints);
 
   vbPolys = new VertexBuffer();
-  vbPolys->CreateVertexBuffer( vertices, nvertices, 
-				sizeof(Point)/sizeof(Vec3f), POLY_TRIANGLES );
-  vbPolys->SetIndices( indices, nindices );
+  vbPolys->CreateVertexBuffer( vecPoints, POLY_TRIANGLES );
+  vbPolys->SetIndices( MCubes->getIndices() );
 
-  delete[] vertices;
-  delete[] indices;
   delete MCubes;
  
   PolysWindow = new OpenglView( NULL, vbPolys );
@@ -310,10 +265,8 @@ void MWindow::timerEvent( QTimerEvent *e )
 
 void MWindow::CleanMemory() 
 {
-  delete objectPointSet;
   delete vbPoints;
   delete vbPolys;
-  objectPointSet = NULL;
   vbPoints = NULL;
   vbPolys = NULL;
 }
