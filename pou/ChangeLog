@@ -1,6 +1,7 @@
 2004-04-28  Thomas
 	* update version number to 1.0, because of release
-
+	* configure.ac libpou/src/AreaSetOctree.cc:
+	remove unused hash_set in octree
 2004-04-28  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/context.cc (OpenglContext): cvs compiles!

@@ -6,6 +6,9 @@
  * @brief  Area set construction, octree based
  * 
  * $Log: AreaSetOctree.h,v $
+ * Revision 1.9  2004/04/28 19:27:37  pumpkins
+ * hash_set removal
+ *
  * Revision 1.8  2004/04/28 19:20:12  pumpkins
  * code cleanup
  *
@@ -26,7 +29,6 @@
 
 #include <fstream>
 #include <vector>
-#include <ext/hash_set>
 #include "math/vector3.h"
 #include "box3d.h"
 

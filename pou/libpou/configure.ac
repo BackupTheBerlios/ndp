@@ -33,12 +33,9 @@ dnl Enable libtool without static lib build
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AC_CHECK_LIB(z, gzopen, Z_LIBS="-lz", AC_MSG_WARN([*** libz not found. Cannot manage compressed files ***]))
+AC_CHECK_LIB(z, gzopen, Z_LIBS="-lz", AC_MSG_ERROR([*** libz not found. Cannot manage compressed files ***]))
 
 AC_SUBST(Z_LIBS)
-
-AC_CHECK_HEADER([ext/hash_set], :, AC_MSG_ERROR([*** cannot find hash_set header ***]))
-
 AM_PATH_GSL(1.1, :, AC_MSG_ERROR([*** libgsl not found ***]))
 
 dnl Modify CFLAGS after all tests
