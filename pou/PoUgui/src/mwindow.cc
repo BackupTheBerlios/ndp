@@ -19,6 +19,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.41  2004/04/27 14:05:48  pumpkins
+ * if (!qpd) replaced by assert
+ *
  * Revision 1.40  2004/04/26 16:28:38  ob821
  * code cleanup
  *
@@ -268,8 +271,7 @@ namespace
 {
   QProgressDialog *qpd;
   bool callback (int v, int max) {
-    if (!qpd)
-      printf ("DIALOG DESTROYED BUT LIBPOU CONTINUE\n");
+    assert(qpd);
     if (qpd->wasCancelled()){
       delete qpd;
       qpd = NULL;
