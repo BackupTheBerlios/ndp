@@ -1,12 +1,19 @@
 2004-04-03  Ben  <leserpent@berlios.de>
 
+	* PoUgui/configure.ac: Fixed a configure bug with Mandrake
+	9.{1,2}: for AC_CHECK_HEADERS #include <full_path_to/file.h>
+	doesn't work, adding temporarily -Ifull_path_to to CXXFLAGS and
+	CPPFLAGS fix everything.
+
+	* PoUgui/src/mc/mc2.cc: Added original mc's licence
+
 	* PoUgui/src/openglview.cc (initializeGL): GL_DEPTH to GL_DEPTH_TEST
 
 	* PoUgui/src/mwindow.cc: Adapted code to the modified VertexBuffer and
 	Mc classes.
 
 	* PoUgui/src/mc/mc2.h: Added methods: set{InitPoint, CubeSize,
-	MaxIteration} and enableTet to class Mc
+	MaxIteration} and enableTet() to class Mc
 	Added a destructor which free previously allocated vertices.
 	Added a getPoints method
 
