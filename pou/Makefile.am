@@ -9,3 +9,4 @@ maintainer-clean-local:
 	@-rm -f config.status install-sh Makefile config.sub ltmain.sh
 	@-rm -fr autom4te.cache
 	@-rm -f COPYING depcomp pou-config
+	@-rm -fr admin/*

@@ -36,7 +36,7 @@ public:
     x = v[0]; y = v[1]; z = v[2];
   }
 
-  // If eveyrthing is negatif, OpenSG returns epsilon
+  // If everything is negatif, OpenSG returns epsilon
   T maxValue() {
     T w = (x>epsilon)?x:epsilon;
     w = (y>w)?y:w;

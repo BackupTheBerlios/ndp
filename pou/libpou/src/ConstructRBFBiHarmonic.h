@@ -9,7 +9,7 @@ class ConstructRBFBiHarmonic : public ConstructRBF {
  public:
   ConstructRBFBiHarmonic();
   ~ConstructRBFBiHarmonic();
-  int compute(const std::vector<Constraint> &cs) ;
+  int computeRBF(const ConstraintSet &cs) ;
   float eval(const Vec3f &p) const;
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   void jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const;

@@ -41,7 +41,8 @@ public:
   {}
 
   virtual bool intersect(const Vec3f& p) const;
-  virtual bool intersectRay (const Vec3f & origin, const Vec3f & direction, float & depth1, float & depth2) const;
+  virtual bool intersectRay (const Vec3f & origin, const Vec3f & direction,
+			     float & depth1, float & depth2) const;
   virtual float w(const Vec3f& p) const;
   virtual void wd(const Vec3f& p, Vec3f &v);
 

@@ -1,6 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([libpou], [0.1], [http://developer.berlios.de/bugs/?func=addbug&group_id=1564])
 
+CFLAGS="$CFLAGS"
+CXXFLAGS="$CXXFLAGS"
+
 dnl Setup for automake
 AC_CONFIG_SRCDIR([src/AreaCube.cc])
 
@@ -53,8 +56,7 @@ dnl Support for debug
 if test "$USE_DEBUG" = yes
 then
 	CFLAGS="$CFLAGS -g"
-	CXXFLAGS="$CXXFLAGS -g"
-	LDFLAGS="$LDFLAGS -s", 
+	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
 fi
 
 dnl Support for profiling
@@ -69,6 +71,7 @@ if test "$USE_OPTIMIZE" = yes
 then
 	CFLAGS="$CFLAGS -O3"
 	CXXFLAGS="$CXXFLAGS -O3"
+	LDFLAGS="$LDFLAGS -s"
 fi
 
 dnl Warning as error

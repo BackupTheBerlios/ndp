@@ -5,17 +5,16 @@ ConstructRBF::ConstructRBF() {
   center = 0;
   w = 0;
   c = 0;
-  cf=new NullFilter();
+  cf=const_cast<ConstraintFilter*>(NULL_FILTER);
 }
 
 ConstructRBF::~ConstructRBF() {
-  delete cf;
-   if (w)
-      delete[] w;
-    if (center)
-      delete[] center;
-    if (c)
-      delete[] c;
+  /*  if (w)
+    delete[] w;
+  if (center)
+    delete[] center;
+  if (c)
+  delete[] c;*/
 }
 
 void
@@ -24,3 +23,5 @@ ConstructRBF::evalNormal(const Vec3f &p, Vec3f &v) const
   evalGradian(p, v);
   v.normalize();  
 }
+
+const ConstraintFilter *ConstructRBF::NULL_FILTER = new NullFilter();

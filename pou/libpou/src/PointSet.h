@@ -1,7 +1,6 @@
 #ifndef POINTSET_H
 #define POINTSET_H
 
-#include <GL/glut.h>
 #include <list>
 #include <vector>
 #include "Area.h"

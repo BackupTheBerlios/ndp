@@ -12,7 +12,8 @@ class ImplicitSurface3D {
   ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type = 
 		    ConstructRBFPOU::TRIHARMONIC);
   ~ImplicitSurface3D();
-  compute(PointSet &ps);
+  void compute(PointSet &ps);
+  void compute(PointSet &ps, unsigned int size);
 
   void load(const std::string &filename);
   void save(const std::string &filename) const;
@@ -21,11 +22,19 @@ class ImplicitSurface3D {
   void evalNormal(const Vec3f &p, Vec3f &v) const;
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   const ConstructRBFPOU *getRBFPOU() const;
+  void setProjDist(float d) {
+    projDist=d;
+  }
+  float getProjDist() {
+    return projDist;
+  }
 
  private:
   ConstructRBFPOU *rbf;
-  ConstructRBFPOU *r,g,b;
-  std::vector<Constraint> *cs;
+  ConstructRBFPOU *r,*g,*b;
+  ConstraintSet *cs;
+  ConstraintFilter *rgb, *nz;
+  float projDist;
 };
 
 inline const ConstructRBFPOU *ImplicitSurface3D::getRBFPOU() const {

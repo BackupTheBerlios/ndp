@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-ConstructRBFBiHarmonic::ConstructRBFBiHarmonic() {
+ConstructRBFBiHarmonic::ConstructRBFBiHarmonic() : ConstructRBF::ConstructRBF() {
   c = new float[4];
 }
 
@@ -11,7 +11,9 @@ ConstructRBFBiHarmonic::~ConstructRBFBiHarmonic() {
   delete c;
 }
 
-float ConstructRBFBiHarmonic::eval(const Vec3f &p) const {
+float
+ConstructRBFBiHarmonic::eval(const Vec3f &p) const
+{
   if (size == 0)
     return 100;
   
@@ -24,25 +26,6 @@ float ConstructRBFBiHarmonic::eval(const Vec3f &p) const {
   
   return sum + c[0]*p[0] + c[1]*p[1] + c[2]*p[2] + c[3];
 }
-
-/*void
-phiDist_d1(const Vec3f& p1, const Vec3f& p2, Vec3f& n)
-{
-  Vec3f delta = p1-p2;
-  float dist = delta.length();
-
-  if (dist==0)
-    {
-      n[0]=n[1]=n[2]=0;
-      return;
-    }
-
-  float distInv = 1.0f / dist;
-
-  n[0] = delta[0] * distInv;
-  n[1] = delta[1] * distInv;
-  n[2] = delta[2] * distInv;
-}*/
 
 void 
 ConstructRBFBiHarmonic::evalGradian(const Vec3f& p, Vec3f& v) const
@@ -96,12 +79,12 @@ void
 ConstructRBFBiHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const
 {
   if (size == 0)
-  {
-    lx.setValues(0.0, 0.0, 0.0);
-    ly = lz = lx;
-    std::cerr << "ImplicitSurface3DrbfBiharmonic::Jacobi - No Points in Region " << std::endl;
-    return;
-  }
+    {
+      lx.setValues(0.0, 0.0, 0.0);
+      ly = lz = lx;
+      std::cerr << "ImplicitSurface3DrbfBiharmonic::Jacobi - No Points in Region " << std::endl;
+      return;
+    }
   
   lx.setValues(0.0, 0.0, 0.0);
   ly = lz =lx;
@@ -136,35 +119,33 @@ ConstructRBFBiHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) 
 }			
 
 int 
-ConstructRBFBiHarmonic::compute(const std::vector<Constraint> &cs) 
+ConstructRBFBiHarmonic::computeRBF(const ConstraintSet &cs) 
 {
   unsigned int size = cs.size();
   double ro = 1e-10;
- 
   //linear system Ax=b  
   Solver s(size+4);
-  
   //Fill matrix A 
   for(unsigned int i=0; i<size; i++)
     for(unsigned int j=i; j<size; j++)
       {
-	double val = phi(dist(cs[i].getVector(), cs[j].getVector()));
+	double val = phi(dist(cs[i]->getVector(), cs[j]->getVector()));
 	if (i==j)
 	  val -= 8 * size * 3.14f * ro;
 	s.setA(i, j, val);
       }
   for(unsigned int i=0; i<size; i++)
     {
-      s.setA(i, size+0, cs[i].getVector()[0]);
-      s.setA(i, size+1, cs[i].getVector()[1]);
-      s.setA(i, size+2, cs[i].getVector()[2]);
+      s.setA(i, size+0, cs[i]->getVector()[0]);
+      s.setA(i, size+1, cs[i]->getVector()[1]);
+      s.setA(i, size+2, cs[i]->getVector()[2]);
       s.setA(i, size+3, 1);
     }
 
   //Fill matrix b
   for(unsigned int i=0; i<size; i++)
     {
-      s.setB(i, cs[i].getConstraint());
+      s.setB(i, cs[i]->getConstraint());
     }
   s.setB(size+0, 0);
   s.setB(size+1, 0);
@@ -178,7 +159,7 @@ ConstructRBFBiHarmonic::compute(const std::vector<Constraint> &cs)
   setSize(size);
   for(unsigned int i=0; i<size; i++)
     {
-      setCenter(i, cs[i].getVector());
+      setCenter(i, cs[i]->getVector());
       setW(i, s.getX(i));
     }
       
@@ -188,20 +169,20 @@ ConstructRBFBiHarmonic::compute(const std::vector<Constraint> &cs)
        s.getX(size+3));
 
   /*
-  for(unsigned int i=0; i<size; i++)
+    for(unsigned int i=0; i<size; i++)
     {
-      cout << "Center " << getCenter(i) 
-	   << " --> " << eval(getCenter(i)) << endl;
+    cout << "Center " << getCenter(i) 
+    << " --> " << eval(getCenter(i)) << endl;
     }
   */
-
   return result;  
 }
 
-void ConstructRBFBiHarmonic::setC(const float cx,
-	  const float cy,
-	  const float cz,
-	  const float cg)
+void
+ConstructRBFBiHarmonic::setC(const float cx,
+			     const float cy,
+			     const float cz,
+			     const float cg)
 {
   c[0] = cx;
   c[1] = cy;
@@ -209,10 +190,11 @@ void ConstructRBFBiHarmonic::setC(const float cx,
   c[3] = cg;
 }
 
-void ConstructRBFBiHarmonic::getC(float& cx,
-	  float& cy,
-	  float& cz,
-	  float& cg)
+void
+ConstructRBFBiHarmonic::getC(float& cx,
+			     float& cy,
+			     float& cz,
+			     float& cg)
 {
   cx = c[0];
   cy = c[1];
@@ -220,8 +202,10 @@ void ConstructRBFBiHarmonic::getC(float& cx,
   cg = c[3];
 }
 
-void ConstructRBFBiHarmonic::load(std::ifstream &stream) {
- unsigned int newSize;
+void
+ConstructRBFBiHarmonic::load(std::ifstream &stream)
+{
+  unsigned int newSize;
 
   stream >> newSize;
   setSize(newSize);
@@ -241,7 +225,9 @@ void ConstructRBFBiHarmonic::load(std::ifstream &stream) {
   setC(cx,cy,cz,cg);
 }
 
-void ConstructRBFBiHarmonic::save(std::ofstream &stream) const {
+void
+ConstructRBFBiHarmonic::save(std::ofstream &stream) const
+{
   stream << size << std::endl;
   for(unsigned int i = 0; i<size; i++)
     stream << getCenter(i)[0] << " " 

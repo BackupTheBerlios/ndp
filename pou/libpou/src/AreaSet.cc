@@ -2,8 +2,6 @@
 #include "vector3.h"
 #include "box3d.h"
 
-using namespace std;
-
 unsigned int 
 AreaSet::getAreas(const Vec3f& p, unsigned int* tab)
 {
@@ -24,7 +22,7 @@ AreaSet::getAreas(const Vec3f& p, unsigned int* tab)
 
 void 
 AreaSet::copy(AreaSet& destination, 
-	      const vector<unsigned int>& index,
+	      const std::vector<unsigned int>& index,
 	      const bool flag)
 {
   if (flag)
@@ -70,5 +68,3 @@ AreaSet::display(int index)
 {
   cells[index]->display();
 }
-
-

@@ -6,17 +6,16 @@
 #include <assert.h>
 #include <algorithm>
 
+
 // THIS CODE IS NOT CLEAN !!!
 
 // I HOPE IT RUNS BUT
 // IT NEEDS TO BE REWRITEN !!!
 
-using namespace std;
-
 static const unsigned int OCTREE_BUFFER_SIZE = 256;
   
 void 
-AreaSetOctree::create(const PointSet& ps,
+AreaSetOctree::create(const ConstraintSet& cs,
 		      unsigned int _threMin,
 		      unsigned int _threMax,
 		      const float _overlap)
@@ -26,7 +25,7 @@ AreaSetOctree::create(const PointSet& ps,
   threMax = _threMax;
   overlap = _overlap;
 
-  BoxVolume box = ps.getBoundingBox();
+  BoxVolume box = cs.getBoundingBox();
 
   Vec3f boxSize;
   box.getSize(boxSize);
@@ -42,7 +41,7 @@ AreaSetOctree::create(const PointSet& ps,
   box = BoxVolume(min,max);
 
   // create octree
-  subdivide(root, ps, box);
+  subdivide(root, cs, box);
   
   // set maxLevel
   maxLevel = getMaxLevel();
@@ -51,21 +50,15 @@ AreaSetOctree::create(const PointSet& ps,
 
 void
 AreaSetOctree::subdivide(Node* &node,
-			 const PointSet& ps,
+			 const ConstraintSet& cs,
 			 const BoxVolume& box)
 {
   node = new Node(box, 2*overlap);
-  PointSet filter(ps, node->a);
+  ConstraintSet filter(cs, node->a);
   unsigned int size = filter.size();
 
-  //if (size==0)
-  //{
-      //cout << "No points "<< endl;
-  //  return;
-  //}
   if (size>threMax)
     {
-      //cout << "Too many points, subdividing" << endl;
       Vec3f boxMin = box.getMin();      
       Vec3f boxMax = box.getMax();
       Vec3f boxCenter;
@@ -77,56 +70,38 @@ AreaSetOctree::subdivide(Node* &node,
 
       newBox = BoxVolume(boxMin[0], boxMin[1], boxMin[2],
 			 boxCenter[0], boxCenter[1], boxCenter[2]);
-      subdivide(node->child[0], ps, newBox);
+      subdivide(node->child[0], cs, newBox);
 
       newBox = BoxVolume(boxMin[0], boxMin[1], boxCenter[2],
 			 boxCenter[0], boxCenter[1], boxMax[2]);
-      subdivide(node->child[1], ps, newBox);
+      subdivide(node->child[1], cs, newBox);
 
       newBox = BoxVolume(boxMin[0], boxCenter[1], boxMin[2],
 			 boxCenter[0], boxMax[1], boxCenter[2]);
-      subdivide(node->child[2], ps, newBox);
+      subdivide(node->child[2], cs, newBox);
 
       newBox = BoxVolume(boxMin[0], boxCenter[1], boxCenter[2],
 			 boxCenter[0], boxMax[1], boxMax[2]);
-      subdivide(node->child[3], ps, newBox);
+      subdivide(node->child[3], cs, newBox);
 
       newBox = BoxVolume(boxCenter[0], boxMin[1], boxMin[2],
 			 boxMax[0], boxCenter[1], boxCenter[2]);
-      subdivide(node->child[4], ps, newBox);
+      subdivide(node->child[4], cs, newBox);
 
       newBox = BoxVolume(boxCenter[0], boxMin[1], boxCenter[2],
 			 boxMax[0], boxCenter[1], boxMax[2]);
-      subdivide(node->child[5], ps, newBox);
+      subdivide(node->child[5], cs, newBox);
 
       newBox = BoxVolume(boxCenter[0], boxCenter[1], boxMin[2],
 			 boxMax[0], boxMax[1], boxCenter[2]);
-      subdivide(node->child[6], ps, newBox);
+      subdivide(node->child[6], cs, newBox);
 
       newBox = BoxVolume(boxCenter[0], boxCenter[1], boxCenter[2],
 			 boxMax[0], boxMax[1], boxMax[2]);
-      subdivide(node->child[7], ps, newBox);
+      subdivide(node->child[7], cs, newBox);
     }
   else if (size<threMin)
     {
-      /*
-      cout << "Size = " << size << " " << flush;
-      float size;
-      //fast hack, 
-      do
-	{
-	  if (size<threMin)
-	    node->a->grow(0.05);
-	  if (size>threMax)
-	    node->a->reduce(0.02);
-
-	  PointSet filter(ps, node->a);
-	  size = filter.size();
-	  cout << size << " " << flush;
-	}
-      while (size<threMin || size>threMax);
-	
-      cout << " --> OK" << endl;*/
       node->areaIndex = addArea(node->a);
       return;
     }
@@ -136,25 +111,24 @@ AreaSetOctree::subdivide(Node* &node,
       node->areaIndex = addArea(node->a);
       return;
     }
-
   return;
 }
 
 void 
 AreaSetOctree::saveOctree(const char * filename) {
-  ofstream stream (filename);
+  std::ofstream stream (filename);
   saveOctree (stream);
   stream.close ();
 }
 
 void 
-AreaSetOctree::saveOctree(ostream& stream)
+AreaSetOctree::saveOctree(std::ostream& stream)
 {
   root->save(stream);
 }
 
 void 
-AreaSetOctree::Node::save(ostream& stream)
+AreaSetOctree::Node::save(std::ostream& stream)
 {
   bool isLeaf = 
     (child[0] == 0) &&
@@ -176,17 +150,17 @@ AreaSetOctree::Node::save(ostream& stream)
 	     << box.getMax()[1] << " "
 	     << box.getMax()[2] << " ";
       stream << areaIndex << " ";
-      stream << 1 << endl;
+      stream << 1 << std::endl;
     }
    else
      {
-       stream << -2 << endl;
+       stream << -2 << std::endl;
        stream << box.getMin()[0] << " "
 	      << box.getMin()[1] << " "
 	      << box.getMin()[2] << " "
 	      << box.getMax()[0] << " "
 	      << box.getMax()[1] << " "
-	      << box.getMax()[2] << endl;
+	      << box.getMax()[2] << std::endl;
        child[0]->save(stream);
        child[1]->save(stream);
        child[2]->save(stream);
@@ -195,26 +169,25 @@ AreaSetOctree::Node::save(ostream& stream)
        child[5]->save(stream);
        child[6]->save(stream);
        child[7]->save(stream);
-       stream << 2 << endl;
+       stream << 2 << std::endl;
      }
 }
 
 void 
 AreaSetOctree::loadOctree(const char * filename) {
-  ifstream stream (filename);
+  std::ifstream stream (filename);
   loadOctree (stream);
   stream.close ();
 }
 
 void
-AreaSetOctree::loadOctree(istream& stream)
+AreaSetOctree::loadOctree(std::istream& stream)
 {
   root = Node::load(stream);
-  cout << "load Octree OK" << endl;
 }
 
 AreaSetOctree::Node*
-AreaSetOctree::Node::load(istream& stream)
+AreaSetOctree::Node::load(std::istream& stream)
 {
   Node* node;
   int tagBegin, tagEnd;
@@ -275,36 +248,10 @@ AreaSetOctree::maxLevelRec(AreaSetOctree::Node* node)
      }
 }
 
-/*
-void 
-AreaSetOctree::getOctreeAreas(const Vec3f& p, vector<unsigned int> & tab)
-{
-  queue<Node*> q;
-  q.push (root);
-  
-  while (!q.empty ()) 
-    {
-      Node * node = q.front();
-      if (node->isLeaf ())
-	{
-	  if (node->a->intersect (p)) {
-	    //tab[count++] = node->areaIndex;
-	    tab.push_back (node->areaIndex);
-	  } 
-	}
-      else 
-	for (unsigned int i = 0; i < 8; i++)
-	  if (node->child[i] != NULL)
-	    q.push (node->child[i]);
-      q.pop ();
-    }
-}
-*/
-
 void 
 AreaSetOctree::getOctreeAreas(const Vec3f& p, AreaIndexVector & vec)
 {
-  vector<Node*> q;
+  std::vector<Node*> q;
   q.reserve (OCTREE_BUFFER_SIZE);
   unsigned int front = 0;
   q.push_back (root);
@@ -331,7 +278,7 @@ void AreaSetOctree::getIntersectionList (const Vec3f& origin,
 					 const Vec3f& direction, 
 					 IntersectionVector & vec)
 {
-  vector<Node*> q;
+  std::vector<Node*> q;
   unsigned int front = 0;
   float depth1 = 0.0, depth2 = 0.0;
   
@@ -360,7 +307,8 @@ void AreaSetOctree::getIntersectionList (const Vec3f& origin,
 }  
   
 bool 
-operator< (const AreaSetOctree::Intersection & i1, const AreaSetOctree::Intersection & i2)
+operator< (const AreaSetOctree::Intersection & i1, 
+	   const AreaSetOctree::Intersection & i2)
 {
   return (i1.getDepth () < i2.getDepth ());
 }

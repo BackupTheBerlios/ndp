@@ -4,16 +4,21 @@
 
 #include <fstream>
 
-ConstructRBFTriHarmonic::ConstructRBFTriHarmonic() {
+ConstructRBFTriHarmonic::ConstructRBFTriHarmonic() :
+  ConstructRBF::ConstructRBF()
+{
   c = new float[10];
 }
 
-ConstructRBFTriHarmonic::~ConstructRBFTriHarmonic() {
+ConstructRBFTriHarmonic::~ConstructRBFTriHarmonic()
+{
   delete c;
 }
 
 
-int ConstructRBFTriHarmonic::compute(const std::vector<Constraint> &cs) {
+int
+ConstructRBFTriHarmonic::computeRBF(const ConstraintSet &cs) 
+{
   unsigned int size = cs.size();
   double ro = 1e-12;
 
@@ -24,24 +29,24 @@ int ConstructRBFTriHarmonic::compute(const std::vector<Constraint> &cs) {
   for(unsigned int i=0; i<size; i++)
     for(unsigned int j=i; j<size; j++)
       {
-        double val = phi(dist(cs[i].getVector(), cs[i].getVector()));
+        double val = phi(dist(cs[i]->getVector(), cs[j]->getVector()));
         if (i==j)
           val -= 8 * size * 3.14f * ro;
         s.setA(i, j, val);
       }
   for(unsigned int i=0; i<size; i++)
     {
-      s.setA(i, size+0, cs[i].getVector()[0]*cs[i].getVector()[0]);
-      s.setA(i, size+1, cs[i].getVector()[1]*cs[i].getVector()[1]);
-      s.setA(i, size+2, cs[i].getVector()[2]*cs[i].getVector()[2]);
+      s.setA(i, size+0, cs[i]->getVector()[0]*cs[i]->getVector()[0]);
+      s.setA(i, size+1, cs[i]->getVector()[1]*cs[i]->getVector()[1]);
+      s.setA(i, size+2, cs[i]->getVector()[2]*cs[i]->getVector()[2]);
 
-      s.setA(i, size+3, cs[i].getVector()[0]*cs[i].getVector()[1]);
-      s.setA(i, size+4, cs[i].getVector()[1]*cs[i].getVector()[2]);
-      s.setA(i, size+5, cs[i].getVector()[2]*cs[i].getVector()[0]);
+      s.setA(i, size+3, cs[i]->getVector()[0]*cs[i]->getVector()[1]);
+      s.setA(i, size+4, cs[i]->getVector()[1]*cs[i]->getVector()[2]);
+      s.setA(i, size+5, cs[i]->getVector()[2]*cs[i]->getVector()[0]);
 
-      s.setA(i, size+6, cs[i].getVector()[0]);
-      s.setA(i, size+7, cs[i].getVector()[1]);
-      s.setA(i, size+8, cs[i].getVector()[2]);
+      s.setA(i, size+6, cs[i]->getVector()[0]);
+      s.setA(i, size+7, cs[i]->getVector()[1]);
+      s.setA(i, size+8, cs[i]->getVector()[2]);
 
       s.setA(i, size+9, 1);
     }
@@ -49,7 +54,7 @@ int ConstructRBFTriHarmonic::compute(const std::vector<Constraint> &cs) {
   //Fill matrix b
   for(unsigned int i=0; i<size; i++)
     {
-      s.setB(i, cs[i].getConstraint());
+      s.setB(i, cs[i]->getConstraint());
     }
   s.setB(size+0, 0);
   s.setB(size+1, 0);
@@ -70,7 +75,7 @@ int ConstructRBFTriHarmonic::compute(const std::vector<Constraint> &cs) {
   
   for(unsigned int i=0; i<size; i++)
     {
-      setCenter(i, cs[i].getVector());
+      setCenter(i, cs[i]->getVector());
       setW(i, s.getX(i));
     }
 
@@ -86,10 +91,10 @@ int ConstructRBFTriHarmonic::compute(const std::vector<Constraint> &cs) {
   c[9] = s.getX(size+9);
 
   return result;
-
 }
 
-float ConstructRBFTriHarmonic::eval(const Vec3f& p) const
+float
+ConstructRBFTriHarmonic::eval(const Vec3f& p) const
 {
   if (size == 0)
     return 100;
@@ -111,8 +116,8 @@ float ConstructRBFTriHarmonic::eval(const Vec3f& p) const
 float
 ConstructRBFTriHarmonic::getL(const BoxVolume& box) const {
   if (size == 0)
-  {
-    std::cerr << "ImplicitSurface3DrbfTriharmonic::L - No Points in Region " << std::endl;
+    {
+      std::cerr << "ImplicitSurface3DrbfTriharmonic::L - No Points in Region " << std::endl;
       return 0;
     }
   float d, tmp;
@@ -123,22 +128,22 @@ ConstructRBFTriHarmonic::getL(const BoxVolume& box) const {
   for (unsigned int i = 0; i < size; i++)
     {
       Vec3f farestPoint(
-        fabs(min.x - center[i].x) > fabs(max.x - center[i].x) ? min.x : max.x,
-        fabs(min.y - center[i].y) > fabs(max.y - center[i].y) ? min.x : max.y,
-        fabs(min.z - center[i].z) > fabs(max.z - center[i].z) ? min.x : max.z);
+			fabs(min.x - center[i].x) > fabs(max.x - center[i].x) ? min.x : max.x,
+			fabs(min.y - center[i].y) > fabs(max.y - center[i].y) ? min.x : max.y,
+			fabs(min.z - center[i].z) > fabs(max.z - center[i].z) ? min.x : max.z);
       d = (dist(farestPoint, center[i]));
       tmp = fabs(d*d * w[i] * 3);
       sum += tmp;
     }
   
-    return sum;
+  return sum;
   
 }
 
 void
 ConstructRBFTriHarmonic::evalGradian(const Vec3f &p, Vec3f &v) const
 {  
-    if (size == 0)
+  if (size == 0)
     {
       v[0] = v[1] = v[2] = 0;
       std::cerr << "ImplicitSurface3DrbfTriharmonic::Grad - No Points in Region " << std::endl;
@@ -161,7 +166,7 @@ ConstructRBFTriHarmonic::evalGradian(const Vec3f &p, Vec3f &v) const
   v[1] += 2 * c[1] * p[1]  +   c[3] * p[0] + c[4] * p[2] + c[7] ;
   v[2] += 2 * c[2] * p[2]  +   c[4] * p[1] + c[5] * p[0] + c[8] ;
 
- // Function is positive inside: Normals will point to interior 
+  // Function is positive inside: Normals will point to interior 
   // we have to turn them around
   v[0] =- v[0];
   v[1] =- v[1];
@@ -206,7 +211,7 @@ ConstructRBFTriHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz)
       lz[1] = ly[2];
       // dfzz
       lz[2] = 3*(wi_dist_div * diff.z * diff.z + wi_dist) + 2 * c[2];
-   }
+    }
 }
 
 void ConstructRBFTriHarmonic::load(std::ifstream &stream) {

@@ -5,7 +5,7 @@
 
 class ConstraintFilter {
  public:
-  virtual void filter(std::vector<Constraint>& cs, int parm) = 0;
+  virtual void filter(ConstraintSet& cs, int parm) = 0;
 };
 
 #endif /* CONSTRAINTFILTER_H */

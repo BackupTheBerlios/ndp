@@ -1,28 +1,102 @@
 #include "ImplicitSurface3D.h"
+#include "PointSet.h"
+#include "ConstraintSet.h"
 #include <fstream>
+#include "ConstraintFilter.h"
+
+
+class ConstraintFilterRGB : public ConstraintFilter {
+private:
+  PointSet *ps;
+public:
+  ConstraintFilterRGB(PointSet *_ps) {
+    ps=_ps;
+  }
+  void filter(ConstraintSet& cs, int parm) {
+    PointList::const_iterator begin=ps->getBegin();
+    PointList::const_iterator end=ps->getEnd();
+    PointList::const_iterator i;
+    int j;
+    
+    for( i=begin, j=0; i!=end; i++, j++) {
+      Point *p=*i;
+      cs[j]->setConstraint(p->getRGB()[parm]);
+    }
+  };
+};
+
+class ConstraintFilterNonZero : public ConstraintFilter {
+private:
+  PointSet *ps;
+  float projDist;
+public:
+  ConstraintFilterNonZero(PointSet *_ps, float _projDist) {
+    ps=_ps;
+    projDist=_projDist;
+  }
+  void filter(ConstraintSet& cs, int parm) {
+    std::cout << "filter nz" << std::endl;
+    PointList::const_iterator begin=ps->getBegin();
+    PointList::const_iterator end=ps->getEnd();
+    PointList::const_iterator i;
+    int j;
+    
+    for( i=begin, j=0; i!=end; i++, j++) {
+      Point *p=*i;
+      Vec3f center;
+      Vec3f c=p->getNorm();
+      cs[j]->setConstraint(0);
+      if (c[0]==0 && c[1]==0 && c[2]==0)
+	continue;
+      center= p->getPos() - (c*projDist);
+      cs.add(new Constraint(center, 1));
+      center= p->getPos() + (c*projDist);
+      cs.add(new Constraint(center, -1));
+    }
+  };
+};
 
 ImplicitSurface3D::ImplicitSurface3D(ConstructRBFPOU::TypeRBF _type) {
   rbf = new ConstructRBFPOU(_type);
-  b = g = r = new ConstructRBFPOU(_type);
-  cs = new vector<Constraint>
-  //  g = new ConstructRBFPOU(_type);
-  //  b = new ConstructRBFPOU(_type);
+  r = new ConstructRBFPOU(_type);
+  g = new ConstructRBFPOU(_type);
+  b = new ConstructRBFPOU(_type);
+  projDist=0.03f;
 }
 
 ImplicitSurface3D::~ImplicitSurface3D() {
-  delete cs;
-  delete r,g,b;
+  delete r;
+  delete g;
+  delete b;
   delete rbf;
 }
 
-ImplicitSurface3D::compute(PointSet &ps) {
-  PointLst::const_iterator psBegin = ps.getBegin();
-  PointList::const_iterator psEnd = filtered.getEnd();
+void ImplicitSurface3D::compute(PointSet &ps) {
+  PointList::const_iterator begin=ps.getBegin();
+  PointList::const_iterator end=ps.getEnd();
   PointList::const_iterator i;
   
-  for (i=psBegin; i!=psEnd; i++) {
-    
-  }
+  rgb = new ConstraintFilterRGB(&ps);
+  nz = new ConstraintFilterNonZero(&ps, projDist);
+  
+  for(i=begin; i!=end; i++) {
+    Point *p=*i;
+    cs->add(new Constraint(p->getPos(), p->getRGB()[0]));
+  } 
+  std::cout << std::endl;
+  r->setFilter(const_cast<ConstraintFilter *>(ConstructRBF::NULL_FILTER), 0);
+  r->compute(*cs);
+  g->setFilter(rgb, 1);
+  g->compute(*cs);
+  g->setFilter(rgb, 2);
+  b->compute(*cs);
+  rbf->setFilter(nz, 0);
+  rbf->compute(*cs);
+}
+
+void ImplicitSurface3D::compute(PointSet &ps, unsigned int size) {
+  PointSet psFiltered(ps, size);
+  compute(psFiltered);
 }
 
 void ImplicitSurface3D::load(const std::string &filename) {
@@ -32,31 +106,5 @@ void ImplicitSurface3D::load(const std::string &filename) {
 
 void ImplicitSurface3D::save(const std::string &filename) const {
   std::ofstream stream(filename.c_str());
-  switch(type)
-    {
-    case BIHARMONIC:
-      stream << 0 << endl;
-      break;
-    case TRIHARMONIC:
-      stream << 1 << endl;
-      break;
-    case THINPLATE:
-      stream << 2 << endl;
-      break;
-    }
-  
-  stream << threMin << " " << threMax << endl;
-  
-  unsigned int size = is.size();
-  stream << size << endl;
-  
-  for(unsigned int i = 0; i<size; i++)
-    {
-      is[i]->save(stream);
-    }
-  
-  for(unsigned int i = 0; i<size; i++)
-    {
-      (*cells)[i]->save(stream);
-    }
+  rbf->save(stream);
 }

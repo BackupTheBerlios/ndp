@@ -1,6 +1,9 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([PoUgui], [0.1], [http://developer.berlios.de/bugs/?func=addbug&group_id=1564])
 
+CFLAGS="$CFLAGS"
+CXXFLAGS="$CXXFLAGS"
+
 dnl Setup for automake
 AC_CONFIG_SRCDIR([src/main.cc])
 
@@ -59,8 +62,12 @@ case "$target" in
         ;;
 esac
 
+LIBS="$LIBS $X_LIBS"
+CFLAGS="$CFLAGS $X_CFLAGS"
+CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+
 save_LIBS="$LIBS"
-    LIBS="$LIBS -l$SYS_GL_LIB $SDL_LIBS"
+    LIBS="$LIBS -l$SYS_GL_LIB $X_LIBS"
     if test -n "$SYS_GL_LIB";then
        AC_MSG_CHECKING([for OpenGL($SYS_GL_LIB)])
        AC_TRY_LINK([
@@ -127,7 +134,7 @@ AC_CACHE_CHECK([for Qt library],
   for X in qt-mt qt; do
     if test "x$ac_qtlib" = "x"; then
       if test -f $QTDIR/lib/lib$X.so -o -f $QTDIR/lib/lib$X.a; then
-        QT_LIBS="-L$QTDIR/lib -l$X $X_LIBS"
+        QT_LIBS="-L$QTDIR/lib -l$X"
 	break
       fi
     fi
@@ -144,7 +151,7 @@ if test "x$ac_qtlib" = "xqt-mt"; then
 fi
 AC_SUBST(QT_THREADS)
 
-QT_CFLAGS="-I$QTDIR/include $X_CFLAGS"
+QT_CFLAGS="-I$QTDIR/include"
 AC_SUBST(QT_CFLAGS)
 
 save_CXXFLAGS="$CXXFLAGS"
@@ -186,26 +193,19 @@ AC_LANG_POP
 dnl A common error message:
 ac_qtdir_errmsg="not found in current PATH. Maybe QT development environment isn't available (qt3-devel)."
 
-dnl Check for Qt qmake utility.
-AC_PATH_PROG(ac_qmake, qmake, [no], $ac_qtdir/bin:${PATH})
-if test "x$ac_qmake" = "xno"; then
-   AC_MSG_ERROR([qmake $ac_qtdir_errmsg])
-fi
-AC_SUBST(ac_qmake)
-
 dnl Check for Qt moc utility.
-AC_PATH_PROG(ac_moc, moc, [no])
-if test "x$ac_moc" = "xno"; then
+AC_PATH_PROG(MOC, moc, [no], $QTDIR/bin:${PATH})
+if test "x$MOC" = "xno"; then
    AC_MSG_ERROR([moc $ac_qtdir_errmsg])
 fi
-AC_SUBST(ac_moc)
+AC_SUBST(MOC)
 
 dnl Check for Qt uic utility.
-AC_PATH_PROG(ac_uic, uic, [no])
-if test "x$ac_uic" = "xno"; then
+AC_PATH_PROG(UIC, uic, [no], $QTDIR/bin:${PATH})
+if test "x$UIC" = "xno"; then
    AC_MSG_ERROR([uic $ac_qtdir_errmsg])
 fi
-AC_SUBST(ac_uic)
+AC_SUBST(UIC)
 
 dnl Modify CFLAGS after all tests
 dnl Add args to configure
@@ -227,7 +227,6 @@ if test "$USE_DEBUG" = yes
 then
 	CFLAGS="$CFLAGS -g"
 	CXXFLAGS="$CXXFLAGS -g"
-	LDFLAGS="$LDFLAGS -s", 
 fi
 
 dnl Support for profiling
@@ -242,6 +241,7 @@ if test "$USE_OPTIMIZE" = yes
 then
 	CFLAGS="$CFLAGS -O3"
 	CXXFLAGS="$CXXFLAGS -O3"
+        LDFLAGS="$LDFLAGS -s"
 fi
 
 dnl Warning as error

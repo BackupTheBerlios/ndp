@@ -1,9 +1,9 @@
 EXTRA_DIST=settings.ui
-bin_PROGRAMS=PoUgui
-
-
 SUBDIRS=gl-headers
 
+DEFS="-DDATADIR=\"${pkgdatadir}\""
+
+bin_PROGRAMS=PoUgui
 PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc main.cc \
 	vertexbuffer.cc
 PoUgui_CXXFLAGS=@QT_CFLAGS@ @GL_CFLAGS@

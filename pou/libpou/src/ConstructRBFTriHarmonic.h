@@ -11,7 +11,6 @@ class ConstructRBFTriHarmonic : public ConstructRBF {
  public:
   ConstructRBFTriHarmonic();
   ~ConstructRBFTriHarmonic();
-  int compute(const std::vector<Constraint> &cs) ;
   float eval(const Vec3f &p) const;
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   void jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const;
@@ -28,6 +27,9 @@ class ConstructRBFTriHarmonic : public ConstructRBF {
     {
       return (p1 - p2).length();
     }
+ private:
+  int computeRBF(const ConstraintSet &cs) ;
+
 };
 
 #endif /* CONSTRUCTRBFTRIHARMONIC_H */

@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <gsl/gsl_linalg.h>
-
+#include <iostream>
 #include "vector3.h"
+
 
 class Solver
 {
@@ -13,7 +14,7 @@ private:
   gsl_matrix* A;
   gsl_vector* b;
   gsl_vector* x; 
-  gsl_vector* r; 
+  gsl_vector* r;
 
 public:
   Solver(unsigned int _size)
