@@ -6,6 +6,7 @@
 
 //TODO: ADD SUPPORT FOR: INDEX, VBO
 
+#include "PointSet.h"
 #include "math/vector3.h"
 
 enum{ 
@@ -23,26 +24,31 @@ enum{
 class VertexBuffer{
  public:
   VertexBuffer();
+  VertexBuffer(const std::vector<Point> &vertices, int polytype );
   ~VertexBuffer();
-  int CreateVertexBuffer( Vec3f *dataptr, int size, int step, int polytype );
-  Vec3f *getDataPointer();
+
+  int CreateVertexBuffer( const std::vector<Point> &vertices, int polytype );
+  void init();
+
   void LockBuffer();
   void unLockBuffer();
   void Bind();
   void unBind();
+
   int ResizeBuffer( Vec3f *dataptr, int size, int step );
   int DrawBuffer();
-  void SetIndices( void *data, int size );
-  inline int getSize(){ return m_indices?m_indices_count/3:size; }
-  inline int getStep(){ return step; }
+
+  void SetIndices(std::vector<unsigned int> indices) { m_indices = indices; }
+  
+  std::vector<Point> &VertexBuffer::getDataPointer();
+  inline int getSize(){ return m_indices.size(); }
   inline int getPolyType(){ return polytype; }
  private:
   void MapBuffer();
   void unMapBuffer();
  private:
-  /* Indices */
-  unsigned int *m_indices;
-  int m_indices_count;
+  std::vector<unsigned int> m_indices;
+  std::vector<Point> m_vertices;
 
   /* Both (vertexbuffer, vbo) */
   int size;
@@ -50,9 +56,6 @@ class VertexBuffer{
   bool isLocked;
   int polytype;
   int contents;
-
-  /*vertexbuffer*/
-  Vec3f *ptr;
 
   /* VBO */
   int id;
