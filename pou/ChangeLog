@@ -1,5 +1,8 @@
 2004-04-27  Damien
+
 	* PoUgui/src/openglview.cc (ParseKey): Disable keys, useless for points
+	
+	* PoUgui/src/*.cc: Indent
 
 2004-04-27  Ben  <leserpent@berlios.de>
 

@@ -20,6 +20,9 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: openglview.cc,v $
+ * Revision 1.42  2004/04/27 20:10:34  ob821
+ * indent
+ *
  * Revision 1.41  2004/04/27 19:40:48  ob821
  * Disable keys for points
  *
@@ -135,19 +138,20 @@ OpenglWidget::initializeGL ()
   m_glcontext->SetDepthTest (false);
   m_vbuffer->Bind();
   /* Activate some flags for poly rendering */
-  if (m_vbuffer->getPolyType () == VertexBuffer::POLY_TRIANGLES){
-    /* Don't cull points only polys */
-    glEnable (GL_CULL_FACE);
-    glCullFace (GL_FRONT);
-    m_glcontext->SetDepthTest (true);
-    m_glcontext->OppositeShowHelp ();
-    /* Enable Lighting*/
-    SetLighting (true, OpenglContext::LIGHT_SMOOTH);
-  }
+  if (m_vbuffer->getPolyType () == VertexBuffer::POLY_TRIANGLES)
+    {
+      /* Don't cull points only polys */
+      glEnable (GL_CULL_FACE);
+      glCullFace (GL_FRONT);
+      m_glcontext->SetDepthTest (true);
+      m_glcontext->OppositeShowHelp ();
+      /* Enable Lighting*/
+      SetLighting (true, OpenglContext::LIGHT_SMOOTH);
+    }
   /* Enable zbuffer */
   m_glcontext->SetDepthTest (true);
-      
-  m_glcontext->OppositeColorFlags();
+  
+  m_glcontext->OppositeColorFlags ();
 }
 
 void 
@@ -164,7 +168,7 @@ OpenglWidget::resizeGL (int w, int h)
   m_glcontext->SetClipDistance (1.0,1500.0);
   m_glcontext->SetFov (60.0);
   m_glcontext->SetViewSize (w, h);
-  m_glcontext->SyncContext();
+  m_glcontext->SyncContext ();
   if (!m_idledraw)
     updateGL();
 }
@@ -198,7 +202,6 @@ OpenglWidget::mousePressEvent (QMouseEvent *e) {
   default:
     break;
   }    
-  m_glcontext->SyncContext ();
 }
 
 void 
@@ -208,122 +211,124 @@ OpenglWidget::ParseKey (int key, int key_ascii)
   if (m_vbuffer->getPolyType () == VertexBuffer::POLY_POINTS)
     return;
 
-  switch (key) {
-  case Qt::Key_F: {
-    bool flag = !m_glcontext->getFpsState ();
-    SetIdleDraw (flag);
-    m_glcontext->ShowFps (flag);
-    break;
-  }
-  
-  case Qt::Key_S:
-    m_glcontext->ShowStats (!(m_glcontext->getStatsState ()));
-    break;
+  switch (key) 
+    {
+    case Qt::Key_F: 
+      {
+	bool flag = !m_glcontext->getFpsState ();
+	SetIdleDraw (flag);
+	m_glcontext->ShowFps (flag);
+	break;
+      }
+      
+    case Qt::Key_S:
+      m_glcontext->ShowStats (!(m_glcontext->getStatsState ()));
+      break;
+      
+    case Qt::Key_P:
+      m_glcontext->ShowLightPosition (!(m_glcontext->getLightPositionState()));
+      break;
+      
+    case Qt::Key_C:
+      m_glcontext->OppositeColorFlags ();
+      break;
+      
+    case Qt::Key_Q:
+      m_glcontext->OppositePolygonMode ();
+      break;
+      
+    case Qt::Key_H:
+      m_glcontext->OppositeShowHelp ();
+      break;
+      
+    case Qt::Key_Left:
+      m_glcontext->MoveLight (0, 5, 0.0);
+      break;
+      
+    case Qt::Key_Right:
+      m_glcontext->MoveLight (0, -5, 0.0);
+      break;
+      
+    case Qt::Key_Down:
+      m_glcontext->MoveLight (5, 0, 0.0);
+      break;
 
-  case Qt::Key_P:
-    m_glcontext->ShowLightPosition (!(m_glcontext->getLightPositionState ()));
-    break;
-    
-  case Qt::Key_C:
-    m_glcontext->OppositeColorFlags ();
-    break;
-
-  case Qt::Key_Q:
-    m_glcontext->OppositePolygonMode ();
-    break;
-
-  case Qt::Key_H:
-    m_glcontext->OppositeShowHelp ();
-    break;
-  
-  case Qt::Key_Left:
-    m_glcontext->MoveLight (0, 5, 0.0);
-    break;
-
-  case Qt::Key_Right:
-    m_glcontext->MoveLight (0, -5, 0.0);
-    break;
-
-  case Qt::Key_Down:
-    m_glcontext->MoveLight (5, 0, 0.0);
-    break;
-
-  case Qt::Key_Up:
-    m_glcontext->MoveLight (-5, 0, 0.0);
-    break;
-
-  case Qt::Key_Plus:
-    m_glcontext->MoveLight (0, 0, 0.2);
-    break;
-    
-  case Qt::Key_Minus:
-    m_glcontext->MoveLight (0, 0, -0.2);
-    break;
-    
-  case Qt::Key_1:
-    m_glcontext->SetLightType (OpenglContext::LIGHT_FLAT);
-    break;
-    
-  case Qt::Key_2:
-    m_glcontext->SetLightType (OpenglContext::LIGHT_SMOOTH);
-    break;
-    
-  case Qt::Key_4:
-    m_glcontext->ChangeShininess (-2.0);
-    break;
-    
-  case Qt::Key_7:
-    m_glcontext->ChangeShininess (2.0);
-    break;
-    
-  case Qt::Key_5:
-    m_glcontext->ChangeDiffuse (-0.05, -0.05, -0.05);
-    break;
-    
-  case Qt::Key_8:
-    m_glcontext->ChangeDiffuse (0.05, 0.05, 0.05);
-    break;
-    
-  case Qt::Key_6:
-    m_glcontext->ChangeSpecular (-0.05, -0.05, -0.05);
-    break;
-    
-  case Qt::Key_9:
-    m_glcontext->ChangeSpecular (0.05, 0.05, 0.05);
-    break;
-
-  }
+    case Qt::Key_Up:
+      m_glcontext->MoveLight (-5, 0, 0.0);
+      break;
+      
+    case Qt::Key_Plus:
+      m_glcontext->MoveLight (0, 0, 0.2);
+      break;
+      
+    case Qt::Key_Minus:
+      m_glcontext->MoveLight (0, 0, -0.2);
+      break;
+      
+    case Qt::Key_1:
+      m_glcontext->SetLightType (OpenglContext::LIGHT_FLAT);
+      break;
+      
+    case Qt::Key_2:
+      m_glcontext->SetLightType (OpenglContext::LIGHT_SMOOTH);
+      break;
+      
+    case Qt::Key_4:
+      m_glcontext->ChangeShininess (-2.0);
+      break;
+      
+    case Qt::Key_7:
+      m_glcontext->ChangeShininess (2.0);
+      break;
+      
+    case Qt::Key_5:
+      m_glcontext->ChangeDiffuse (-0.05, -0.05, -0.05);
+      break;
+      
+    case Qt::Key_8:
+      m_glcontext->ChangeDiffuse (0.05, 0.05, 0.05);
+      break;
+      
+    case Qt::Key_6:
+      m_glcontext->ChangeSpecular (-0.05, -0.05, -0.05);
+      break;
+      
+    case Qt::Key_9:
+      m_glcontext->ChangeSpecular (0.05, 0.05, 0.05);
+      break;
+      
+    }
   
   if( !m_idledraw )
     updateGL();
-
-  m_glcontext->SyncContext ();
 }
 
 void 
 OpenglWidget::mouseReleaseEvent (QMouseEvent * e) 
 {
-  switch(e->button()) {
-  case QMouseEvent::LeftButton:
-    m_glcontext->StopRotationMode ();
-    m_glcontext->SyncContext ();
-    if (!m_idledraw)
-      updateGL();
-    break;
-  default:
-    break;
-  }    
+  switch(e->button()) 
+    {
+    case QMouseEvent::LeftButton:
+      m_glcontext->StopRotationMode ();
+      m_glcontext->SyncContext ();
+      if (!m_idledraw)
+	updateGL ();
+      break;
+    default:
+      break;
+    }    
 }
 
 void 
 OpenglWidget::mouseMoveEvent( QMouseEvent *e ) 
 {
-  if(e->state()&QMouseEvent::LeftButton) {
-    m_glcontext->RotateView (e->x(), e->y());
-    m_glcontext->SyncContext();
-    if (!m_idledraw)
-      updateGL();
-  }
+  if(e->state ()&QMouseEvent::LeftButton) 
+    {
+      m_glcontext->RotateView (e->x(), e->y());
+      m_glcontext->SyncContext ();
+      if (!m_idledraw)
+	updateGL();
+    }
 }
 
 void 
