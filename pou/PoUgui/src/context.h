@@ -19,8 +19,11 @@ class OpenglContext {
   void DrawHud();
   void ShowFps( bool flag );
   void ShowStats( bool flag );
+  void ShowLightPosition( bool flag );
   inline bool getFpsState() { return m_showfps; }
   inline bool getStatsState() { return m_showstats; }
+  inline bool getLightPositionState() { return m_lightdraw; }
+  
   /********************/
   /* NEED SyncContext() */
   /********************/
@@ -39,8 +42,7 @@ class OpenglContext {
   void SetDepthTest( bool state );
   void SetLighting( bool state );
   void SetLightType( int type );
-  void SetLightPosition( float x, float y, float z );
-  void DrawLightPosition( bool flag );
+  void MoveLight( int anglex, int angley, double distance );
   
  protected:
   void mapToSphere(Vec3f &dest);  
@@ -68,14 +70,13 @@ class OpenglContext {
   static const float INVSQRT2;
 
   /* Light Motion */
-  double m_lightzoomfactor;
-  Vec3f m_lightstartVector;
-  Quaternionf m_lightorientation, m_lightstartOrientation;
+  double m_lightdistance;
+  int m_lightrx, m_lightry;
+  Vec3f m_lightpos;
   
   /* Lighting */
   bool m_lightstate;
   bool m_lightdraw;
-  float m_lightx, m_lighty, m_lightz;
   int m_lighttype;
 
   /* Stats */

@@ -51,6 +51,10 @@ OpenglContext::OpenglContext( OpenglWidget *parent )
   m_lasttime = -1;
   m_showfps = false;
   m_parent = parent;
+  m_lightrx = 0;
+  m_lightry = 0;
+  m_lightdistance = 0;
+  m_lightpos = Vec3f( 0.0f, 0.0f, 0.0f );
   /* init font */
   m_font.setStyleStrategy( QFont::OpenGLCompatible );
   m_font.setFamily("fixed");
@@ -184,39 +188,75 @@ void OpenglContext::SetLighting( bool state )
   m_lightstate = state;
   if (m_lightstate)
     {
-      GLfloat m_lightpos[]={m_lightx, m_lighty, m_lightz, 1};
-      GLfloat m_light[]={1.0,1.0,1.0,1.0};
       glMatrixMode( GL_PROJECTION );
       glLoadIdentity();
       glEnable (GL_LIGHTING);
       glEnable (GL_LIGHT0);
-      glLightfv (GL_LIGHT0,GL_POSITION,m_lightpos);
+      float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
+      glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
     }
 }
+
 void OpenglContext::SetLightType( int type )
 {
   m_lighttype = type;
 }
 
-void OpenglContext::SetLightPosition( float x, float y, float z )
-{
-  m_lightx = x;
-  m_lighty = y;
-  m_lightz = z;
-}
-
-void OpenglContext::DrawLightPosition( bool flag )
+void OpenglContext::ShowLightPosition( bool flag )
 {
   m_lightdraw = flag;
 }
 
+void OpenglContext::MoveLight( int anglex, int angley, double distance ){
+  double cTheta, sTheta, cPhi, sPhi, theta, phi;
+  m_lightdistance += distance;
+  m_lightrx += anglex;
+  //m_lightrx %= 360; // [0, PI]
+  m_lightry += angley;
+  //m_lightry %= 360; // [0, 2PI ]
+  
+  theta = DEG2RAD((double)m_lightry );
+  phi = DEG2RAD((double)m_lightrx );
+
+  cTheta = cos( theta );
+  cPhi = cos( phi );
+  sTheta = sin( theta );
+  sPhi = sin( phi );
+
+  m_lightpos.x = m_lightdistance * cTheta * sPhi;
+  m_lightpos.z = m_lightdistance * sTheta * sPhi;
+  m_lightpos.y = m_lightdistance * cPhi;
+  float pos[4] = { m_lightpos.x , m_lightpos.y, m_lightpos.z, 1.0f };
+  glLightfv (GL_LIGHT0,GL_POSITION,(float *)pos);
+}
+
 void OpenglContext::DrawHud()
 {
-  
   glPushAttrib( GL_ENABLE_BIT );
   glDisable (GL_LIGHTING);
-  glDisable(GL_DEPTH_TEST);
+  
+  /* Draw the light position using 2 quads */
+  if( m_lightdraw ){
+    glDisable( GL_CULL_FACE );
+    glColor3f( 0.0, 1.0, 0.0 );
+    glBegin( GL_QUADS );
+    glVertex3f( m_lightpos.x - 0.1, m_lightpos.y - 0.1, m_lightpos.z);
+    glVertex3f( m_lightpos.x + 0.1, m_lightpos.y - 0.1, m_lightpos.z);
+    glVertex3f( m_lightpos.x + 0.1, m_lightpos.y + 0.1, m_lightpos.z);
+    glVertex3f( m_lightpos.x - 0.1, m_lightpos.y + 0.1, m_lightpos.z);
 
+    glVertex3f( m_lightpos.x - 0.1, m_lightpos.y, m_lightpos.z-0.1);
+    glVertex3f( m_lightpos.x + 0.1, m_lightpos.y, m_lightpos.z-0.1);
+    glVertex3f( m_lightpos.x + 0.1, m_lightpos.y, m_lightpos.z+0.1);
+    glVertex3f( m_lightpos.x - 0.1, m_lightpos.y, m_lightpos.z+0.1);
+
+    glEnd();
+    glColor3f( 1.0, 1.0, 1.0 );
+  }
+
+  /* Disable zbuffer for text rendering */
+  glDisable(GL_DEPTH_TEST);
+  
   if( m_showstats ){
     QString spolys("Triangles ");
     VertexBuffer *vb = m_parent ->getVertexBuffer();
@@ -248,6 +288,7 @@ void OpenglContext::DrawHud()
     glColor3f( 1.0, 1.0, 1.0 );
     m_parent -> renderText( 10, 20, sfps, m_font );
   }
+  /* Restore gl flags */
   glPopAttrib();
   
 }

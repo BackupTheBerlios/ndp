@@ -46,12 +46,11 @@ OpenglWidget::OpenglWidget( QWidget *parent, const char *name,
 
   glcontext -> ShowFps( false );
   glcontext -> ShowStats( false );
+  glcontext -> ShowLightPosition( false );
   
   /* Polygon window => show fps */
   if( vb -> getPolyType() == POLY_TRIANGLES )
     m_idledraw = true;
-  
-  //setFocusProxy( this );
 }
 
 OpenglWidget::~OpenglWidget() {
@@ -73,7 +72,7 @@ void OpenglWidget::initializeGL()
 
   if( m_idledraw ){
     startTimer( FRAME_DELAY );
-    SetLighting (true,GL_DIFFUSE,1.0,1.0,1.0);
+    SetLighting (true, GL_DIFFUSE );
     glcontext->SetDepthTest( true );
     /* Don't cull points only polys */
     glEnable( GL_CULL_FACE );
@@ -129,12 +128,27 @@ void OpenglWidget::mousePressEvent( QMouseEvent *e ) {
   glcontext -> SyncContext();
 }
 
-void OpenglWidget::ParseKey( int key )
+void OpenglWidget::ParseKey( int key, int key_ascii )
 {
-  if( tolower(key) == 'f' )
+  if( tolower(key_ascii) == 'f' )
     glcontext -> ShowFps( !(glcontext -> getFpsState()) );
-  if( tolower(key) == 's' )
+  if( tolower(key_ascii) == 's' )
     glcontext -> ShowStats( !(glcontext -> getStatsState()) );
+
+  if( tolower(key_ascii) == 'p' )
+    glcontext -> ShowLightPosition( !(glcontext -> getLightPositionState()) );
+
+  if( key == Qt::Key_Right)
+    glcontext -> MoveLight( 0, 5, 0.0 );
+
+  if(  key == Qt::Key_Left )
+    glcontext -> MoveLight( 0, -5, 0.0 );
+
+  if(  key == Qt::Key_Up )
+    glcontext -> MoveLight( 5, 0, 0.0 );
+
+  if(  key == Qt::Key_Down )
+    glcontext -> MoveLight( -5, 0, 0.0 );
 }
 
 void OpenglWidget::mouseReleaseEvent( QMouseEvent * e) {
@@ -168,16 +182,13 @@ void OpenglWidget::wheelEvent ( QWheelEvent * e ) {
 }
 
 
-void OpenglWidget::SetLighting( bool state, int type, float x, float y, 
-				float z ){
+void OpenglWidget::SetLighting( bool state, int type ){
   glcontext -> SetLightType (type);
-  glcontext -> SetLightPosition (x, y, z);
   glcontext -> SetLighting ( state );
-  glcontext -> DrawLightPosition (false);
+  glcontext -> MoveLight( 0, 0, 1.5 );
 }
 
 void OpenglWidget::timerEvent( QTimerEvent *e) {
-  //printf("DRAW\n");
   updateGL();
 }
 
@@ -205,5 +216,5 @@ void OpenglView::closeEvent( QCloseEvent *e )
 
 void OpenglView::keyPressEvent( QKeyEvent *e )
 {
-  glwidget->ParseKey( e->ascii() );
+  glwidget->ParseKey( e->key(), e->ascii() );
 }

@@ -1,5 +1,9 @@
 2004-04-05  Damien
 
+	* PoUgui/src/context.cc: Light Motion
+	Use 'p' to see light position
+	Use direction keys for light motion
+
 	* PoUgui/src/context.cc: DepthTest support
 	Font init. moved in constructor
 	glPushattrib removed ( don't work with some hardware )

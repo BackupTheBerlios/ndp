@@ -16,8 +16,8 @@ class OpenglWidget : public QGLWidget
   OpenglWidget( QWidget *parent, const char *name, VertexBuffer *vbuffer );
   ~OpenglWidget();
   
-  void SetLighting( bool state, int type, float x, float y, float z );
-  void ParseKey( int key );
+  void SetLighting( bool state, int type );
+  void ParseKey( int key, int key_ascii );
   /* Surcharge des fonctions de base */
   void initializeGL();
   void clearGL();
