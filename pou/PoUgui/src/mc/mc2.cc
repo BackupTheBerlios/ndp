@@ -1,11 +1,62 @@
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <iostream>
+#include <string>
+
 #include "mc2.h"
+#include "ImplicitSurface3D.h"
 
 Mc::Mc(void (*callback)(int, int), int step):
-  progress_callback(callback), progress_step(step), RES(10)   {
+  initPoint(-0.269614, 0.228464, 0.0772211), progress_callback(callback),
+  progress_step(step), RES(10) {
   assert(callback);
   memset(cubetable, 0, 256*sizeof(int));
 }
 
+
+void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox, bool tet)
+{
+  is = imps;
+
+  char *err;
+  gntris = 0;
+
+  
+//BUG: The Pointset bounding box doesn't seem to be a good bounding
+//	box for the surface
+  Vec3f size=bbox.getSize();
+  int bounds = (int)(size.maxValue()/(2*0.05))+20;
+//  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
+  progress_max = (int)((size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)/8);
+  if ((err = polygonize(0.05, bounds, 
+                        initPoint.x, initPoint.y, initPoint.z,
+                        tet)) != NULL) 
+  {
+    std::cout << "Error " << err << std::endl;
+  }
+
+  std::cout << gntris << " triangles, " 
+            << gvertices.count << "  vertices\n" << std::endl; 
+}
+
+void Mc::getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals) {
+  for (int i = 0; i < gvertices.count; i++) {
+    VERTEX v;
+    v = gvertices.ptr[i];
+    
+    vertices.push_back(Vec3f(v.position.x, v.position.y, v.position.z));
+    normals.push_back(Vec3f(v.normal.x, v.normal.y, v.normal.z));
+  }
+}
+
+const std::vector<unsigned int>& Mc::getIndices() {
+  return indices;
+}
+
+/***********************************************************************/
 double Mc::RAND() {
   return (rand()&32767)/32767.0;
 }
@@ -497,9 +548,9 @@ void Mc::vnormal (POINT* point, PROCESS* p, POINT* v)
   
   is->evalNormal(dest, norm);
   //is.evalNormalAna(dest, norm);
-  v->x = norm[0];
-  v->y = norm[1];
-  v->z = norm[2];
+  v->x = -norm[0];
+  v->y = -norm[1];
+  v->z = -norm[2];
 }
 
 
@@ -536,45 +587,6 @@ double Mc::fun(double x, double y, double z)
   return -is->eval(Vec3f(x,y,z));
 }
 
-void Mc::domc(ImplicitSurface3D *imps, const Box3f &bbox)
-{
-  is = imps;
-
-  char *err;
-  gntris = 0;
-
-  
-//BUG: The Pointset bounding box doesn't seem to be a good bounding
-//	box for the surface
-  Vec3f size=bbox.getSize();
-  int bounds = (int)(size.maxValue()/(2*0.05))+20;
-//  std::cerr <<"eestimation " << (size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f) <<std::endl;
-  progress_max = (int)((size.x/0.05f)*(size.y/0.05f)*(size.z/0.05f)/8);
-  if ((err = polygonize(0.05, bounds, 
-                        0, 0, 0,
-                        false)) != NULL) 
-  {
-    std::cout << "Error " << err << std::endl;
-  }
-
-  std::cout << gntris << " triangles, " 
-            << gvertices.count << "  vertices\n" << std::endl; 
-}
-
-void Mc::getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals) {
-  for (int i = 0; i < gvertices.count; i++) {
-    VERTEX v;
-    v = gvertices.ptr[i];
-    
-    vertices.push_back(Vec3f(v.position.x, v.position.y, v.position.z));
-    normals.push_back(Vec3f(v.normal.x, v.normal.y, v.normal.z));
-  }
-}
-
-const std::vector<unsigned int>& Mc::getIndices() {
-  return indices;
-}
-
 /*Static members*/
 const Mc::Corner Mc::corner1[12] = {LBN,LTN,LBN,LBF,RBN,RTN,RBN,RBF,LBN,LBF,LTN,LTF};
 const Mc::Corner Mc::corner2[12] = {LBF,LTF,LTN,LTF,RBF,RTF,RTN,RTF,RBN,RBF,RTN,RTF};
@@ -583,6 +595,9 @@ const Mc::Direction Mc::rightface[12] = {L,  T,  N,  L,  B,  R,  R,  F,  B,  F, 
 
 /* History:
 * $Log: mc2.cc,v $
+* Revision 1.3  2004/04/02 07:25:33  leserpent
+* Added a setInitPoint method.
+*
 * Revision 1.2  2004/04/01 20:57:45  leserpent
 * Trivial: Moved Log keyword at the end of the file
 *

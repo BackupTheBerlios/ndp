@@ -1,25 +1,16 @@
 #ifndef MC_H
 #define MC_H
 
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-
-#include <iostream>
-#include <fstream>
-#include <string>
 #include <vector>
 
-#include "ImplicitSurface3D.h"
+class ImplicitSurface3D;
 
 #include "math/vector3.h"
 #include "box3d.h"
 
 class Mc {
 private:
+  Vec3f initPoint;
   std::vector<unsigned int> indices;
   void (*progress_callback)(int v, int max);
   unsigned int progress_step;
@@ -29,14 +20,16 @@ private:
 public:
   Mc(void (*callback)(int, int), int step);
   
-  void mc_setcallback(void (*c)(int, int), unsigned int step) {
+  void setcallback(void (*c)(int, int), unsigned int step) {
     progress_callback = c;
     progress_step = step;
   }
 
   const std::vector<unsigned int>& getIndices();
   void getVertNorm(std::vector<Vec3f> &vertices, std::vector<Vec3f> &normals);
-  void domc(ImplicitSurface3D *imps, const Box3f &bbox);
+  void domc(ImplicitSurface3D *imps, const Box3f &bbox, bool tet=false);
+  
+  void setInitPoint(const Vec3f& init) { initPoint = init; }
 
 private:
   int RES; /* # converge iterations    */
@@ -166,6 +159,9 @@ private:
 
 /* History:
 * $Log: mc2.h,v $
+* Revision 1.4  2004/04/02 07:25:33  leserpent
+* Added a setInitPoint method.
+*
 * Revision 1.3  2004/04/01 20:57:45  leserpent
 * Trivial: Moved Log keyword at the end of the file
 *
