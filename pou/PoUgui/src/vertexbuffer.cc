@@ -44,19 +44,12 @@ VertexBuffer::~VertexBuffer()
 {
   if( m_islocked )
     unLockBuffer();
-  if( m_type == TYPE_VBO )
-    ; /* Delete buffer */
 }
 
 void 
 VertexBuffer::init() 
 {
-  if( !HasVBO() )
-    m_type = TYPE_VERTEXBUFFER;
-  else
-    m_type = TYPE_VBO;
   m_islocked = false;
-  m_mapptr = 0;
 }
 
 int 
@@ -64,12 +57,7 @@ VertexBuffer::CreateVertexBuffer( const std::vector<Point> &vertices,
 				  int polytype ) 
 {
   m_polytype = polytype;
-  if( m_type == TYPE_VERTEXBUFFER )
-    m_vertices = vertices;
-  
-  if( m_type == TYPE_VBO ) 
-    {
-    }
+  m_vertices = vertices;
   
   return 0;
 }
@@ -78,13 +66,6 @@ std::vector<Point> &
 VertexBuffer::getDataPointer() 
 {
   assert(m_islocked);
-
-  if( (m_type == TYPE_VBO) && !m_mapptr )
-    MapBuffer();
-
-  //if( m_type == TYPE_VBO )
-  //return (Vec3f *)m_mapptr;
-
   return m_vertices;
 }
 
@@ -95,12 +76,9 @@ VertexBuffer::Bind()
   glEnableClientState( GL_VERTEX_ARRAY );
   glEnableClientState( GL_NORMAL_ARRAY );
 
-  if( m_type == TYPE_VERTEXBUFFER )
-    {
-      glVertexPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].pos);
-      glColorPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].rgb);
-      glNormalPointer(GL_FLOAT, sizeof(Point), &m_vertices[0].norm);
-    }
+  glVertexPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].pos);
+  glColorPointer(3, GL_FLOAT, sizeof(Point), &m_vertices[0].rgb);
+  glNormalPointer(GL_FLOAT, sizeof(Point), &m_vertices[0].norm);
 }
 
 void 
@@ -121,14 +99,6 @@ void
 VertexBuffer::unLockBuffer() 
 {
   m_islocked = false;
-  if( (m_type == TYPE_VBO) && m_mapptr )
-    unMapBuffer();
-}
-
-int 
-VertexBuffer::ResizeBuffer( Vec3f *dataptr, int size, int step ) 
-{
-  return 0;
 }
 
 int 
@@ -144,23 +114,4 @@ VertexBuffer::DrawBuffer()
 		   &m_indices[0]);
   }
   return 0;
-}
-
-void 
-VertexBuffer::MapBuffer() 
-{
-  if( m_type == TYPE_VBO )
-    if( !m_mapptr ){
-
-    }
-}
-
-void 
-VertexBuffer::unMapBuffer() 
-{
-  if( m_type == TYPE_VBO )
-    if( m_mapptr )
-      {
-	m_mapptr = NULL;
-      }
 }

@@ -17,8 +17,8 @@ m%.cc: %.h
 BUILT_SOURCES = settings.h settings.cc msettings.cc
 bin_PROGRAMS=PoUgui
 PoUgui_SOURCES=mwindow-moc.cc openglview.cc mwindow.cc init.cc \
-	main.cc vertexbuffer.cc context.cc utils.cc\
-	language.h mwindow.h openglview.h utils.h\
+	main.cc vertexbuffer.cc context.cc utils.cc xmlparser.cc\
+	language.h mwindow.h openglview.h utils.h xmlparser.h\
 	context.h init.h opengl.h vertexbuffer.h\
 	settings.ui.h settings.ui
 

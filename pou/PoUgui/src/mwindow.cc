@@ -19,6 +19,11 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * $Log: mwindow.cc,v $
+ * Revision 1.32  2004/04/23 17:57:35  ob821
+ * new xmlparser
+ * bugfix
+ * code cleanup
+ *
  * Revision 1.31  2004/04/07 18:23:17  ob821
  * segfault fix
  * lighting bugfix
@@ -53,6 +58,7 @@
 #include "ImplicitSurface3D.h"
 #include "PointSet.h"
 #include "mc/mc2.h"
+#include "icons.h"
 
 QApplication *MainWindow::m_qtgui;
 
@@ -105,26 +111,26 @@ MainWindow::CreateMenu()
   menuBar()->insertItem( MENU_SETTINGS, menu_settings );
   menuBar()->insertItem( MENU_HELP, menu_help );
   //Files
-  AddTool( this, MENU_FILE_OPEN, QPixmap( DATADIR"/fileopen.png"),
+  AddTool( this, MENU_FILE_OPEN, QPixmap ((const char **)icon_fileopen),
 	   QKeySequence("Ctrl+O"), toolbar, menu_file,SLOT(MenuFileOpen()));
-  AddTool( this, MENU_FILE_CLOSE, QPixmap(DATADIR"/fileclose.png"),
+  AddTool( this, MENU_FILE_CLOSE, QPixmap ((const char **)icon_fileclose),
 	   QKeySequence("Ctrl+D"), toolbar, menu_file,SLOT(MenuFileClose()));
   menu_file->insertSeparator();
-  AddTool( this, MENU_FILE_EXIT, QPixmap(DATADIR"/exit.png"),
+  AddTool( this, MENU_FILE_EXIT, QPixmap ((const char **)icon_exit),
 	   QKeySequence("Ctrl+X"), NULL, menu_file,SLOT(MenuFileExit()));
   //Windows
   toolbar->addSeparator();
-  AddTool( this, MENU_WINDOWS_NEW, QPixmap(DATADIR"/window_new.png"),
+  AddTool( this, MENU_WINDOWS_NEW, QPixmap((const char **)icon_newwindow),
 	   QKeySequence("Ctrl+N"), toolbar, menu_windows, 
 	   SLOT(MenuWindowsNew()));
   // Settings
   toolbar->addSeparator();
-  AddTool( this, MENU_SETTINGS_ARGS, QPixmap(DATADIR"/configure.png"),
+  AddTool( this, MENU_SETTINGS_ARGS, QPixmap((const char **)icon_configure),
 	   QKeySequence("Ctrl+S"), toolbar, menu_settings, 
 	   SLOT(MenuSettingsArgs()));
   //Rendering
   toolbar->addSeparator();
-  AddTool( this, MENU_RENDERING_RENDER, QPixmap(DATADIR"/render.png"),
+  AddTool( this, MENU_RENDERING_RENDER, QPixmap((const char **)icon_render),
 	   QKeySequence("Ctrl+R"), toolbar, menu_rendering, 
 	   SLOT(MenuRenderingRender()));
   
