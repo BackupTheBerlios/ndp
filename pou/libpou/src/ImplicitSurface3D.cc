@@ -1,11 +1,16 @@
 /**
  * @file   ImplicitSurface3D.cc
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:50:25 2004
  * 
  * @brief  Implicit surface support
  * 
  * $Log: ImplicitSurface3D.cc,v $
+ * Revision 1.14  2004/04/20 11:16:39  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.13  2004/04/07 08:00:18  leserpent
  * Use the	new constructor of ConstraintSet.
  * Added some const.
@@ -33,9 +38,7 @@
 #include "ConstraintSet.h"
 #include "ConstraintFilter.h"
 #include "helpers/deletor.h"
-
-#include <fstream>
-
+#include "helpers/gzstream.h"
 
 class ConstraintFilterRGB : public ConstraintFilter {
 private:
@@ -149,11 +152,11 @@ void ImplicitSurface3D::computeGeometry(const PointSet &ps, unsigned int size) {
 }
 
 void ImplicitSurface3D::load(const std::string &filename) {
-  std::ifstream stream(filename.c_str());
+  igzstream stream(filename.c_str());
   rbf->load(stream);
 }
 
 void ImplicitSurface3D::save(const std::string &filename) const {
-  std::ofstream stream(filename.c_str());
+  ogzstream stream(filename.c_str());
   rbf->save(stream);
 }

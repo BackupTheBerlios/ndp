@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBFBiHarmonic.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:44:31 2004
  * 
  * @brief  rbf reconstruction using biharmonics
  * 
  * $Log: ConstructRBFBiHarmonic.h,v $
+ * Revision 1.5  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.4  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -28,8 +33,8 @@ class ConstructRBFBiHarmonic : public ConstructRBF {
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   void jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz) const;
   float getL(const BoxVolume&) const;
-  void load(std::ifstream &stream);
-  void save(std::ofstream &stream) const;
+  void load(std::istream &stream);
+  void save(std::ostream &stream) const;
 
  private:
   void setC(float cx,

@@ -1,11 +1,16 @@
 /**
  * @file   Constraint.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:45:59 2004
  * 
  * @brief  One Constraint management
  *
  * $Log: Constraint.h,v $
+ * Revision 1.5  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.4  2004/04/07 08:02:30  leserpent
  * Added a	default value to the parameter param of the constructor
  *

@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBFBiHarmonic.cc
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:52:15 2004
  * 
  * @brief  rbf reconstruction using biharmonics
  *
  * $Log: ConstructRBFBiHarmonic.cc,v $
+ * Revision 1.7  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.6  2004/04/05 19:14:36  pumpkins
  * File documentation
  * 
@@ -217,7 +222,7 @@ ConstructRBFBiHarmonic::getC(float& cx,
 }
 
 void
-ConstructRBFBiHarmonic::load(std::ifstream &stream)
+ConstructRBFBiHarmonic::load(std::istream &stream)
 {
   unsigned int newSize;
 
@@ -240,7 +245,7 @@ ConstructRBFBiHarmonic::load(std::ifstream &stream)
 }
 
 void
-ConstructRBFBiHarmonic::save(std::ofstream &stream) const
+ConstructRBFBiHarmonic::save(std::ostream &stream) const
 {
   stream << size << std::endl;
   for(unsigned int i = 0; i<size; i++)

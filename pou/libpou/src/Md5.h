@@ -1,11 +1,16 @@
 /**
  * @file   Md5.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Tue Apr  6 13:50:43 2004
  * 
  * @brief  Md5 sum support 
  * 
  * $Log: Md5.h,v $
+ * Revision 1.2  2004/04/20 11:16:39  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.1  2004/04/06 11:57:45  pumpkins
  * support for md5sum
  *

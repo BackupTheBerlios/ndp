@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBF.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:44:49 2004
  * 
  * @brief  Radial Basis Functions
  * 
  * $Log: ConstructRBF.h,v $
+ * Revision 1.7  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.6  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -46,8 +51,8 @@ class ConstructRBF {
   void evalNormal(const Vec3f &p, Vec3f &v) const;
   virtual void evalGradian(const Vec3f &p, Vec3f &v) const =0;
 
-  virtual void load(std::ifstream &stream) = 0;
-  virtual void save(std::ofstream &stream) const = 0;
+  virtual void load(std::istream &stream) = 0;
+  virtual void save(std::ostream &stream) const = 0;
 
 
   unsigned int getSize();

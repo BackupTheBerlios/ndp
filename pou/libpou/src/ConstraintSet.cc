@@ -1,11 +1,16 @@
 /**
  * @file   ConstraintSet.cc
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:53:20 2004
  * 
  * @brief  ConstraintSet management
  * 
  * $Log: ConstraintSet.cc,v $
+ * Revision 1.6  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.5  2004/04/07 08:01:14  leserpent
  * Added a	constructor which takes a PointSet.
  * Removed an useless copy constructor.

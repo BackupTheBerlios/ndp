@@ -1,3 +1,11 @@
+2004-04-20  Thomas
+	* libpou/src/{ConstructRBF*, PointSet.*}: switch to gzstream
+	* libpou/src/helpers/gzstream{.C,.h}: support for zlib compressed
+	streams
+	* models/*.sur: models now in cvs (gzip -9)
+	* libpou/configure.ac: zlib detection
+	* libpou/src/*: @authors
+
 2004-04-13  Ben  <leserpent@berlios.de>
 
 	* PoUgui/src/Makefile.am: Fixed .ui non automatic compilation

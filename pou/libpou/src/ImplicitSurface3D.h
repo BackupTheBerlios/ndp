@@ -1,11 +1,16 @@
 /**
  * @file   ImplicitSurface3D.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:40:38 2004
  * 
  * @brief Support for implicit surface
  * 
  * $Log: ImplicitSurface3D.h,v $
+ * Revision 1.11  2004/04/20 11:16:39  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.10  2004/04/07 08:00:18  leserpent
  * Use the	new constructor of ConstraintSet.
  * Added some const.

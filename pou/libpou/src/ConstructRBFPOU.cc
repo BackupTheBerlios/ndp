@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBFPOU.cc
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:51:23 2004
  * 
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.cc,v $
+ * Revision 1.11  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.10  2004/04/06 16:49:32  leserpent
  * ConstructRBFPOU::setcallback() can take two more parameters in order
  * to show only one progress dialog during color computing.
@@ -19,7 +24,6 @@
 #include "AreaCube.h"
 #include "AreaSphere.h"
 #include "AreaSetOctree.h"
-#include <fstream>
 #include <iostream>
 
 ConstructRBFPOU::ConstructRBFPOU(ConstructRBFPOU::TypeRBF type):
@@ -38,10 +42,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
 {
   int result;
   applyFilter(cs);
-  //  if (octree)
-  //    cells=const_cast<AreaSet *>(octree);
-  //  else {
-    dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
+  dynamic_cast<AreaSetOctree *>(cells)->create(cs, threMin, threMax, overlap);
 
   unsigned int size=cells->size();
   for(unsigned int i=0; i<size; i++)
@@ -51,9 +52,7 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       if (i % step == 0 && callback)
 	callback(i+pass*size, size*numPass);
 
-//       std::cerr << "Region " << i << "/" << cells->size()
-//                 << " --> " << std::flush;
-
+      
       while(1)
 	{
 	  ConstraintSet filtered(cs, &area);
@@ -81,7 +80,6 @@ ConstructRBFPOU::compute(ConstraintSet& cs, const AreaSet *octree)
       rbf.push_back(newrbf);
       flag.push_back(OK_FLAG);
     }
-  //  }
 }
 
 void
@@ -212,7 +210,7 @@ ConstructRBFPOU::evalNormal(const Vec3f &p, Vec3f &v) const
 }
 
 void
-ConstructRBFPOU::load(std::ifstream &stream)
+ConstructRBFPOU::load(std::istream &stream)
 {
   int intType;
   stream >> intType;
@@ -261,7 +259,7 @@ ConstructRBFPOU::load(std::ifstream &stream)
 }
 
 void
-ConstructRBFPOU::save(std::ofstream &stream) const
+ConstructRBFPOU::save(std::ostream &stream) const
 {
   switch(type)
     {

@@ -6,6 +6,11 @@
  * @brief  PointSet management
  * 
  * $Log: PointSet.cc,v $
+ * Revision 1.7  2004/04/20 11:16:39  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.6  2004/04/07 07:35:18  leserpent
  * Changed var ++ to var++.
  * Removed blank lines and some commented code.
@@ -20,11 +25,11 @@
  *
  * 
  */
-#include <fstream>
 #include <iostream>
 #include "PointSet.h"
 #include "math/vector3.h"
 #include "helpers/deletor.h"
+#include "helpers/gzstream.h"
 #include "box3d.h"
 
 using namespace std;
@@ -139,7 +144,7 @@ PointSet::randomSplit(const unsigned int number,
 void 
 PointSet::load(const char* filename)
 {
-  ifstream fs(filename);
+  igzstream fs(filename);
   int counter = 0;
 
   cout << "Reading... " << endl;
@@ -162,8 +167,6 @@ PointSet::load(const char* filename)
         cout << "\r " << counter << " read..." << flush;
     }
   
-  fs.close();
-  
   cout << "\r" << counter << " read...    " << endl;
   cout << "Bounding Box " << box.getMin() << " -- " << box.getMax() << endl;
 }
@@ -172,7 +175,7 @@ PointSet::load(const char* filename)
 void 
 PointSet::save(const char* filename)
 {
-  ofstream fs(filename);
+  ogzstream fs(filename);
   
   cout << "Save " << filename << endl;
   for(PointList::iterator i=points.begin(); i!=points.end(); i++)
@@ -191,7 +194,6 @@ PointSet::save(const char* filename)
 	 << p->rgb[1] << " "
 	 << p->rgb[2] << endl << endl;
     }
-  fs.close();
 }
 
 int 

@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBFTriHarmonic.cc
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:43:17 2004
  * 
  * @brief  rbf reconstruction using triharmonics
  * 
  * $Log: ConstructRBFTriHarmonic.cc,v $
+ * Revision 1.7  2004/04/20 11:16:39  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.6  2004/04/05 19:14:36  pumpkins
  * File documentation
  *
@@ -227,7 +232,7 @@ ConstructRBFTriHarmonic::jacobi(const Vec3f& p, Vec3f& lx, Vec3f& ly, Vec3f& lz)
     }
 }
 
-void ConstructRBFTriHarmonic::load(std::ifstream &stream) {
+void ConstructRBFTriHarmonic::load(std::istream &stream) {
   unsigned int newSize;
 
   stream >> newSize;
@@ -247,7 +252,7 @@ void ConstructRBFTriHarmonic::load(std::ifstream &stream) {
     	 >> c[6] >> c[7] >> c[8] >> c[9];
 }
 
-void ConstructRBFTriHarmonic::save(std::ofstream &stream) const {
+void ConstructRBFTriHarmonic::save(std::ostream &stream) const {
   stream << size << std::endl;
 
   for(unsigned int i = 0; i<size; i++)

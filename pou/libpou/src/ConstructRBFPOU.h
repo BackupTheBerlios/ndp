@@ -1,11 +1,16 @@
 /**
  * @file   ConstructRBFPOU.h
- * @author Arcila Thomas
+ * @author Arcila Thomas, Dallarosa Damien, Grange Benjamin, Martin Loic
  * @date   Mon Apr  5 20:43:35 2004
  * 
  * @brief  rbf reconstruction using an octree
  *
  * $Log: ConstructRBFPOU.h,v $
+ * Revision 1.9  2004/04/20 11:16:38  pumpkins
+ * gzstream
+ * authors
+ * models
+ *
  * Revision 1.8  2004/04/07 08:03:17  leserpent
  * Added a	default value to the parameter p of setFilter
  *
@@ -58,8 +63,8 @@ class ConstructRBFPOU {
   void evalGradian(const Vec3f &p, Vec3f &v) const;
   void evalNormal(const Vec3f &p, Vec3f &v) const;
 
-  void load(std::ifstream &stream);
-  void save(std::ofstream &stream) const;
+  void load(std::istream &stream);
+  void save(std::ostream &stream) const;
   const AreaSet *getOctree();  
   void setFilter(ConstraintFilter *f, int p = 0);
 
